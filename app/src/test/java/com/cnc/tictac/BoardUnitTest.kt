@@ -48,23 +48,29 @@ class BoardUnitTest {
         var board : Board = Board()
         var player : Player = HumanPlayer()
 
+        println("State 1: \n ${board.toString()}")
+
         board.placePuck(player, 0, 0)
+        println("State 2: \n ${board.toString()}")
+
         board.placePuck(player, 1, 1)
+        println("State 3: \n ${board.toString()}")
+
         var boardState1 = board.boardHistory.peek() // History of board before puck placement
+        println("State 4: \n ${board.toString()}")
 
         board.placePuck(player, 2, 0)
         var boardState2 = board.boardHistory.peek() // History of board after pluck placement
+        println("State 5: \n ${board.toString()}")
 
         board.undoPreviousMove()
         var boardState3 = board.boardHistory.peek() // History of board after undo-ing previous move
+        println("State 6: \n ${board.toString()}")
 
-        println(board.toString())
-
-        /*
         assert(!boardState1.contentEquals(boardState2))
         assert(boardState1.contentEquals(boardState3))
         assert(!boardState2.contentEquals(boardState3))
-        */
+
 
     }
 }

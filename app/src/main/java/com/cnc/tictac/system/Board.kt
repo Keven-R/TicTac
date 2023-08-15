@@ -26,12 +26,12 @@ class Board(
      *  caught, and "false" is returned by the function.
      */
     fun placePuck(currentPlayer : Player, x : Int, y : Int) : Boolean{
-        try {
+        return try {
             this.boardState[x][y] = currentPlayer
             this.boardHistory.push(this.boardState)
-            return true
+            true
         } catch (e : ArrayIndexOutOfBoundsException){
-            return false
+            false
         }
     }
     /** undoPreviousMove (void)
@@ -68,6 +68,23 @@ class Board(
      *  This method converts the board to a string (for debugging)
      */
     override fun toString() : String{
-        return boardState.toString()
+        var boardString = ""
+        for(index in this.boardHistory){
+            boardString += index.convertToString()
+            boardString += " \\/ "
+        }
+        boardString += " _____ "
+        return boardString
+    }
+    fun BoardState.convertToString() : String{
+        var boardString = ""
+        for(y in this){
+            for(x in y){
+                boardString += x.toString()
+                boardString += ", "
+            }
+            boardString += "\n"
+        }
+        return boardString
     }
 }
