@@ -64,4 +64,10 @@ class Board(
             }
         }
     }
+    /** toString()
+     *  This method converts the board to a string (for debugging)
+     */
+    override fun toString() : String{
+        return boardState.toString()
+    }
 }

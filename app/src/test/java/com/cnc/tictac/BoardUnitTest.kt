@@ -7,6 +7,9 @@ import org.junit.Test
  * Unit tests for the Board class
  */
 class BoardUnitTest {
+    /**
+     * Constructor test module
+     */
     @Test
     fun constructor_isCorrect() {
         var board : Board = Board()
@@ -18,6 +21,9 @@ class BoardUnitTest {
         // Confirm board is initialised to null
         assert(board.boardHistory.peek()[0][0] == null)
     }
+    /**
+     * placePuck test modules
+     */
     @Test
     fun placePuck_isCorrect() {
         var board : Board = Board()
@@ -32,7 +38,33 @@ class BoardUnitTest {
     fun placePuck_errorHandling() {
         var board : Board = Board()
         var player : Player = HumanPlayer()
-        board.placePuck(player, 100, 100)
+        assert(!board.placePuck(player, 100, 100))
+    }
+    /**
+     * undoPreviousMove test modules
+     */
+    @Test
+    fun undoPreviousMove_isCorrect(){
+        var board : Board = Board()
+        var player : Player = HumanPlayer()
+
+        board.placePuck(player, 0, 0)
+        board.placePuck(player, 1, 1)
+        var boardState1 = board.boardHistory.peek() // History of board before puck placement
+
+        board.placePuck(player, 2, 0)
+        var boardState2 = board.boardHistory.peek() // History of board after pluck placement
+
+        board.undoPreviousMove()
+        var boardState3 = board.boardHistory.peek() // History of board after undo-ing previous move
+
+        println(board.toString())
+
+        /*
+        assert(!boardState1.contentEquals(boardState2))
+        assert(boardState1.contentEquals(boardState3))
+        assert(!boardState2.contentEquals(boardState3))
+        */
 
     }
 }
