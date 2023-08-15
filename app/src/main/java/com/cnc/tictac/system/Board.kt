@@ -1,13 +1,14 @@
 package com.cnc.tictac.system
+import android.util.Log
 import java.util.Stack
 // Board state is a nullable 2D array of players. Initially a null array.
 typealias BoardState = Array<Array<Player?>>
 class Board(
-    private val width           : Int,
-    private val height          : Int,
-    private val minimumWin      : Int,
-    var boardState              : BoardState = Array(width, { Array(height, { null }) }),
-    var boardHistory            : Stack<BoardState>
+    private val width           : Int               = 3,
+    private val height          : Int               = 3,
+    private val minimumWin      : Int               = 3,
+    var boardState              : BoardState        = Array(width, { Array(height, { null }) }),
+    var boardHistory            : Stack<BoardState> = Stack<BoardState>()
 ){
     /** init
      * Appends empty board state to board history
@@ -21,12 +22,18 @@ class Board(
      *  This method places the player object reference in the specified x and y coordinates of the board.
      *  Understanding which player has the turn, and other such game logic is controlled by the
      *  GameController class.
+     *  If GameController attempts to place a puck out of bounds, ArrayIndexOutOfBoundsException is
+     *  caught, and "false" is returned by the function.
      */
-    fun placePuck(currentPlayer : Player, x : Int, y : Int){
-        this.boardState[x][y] = currentPlayer
-        this.boardHistory.push(this.boardState)
+    fun placePuck(currentPlayer : Player, x : Int, y : Int) : Boolean{
+        try {
+            this.boardState[x][y] = currentPlayer
+            this.boardHistory.push(this.boardState)
+            return true
+        } catch (e : ArrayIndexOutOfBoundsException){
+            return false
+        }
     }
-
     /** undoPreviousMove (void)
      * -------------------------
      * This method pops the boardHistory (removing the latest entry),
@@ -36,7 +43,6 @@ class Board(
         this.boardHistory.pop()
         this.boardState = this.boardHistory.peek()
     }
-
     /** clearGameBoard()
      * Calling this method clears the boardState to null, and empties the boardHistory stack.
      */
@@ -46,5 +52,16 @@ class Board(
         // Append initial blank board state to boardHistory stack
         this.boardHistory.clear()
         this.boardHistory.push(this.boardState)
+    }
+
+    /** searchWinCondition()
+     *
+     */
+    fun searchWinCondition(){
+        for(ey in boardState){
+            for(ex in ey){
+                Log.d("BoardState", ex.toString())
+            }
+        }
     }
 }
