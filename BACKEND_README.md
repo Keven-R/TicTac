@@ -7,26 +7,6 @@ Tic Tac Toe Game Backend Documentation
 * clear the board
 * search for a win condition on the board
 
-## Player.kt Class
-This is an abstract class that defines the general properties of a player. 
-### Variables
-```KOTLIN
-playerName     : String
-playerID       : Long
-playerIcon     : Pair<Int, String> // resource and description
-playerAvatar   : Pair<Int, String>
-```
-### Abstract methods
-```KOTLIN
-toString() : String
-copy() : Player
-```
-## HumanPlayer.kt
-Implementation of abstract class Player
-
-*Note: There will eventually be an AIPlayer.kt that is an implementation of
-Player with extended methods for deciding where to place the puck*
-
 ## Board.kt Class
 This class handles the creation and modification of a game board, and
 testing the board for win conditions.
@@ -107,5 +87,26 @@ Array<Array<Int>>.convolution2D(operand: Array<Array<Int>>) : Array<Array<Int>>
 ```KOTLIN
 Array<Array<Player?>>.deepCopy() : Array<Array<Player?>>
 ```
+
+## Player.kt Class
+This is an abstract class that defines the general properties of a player. 
+### Variables
+```KOTLIN
+playerName     : String
+playerID       : Long
+playerIcon     : Pair<Int, String> // resource and description
+playerAvatar   : Pair<Int, String>
+```
+### Abstract methods
+```KOTLIN
+toString() : String
+copy() : Player
+```
+## HumanPlayer.kt
+Implementation of abstract class Player
+
+*Note: There will eventually be an AIPlayer.kt that is an implementation of
+Player with extended methods for deciding where to place the puck*
+
 
 
