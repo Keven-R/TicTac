@@ -37,3 +37,8 @@ playMove( x : Int = if(this.playerQueue.peek()!! is AIPlayer) (this.playerQueue.
         ) : Pair<String, Boolean>
 ```
 
+### Who is playing?
+This method simply returns the current player at the time. 
+```KOTLIN
+whoIsPlaying() : Player?
+```
