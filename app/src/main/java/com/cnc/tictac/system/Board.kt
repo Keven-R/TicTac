@@ -1,7 +1,9 @@
 package com.cnc.tictac.system
 import java.util.Arrays
 import java.util.Stack
-
+/**
+ * Please See BACKEND_README.md on GITHUB for implementation information.
+ */
 typealias BoardState = Array<Array<Player?>>
 class Board(
     private val width       : Int = 3,
@@ -28,6 +30,9 @@ class Board(
     }
     fun getBoardState() : BoardState {
         return this.boardState
+    }
+    fun getConstraints() : Pair<Int, Int>{
+        return Pair(this.width, this.height)
     }
     /** placePuck ( currentPlayer , x, y )
      * ------------------------------------
