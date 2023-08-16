@@ -1,5 +1,11 @@
 # TicTac Backend
 Tic Tac Toe Game Backend Documentation
+## What can Board.kt do?
+* construct any board to any specification (can be rectangular)
+* place a puck
+* undo the previous move
+* clear the board
+* search for a win condition on the board
 
 ## Player.kt Class
 This is an abstract class that defines the general properties of a player. 
