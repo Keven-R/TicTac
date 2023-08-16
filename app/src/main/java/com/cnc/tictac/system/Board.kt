@@ -1,21 +1,33 @@
 package com.cnc.tictac.system
-import android.util.Log
+import java.util.Arrays
 import java.util.Stack
-// Board state is a nullable 2D array of players. Initially a null array.
+
 typealias BoardState = Array<Array<Player?>>
 class Board(
-    private val width           : Int               = 3,
-    private val height          : Int               = 3,
-    private val minimumWin      : Int               = 3,
-    var boardState              : BoardState        = Array(width, { Array(height, { null }) }),
-    var boardHistory            : Stack<BoardState> = Stack<BoardState>()
+    private val width       : Int = 3,
+    private val height      : Int = 3,
+    private val minimumWin  : Int = 3,
+    private var boardState          : BoardState
+                            = Array(width, { Array(height, { null }) }),
+    private var boardHistory        : Stack<BoardState>
+                            = Stack()
 ){
     /** init
      * Appends empty board state to board history
      */
     init{
         // Append initial blank board state to boardHistory stack
-        boardHistory.push(boardState)
+        boardHistory.push(this.boardState.deepCopy())
+    }
+
+    /**
+     * Accessor methods
+     */
+    fun getBoardHistory() : Stack<BoardState> {
+        return this.boardHistory
+    }
+    fun getBoardState() : BoardState {
+        return this.boardState
     }
     /** placePuck ( currentPlayer , x, y )
      * ------------------------------------
@@ -24,14 +36,20 @@ class Board(
      *  GameController class.
      *  If GameController attempts to place a puck out of bounds, ArrayIndexOutOfBoundsException is
      *  caught, and "false" is returned by the function.
+     *  Additionally, if the GameController attempts to place a puck in an occupied zone, false is
+     *  returned.
      */
     fun placePuck(currentPlayer : Player, x : Int, y : Int) : Boolean{
-        return try {
-            this.boardState[x][y] = currentPlayer
-            this.boardHistory.push(this.boardState)
-            true
+        try {
+            if(this.boardState[x][y] == null){
+                this.boardState[x][y] = currentPlayer
+                boardHistory.push(this.boardState.deepCopy())
+                return true
+            } else {
+                return false
+            }
         } catch (e : ArrayIndexOutOfBoundsException){
-            false
+            return false
         }
     }
     /** undoPreviousMove (void)
@@ -44,6 +62,7 @@ class Board(
         this.boardState = this.boardHistory.peek()
     }
     /** clearGameBoard()
+     * -------------------
      * Calling this method clears the boardState to null, and empties the boardHistory stack.
      */
     fun clearGameBoard(){
@@ -53,38 +72,71 @@ class Board(
         this.boardHistory.clear()
         this.boardHistory.push(this.boardState)
     }
-
     /** searchWinCondition()
-     *
+     * ----------------------
+     *  Performs convolutions to search for win conditions on the board
      */
-    fun searchWinCondition(){
-        for(ey in boardState){
-            for(ex in ey){
-                Log.d("BoardState", ex.toString())
+    fun searchWinCondition(currentPlayer : Player) : Pair<String, Boolean>{
+        // Convolutional templates for calculation
+        val convVertical = Array(this.minimumWin, { Array(1, {1}) })
+        val convHorisontal = Array(1, { Array(this.minimumWin, {1}) })
+        val convDiagonal1 = Array(this.minimumWin, {index1 -> Array(this.minimumWin, {index2 -> if(index1 == index2){ 1 } else{ 0 } })})
+        val convDiagonal2 = Array(this.minimumWin, {index1 -> Array(this.minimumWin, {index2 -> if((this.width - index1) == index2){ 1 } else{ 0 } })})
+
+        val positionMap = Array(this.boardState.size, { Array<Int>(this.boardState[0].size, { 0 }) })
+        for(y in 0 until this.boardState.size)
+            for(x in 0 until this.boardState[0].size)
+                positionMap[y][x] = if(this.boardState[x][y] == currentPlayer) {1} else {0}
+
+        val convolutionVertical     = positionMap.convolution2D(convVertical)
+        val convolutionHorisontal   = positionMap.convolution2D(convHorisontal)
+        val convolutionDiagonal1    = positionMap.convolution2D(convDiagonal1)
+        val convolutionDiagonal2    = positionMap.convolution2D(convDiagonal2)
+
+        return if(Arrays.stream(convolutionVertical).anyMatch   { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} })
+            Pair("Vertical", true)
+        else if(Arrays.stream(convolutionHorisontal).anyMatch   { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} })
+            Pair("Horisontal", true)
+        else if(Arrays.stream(convolutionDiagonal1).anyMatch    { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
+            || Arrays.stream(convolutionDiagonal2).anyMatch     { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} })
+            Pair("Diagonal", true)
+        else
+            Pair("", false)
+    }
+
+    /** Convolution2D
+     * ---------------
+     *  Performs 2D convolution between two 2D arrays
+     */
+    private fun Array<Array<Int>>.convolution2D(operand : Array<Array<Int>>) : Array<Array<Int>>{
+        val result = Array(this.size, { Array(this[0].size, { 0 }) })
+        for(y in 0 until this.size){
+            for(x in 0 until this[0].size){
+                //(x, y) is the middle position of the convolution, (OR IT COULD BE THE TOP LEFT, for compat with even squares)
+                var sum = 0
+                for(y2 in 0 until operand.size){
+                    for(x2 in 0 until operand[0].size){
+                        //(x2, y2) is the operand sub position
+                        sum += this[if(y+y2 < this.size) y+y2 else break][if(x+x2 < this[0].size) x+x2 else break] * operand[y2][x2]
+                    }
+                    result[y][x] = sum
+                }
             }
         }
+        return result
     }
-    /** toString()
-     *  This method converts the board to a string (for debugging)
+    /** deepCopy()
+     * ------------
+     *  This method copies the MutableList<MutableList<Player?>> method deeply,
+     *  meaning all elemenents are copied, not just the top level List
      */
-    override fun toString() : String{
-        var boardString = ""
-        for(index in this.boardHistory){
-            boardString += index.convertToString()
-            boardString += " \\/ "
+    private fun Array<Array<Player?>>.deepCopy() : Array<Array<Player?>>{
+        var new = this.clone()
+        for(x in 0 until this.size){
+            new[x] = this[x].clone()
+            for(y in 0 until this[0].size)
+                new[x][y] = this[x][y]?.copy()
         }
-        boardString += " _____ "
-        return boardString
-    }
-    fun BoardState.convertToString() : String{
-        var boardString = ""
-        for(y in this){
-            for(x in y){
-                boardString += x.toString()
-                boardString += ", "
-            }
-            boardString += "\n"
-        }
-        return boardString
+        return new
     }
 }

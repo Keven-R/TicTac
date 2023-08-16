@@ -1,6 +1,9 @@
 import com.cnc.tictac.system.Board
 import com.cnc.tictac.system.HumanPlayer
 import com.cnc.tictac.system.Player
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
 /**
@@ -14,12 +17,10 @@ class BoardUnitTest {
     fun constructor_isCorrect() {
         var board : Board = Board()
         // Confirm that board is of the correct dimensions
-        assert(board.boardState.size == 3)
-        assert(board.boardState[0].size == 3)
-        // Confirm that board history is equal to current board state
-        assert(board.boardHistory.peek() == board.boardState)
+        assertEquals(board.getBoardState().size, 3)
+        assertEquals(board.getBoardState()[0].size, 3)
         // Confirm board is initialised to null
-        assert(board.boardHistory.peek()[0][0] == null)
+        assertEquals(board.getBoardHistory().last()[0][0], null)
     }
     /**
      * placePuck test modules
@@ -30,15 +31,15 @@ class BoardUnitTest {
         var player : Player = HumanPlayer()
         board.placePuck(player, 0, 0)
         // Confirm player marker is placed on board
-        assert(board.boardState[0][0] == player)
+        assertEquals(board.getBoardState()[0][0]?.playerID, player.playerID)
         // Confirm board history is updated with event
-        assert(board.boardHistory.peek()[0][0] == player)
+        assertEquals(board.getBoardHistory().last()[0][0]?.playerID, player.playerID)
     }
     @Test
     fun placePuck_errorHandling() {
         var board : Board = Board()
         var player : Player = HumanPlayer()
-        assert(!board.placePuck(player, 100, 100))
+        assertTrue(!board.placePuck(player, 100, 100))
     }
     /**
      * undoPreviousMove test modules
@@ -47,30 +48,52 @@ class BoardUnitTest {
     fun undoPreviousMove_isCorrect(){
         var board : Board = Board()
         var player : Player = HumanPlayer()
-
-        println("State 1: \n ${board.toString()}")
-
         board.placePuck(player, 0, 0)
-        println("State 2: \n ${board.toString()}")
-
         board.placePuck(player, 1, 1)
-        println("State 3: \n ${board.toString()}")
-
-        var boardState1 = board.boardHistory.peek() // History of board before puck placement
-        println("State 4: \n ${board.toString()}")
-
+        var boardState1 = board.getBoardHistory().last() // History of board before puck placement
         board.placePuck(player, 2, 0)
-        var boardState2 = board.boardHistory.peek() // History of board after pluck placement
-        println("State 5: \n ${board.toString()}")
-
+        var boardState2 = board.getBoardHistory().last() // History of board after pluck placement
         board.undoPreviousMove()
-        var boardState3 = board.boardHistory.peek() // History of board after undo-ing previous move
-        println("State 6: \n ${board.toString()}")
+        var boardState3 = board.getBoardHistory().last() // History of board after undo-ing previous move
+        assertNotEquals(boardState1, boardState2)
+        assertEquals(boardState1, boardState3)
+        assertNotEquals(boardState2, boardState3)
+    }
+    /**
+     * clearGameBoard test modules
+     */
+    @Test
+    fun clearGameBoard_isCorrect(){
+        var board : Board = Board()
+        var player : Player = HumanPlayer()
+        board.placePuck(player, 0, 0)
+        board.placePuck(player, 1, 1)
+        board.clearGameBoard()
+        assertEquals(board.getBoardState()[0][0], null)
+    }
+    /**
+     * searchWinCondition test modules
+     */
+    @Test
+    fun searchWinCondition_isCorrect(){
+        var board : Board = Board(width = 6, height = 6, minimumWin = 4)
+        var player : Player = HumanPlayer()
+        board.placePuck(player, 2, 0)
+        board.placePuck(player, 0, 2)
+        //board.placePuck(player, 0, 2)
+        board.placePuck(player, 3, 0)
+        board.placePuck(player, 4, 0)
+        board.placePuck(player, 5, 0)
 
-        assert(!boardState1.contentEquals(boardState2))
-        assert(boardState1.contentEquals(boardState3))
-        assert(!boardState2.contentEquals(boardState3))
+        board.placePuck(player, 4, 1)
+        board.placePuck(player, 5, 2)
 
+        board.placePuck(player, 2, 2)
+        board.placePuck(player, 3, 3)
+        board.placePuck(player, 4, 4)
+        board.placePuck(player, 5, 5)
+        //board.placePuck(player, 2, 0)
 
+        assertEquals(board.searchWinCondition(player).second, true)
     }
 }
