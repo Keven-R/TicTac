@@ -2,6 +2,7 @@
 Tic Tac Toe Game Backend Documentation
 ## What can Board.kt do?
 * construct any board to any specification (can be rectangular)
+* define the number of pucks needed to win
 * place a puck
 * undo the previous move
 * clear the board
