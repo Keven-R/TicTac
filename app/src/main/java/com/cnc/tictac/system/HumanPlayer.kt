@@ -5,9 +5,9 @@ class HumanPlayer(
     // Player-set username.
     playerID        : Long                  = 1L,
     // Unique player ID (system generated).
-    playerIcon      : Pair<Int, String>    = Pair(R.drawable.avatar, "Null Player Icon"),
+    playerIcon      : Pair<Int, String>    = Pair(R.drawable.test_avatar, "Null Player Icon"),
     // Pair for player icon: Resource, and description.
-    playerAvatar    : Pair<Int, String>    = Pair(R.drawable.avatar, "Null Player Icon"),
+    playerAvatar    : Pair<Int, String>    = Pair(R.drawable.test_avatar, "Null Player Icon"),
     // Pair for avatar image: Resource, and description.
 ) : Player (playerName, playerID, playerIcon, playerAvatar) {
     override fun toString(): String {
