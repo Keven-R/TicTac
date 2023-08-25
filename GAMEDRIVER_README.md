@@ -7,7 +7,7 @@
   - [Undo Previous Move](#undo-previous-move)
   - [Reset Game Board](#reset-game-board)
   - [Reset Game Driver](#reset-game-driver)
-  - [Create Game Board](#create-game-board)
+  - [Create New Board](#create-new-board)
 - [Player Operations](#player-operations)
   - [Editing a Player Attribute](#editing-a-player-attribute)
   - [Remove a Player from the Datbase](#remove-a-player-from-the-database)
