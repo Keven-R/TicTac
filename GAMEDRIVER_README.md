@@ -13,7 +13,7 @@
   - [Remove a Player from the Datbase](#remove-player-from-database)
   - [Get Players from the Database](#get-players-in-database)
   - [Get a Player from the Database](#get-a-player-from-the-database)
-  - [Get a Player's Win Stats from the Database](#get-a-player's-win-stats-from-the-database)
+  - [Get a Player's Win Stats from the Database](#get-a-players-win-stats-from-the-database)
   - [Add a Player to the Database](#add-a-player-to-the-database)
   - [Add a Player to the Current Game](#add-a-player-to-the-current-game)
   - [Increment a Player's Wins](#increment-a-players-wins)
