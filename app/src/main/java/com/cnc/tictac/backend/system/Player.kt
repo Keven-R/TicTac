@@ -1,6 +1,4 @@
-package com.cnc.tictac.system
-
-import android.graphics.drawable.Drawable
+package com.cnc.tictac.backend.system
 
 abstract class Player(
     playerName  : String, // Player-set username.

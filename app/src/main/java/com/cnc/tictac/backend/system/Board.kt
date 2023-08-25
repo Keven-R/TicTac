@@ -1,13 +1,13 @@
-package com.cnc.tictac.system
+package com.cnc.tictac.backend.system
+
 import android.util.Log
 import java.util.Stack
-// Board state is a nullable 2D array of players. Initially a null array.
 typealias BoardState = Array<Array<Player?>>
 class Board(
     private val width           : Int               = 3,
     private val height          : Int               = 3,
     private val minimumWin      : Int               = 3,
-    var boardState              : BoardState        = Array(width, { Array(height, { null }) }),
+    var boardState              : BoardState = Array(width, { Array(height, { null }) }),
     var boardHistory            : Stack<BoardState> = Stack<BoardState>()
 ){
     /** init

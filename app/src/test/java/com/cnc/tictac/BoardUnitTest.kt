@@ -1,6 +1,6 @@
-import com.cnc.tictac.system.Board
-import com.cnc.tictac.system.HumanPlayer
-import com.cnc.tictac.system.Player
+import com.cnc.tictac.backend.system.system.Board
+import com.cnc.tictac.backend.system.system.HumanPlayer
+import com.cnc.tictac.backend.system.system.Player
 import org.junit.Test
 
 /**
