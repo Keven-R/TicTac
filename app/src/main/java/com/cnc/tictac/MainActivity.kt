@@ -15,6 +15,10 @@ import com.cnc.tictac.viewmodel.TicTacViewModel
 
 private const val TAG = "MainActivity"
 
+
+/**
+ * Main activity for TicTac app
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.v(TAG, "MainActivity Created")
