@@ -25,12 +25,12 @@ class GameDriverInstrumentedTest {
 
         assert(db_Player2 != null)
         assert(player2.playerName == db_Player2!!.playerName)
-        assert(player2.playerID == db_Player2!!.playerID)
+        assert(player2.playerID == db_Player2.playerID)
         assert(player2.equals(db_Player2))
 
         assert(db_Player1 != null)
         assert(player1.playerName == db_Player1!!.playerName)
-        assert(player1.playerID == db_Player1!!.playerID)
+        assert(player1.playerID == db_Player1.playerID)
         assert(player1.equals(db_Player1))
     }
 
@@ -60,7 +60,7 @@ class GameDriverInstrumentedTest {
 
         this.gd.editPlayerAttribute(player, "playerID", 11443322)
         var playerDB2 = this.gd.getPlayerFromDatabase(11443322)
-        assert(playerDB!!.playerName == "Johnny")
+        assert(playerDB.playerName == "Johnny")
     }
 
     @Test
