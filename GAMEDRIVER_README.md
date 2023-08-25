@@ -91,7 +91,7 @@ GameDriver.addPlayerToGame(newPlayer : Player? = HumanPlayer())
 ```
 * Adds a given player object to the `playerQueue` of the game driver.
 * Players must be in the queue in order to play moves.
-### Increment a Players Wins (Not implemented yet)
+### Increment a Players Wins (Not implemented yet) 
 ```KOTLIN
 GameDriver.increaseWins(playerID : Int)
 ```
