@@ -1,0 +1,36 @@
+Possible events that may occur in the front end to be handled by the game driver.
+
+
+1) Initialisation**
+    > new game config and board
+    > load players from database and populate player queue
+
+2) Add player**
+    > create blank player
+    > add player to database
+
+3) Add player to game**
+    > fetch player from database by ID
+    > add player to game queue
+
+4) Add AI Player to game**
+    > create AI player
+    > add AI player to game
+
+5) edit Player Attribute**
+    > Find player in database by ID
+    > modify specified property in database
+
+6) fetch all players from database**
+7) fetch a specific player from database**
+
+8) see who's turn it is**
+9) place puck**
+10) undo previous turn**
+11) reset game board**
+12) Quit game early without updating database**
+
+12) set game paramaters
+    > get paramaters
+    > recreate board object
+
