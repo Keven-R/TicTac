@@ -3,7 +3,26 @@
 - [Class Variables](#class-variables)
 - [Initialisation](#initialisation)
 - [Game Mechanics](#game-mechanics)
--   [Play Move](#play-move)
+  - [Play Move](#play-move)
+  - [Undo Previous Move](#undo-previous-move)
+  - [Reset Game Board](#reset-game-board)
+  - [Reset Game Driver](#reset-game-driver)
+  - [Create Game Board](#create-game-board)
+- [Player Operations](#player-operations)
+  - [Editing a Player Attribute](#editing-a-player-attribute)
+  - [Remove a Player from the Datbase](#remove-a-player-from-the-database)
+  - [Get Players from the Database](#get-players-from-the-database)
+  - [Get a Player from the Database](#get-a-player-from-the-database)
+  - [Get a Player's Win Stats from the Database](#get-a-player's-win-stats-from-the-database)
+  - [Add a Player to the Database](#add-a-player-to-the-database)
+  - [Add a Player to the Current Game](#add-a-player-to-the-current-game)
+  - [Increment a Player's Wins](#increment-a-players-wins)
+  - [Increment a Player's Draws](#increment-a-players-draws)
+  - [Increment a Player's Losses](#increment-a-players-losses)
+- [Accessors](#accessors)
+  - [Who is Playing Right Now?](#who-is-playing-right-now?)
+  - [Get the Game Board](#get-the-game-board)
+  - [Get a Copy of the Player Queue](#get-a-copy-of-the-player-queue)  
 ## Class Variables
 ```KOTLIN
 (private var) board           : Board                                    //-> from Board.kt
@@ -96,15 +115,18 @@ GameDriver.addPlayerToGame(newPlayer : Player? = HumanPlayer())
 ```
 * Adds a given player object to the `playerQueue` of the game driver.
 * Players must be in the queue in order to play moves.
-### Increment a Players Wins (Not implemented yet) 
+### Increment a Players Wins 
+#### (Not implemented yet) 
 ```KOTLIN
 GameDriver.increaseWins(playerID : Int)
 ```
-### Increment a Players Losses (Not implemented yet)
+### Increment a Players Losses 
+#### (Not implemented yet)
 ```KOTLIN
 GameDriver.increaseLosses(playerID : Int)
 ```
-### Increment a Players Draws (Not implemented yet)
+### Increment a Players Draws 
+#### (Not implemented yet)
 ```KOTLIN
 GameDriver.increaseDraws(playerID : Int)
 ```
