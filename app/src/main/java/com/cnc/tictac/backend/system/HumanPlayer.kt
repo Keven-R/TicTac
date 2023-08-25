@@ -1,5 +1,4 @@
 package com.cnc.tictac.backend.system
-import com.cnc.tictac.R
 import com.cnc.tictac.backend.database.PlayerSerializer
 import kotlinx.serialization.Serializable
 
@@ -9,9 +8,9 @@ class HumanPlayer(
     // Player-set username.
     playerID        : Int?                 = null,
     // Unique player ID (system generated).
-    playerIcon      : Pair<Int, String>    = Pair(R.drawable.avatar, "Null Player Icon"),
+    playerIcon      : Pair<Int, String>    = Pair(0, "Null Player Icon"),
     // Pair for player icon: Resource, and description.
-    playerAvatar    : Pair<Int, String>    = Pair(R.drawable.avatar, "Null Player Icon"),
+    playerAvatar    : Pair<Int, String>    = Pair(0, "Null Player Icon"),
     // Pair for avatar image: Resource, and description.
 ) : Player (playerName, playerID, playerIcon, playerAvatar) {
     init{
