@@ -20,7 +20,7 @@
   - [Increment a Player's Draws](#increment-a-players-draws)
   - [Increment a Player's Losses](#increment-a-players-losses)
 - [Accessors](#accessors)
-  - [Who is Playing Right Now?](#who-is-playing-right-now?)
+  - [Who is Playing Right Now?](#who-is-playing-right-now)
   - [Get the Game Board](#get-the-game-board)
   - [Get a Copy of the Player Queue](#get-a-copy-of-the-player-queue)  
 ## Class Variables
