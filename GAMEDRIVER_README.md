@@ -1,6 +1,9 @@
 # Tic Tac GameDriver.kt Documentation
 ## Contents 
-- [Class Variables](#class-variables) 
+- [Class Variables](#class-variables)
+- [Initialisation](#initialisation)
+- [Game Mechanics](#game-mechanics)
+-   [Play Move](#play-move)
 ## Class Variables
 ```KOTLIN
 (private var) board           : Board                                    //-> from Board.kt
