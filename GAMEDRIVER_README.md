@@ -1,4 +1,6 @@
 # Tic Tac GameDriver.kt Documentation
+## Contents 
+- [Class Variables](#class-variables) 
 ## Class Variables
 ```KOTLIN
 (private var) board           : Board                                    //-> from Board.kt
