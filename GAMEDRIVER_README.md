@@ -11,7 +11,7 @@
 - [Player Operations](#player-operations)
   - [Editing a Player Attribute](#editing-a-player-attribute)
   - [Remove a Player from the Datbase](#remove-player-from-database)
-  - [Get Players from the Database](#get-players-from-database)
+  - [Get Players from the Database](#get-players-in-database)
   - [Get a Player from the Database](#get-a-player-from-the-database)
   - [Get a Player's Win Stats from the Database](#get-a-player's-win-stats-from-the-database)
   - [Add a Player to the Database](#add-a-player-to-the-database)
