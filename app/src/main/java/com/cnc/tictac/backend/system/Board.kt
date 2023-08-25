@@ -1,9 +1,15 @@
-package com.cnc.tictac.system
+package com.cnc.tictac.backend.system
 import java.util.Arrays
 import java.util.Stack
 /**
  * Please See BACKEND_README.md on GITHUB for implementation information.
  */
+enum class WinCondition{
+    WIN,
+    NO_WIN,
+    DRAW
+}
+
 typealias BoardState = Array<Array<Player?>>
 class Board(
     private val width       : Int = 3,
@@ -12,7 +18,8 @@ class Board(
     private var boardState          : BoardState
                             = Array(width, { Array(height, { null }) }),
     private var boardHistory        : Stack<BoardState>
-                            = Stack()
+                            = Stack(),
+    private var movesMade   : Int = 0,
 ){
     /** init
      * Appends empty board state to board history
@@ -49,6 +56,7 @@ class Board(
             if(this.boardState[x][y] == null){
                 this.boardState[x][y] = currentPlayer
                 boardHistory.push(this.boardState.deepCopy())
+                this.movesMade ++
                 return true
             } else {
                 return false
@@ -80,8 +88,10 @@ class Board(
     /** searchWinCondition()
      * ----------------------
      *  Performs convolutions to search for win conditions on the board
+     *  Modified: 23/08... Allows searching for DRAWS now. Modified output to be an enum, reduces
+     *  errors associated with using strings.
      */
-    fun searchWinCondition(currentPlayer : Player) : Pair<String, Boolean>{
+    fun searchWinCondition(currentPlayer : Player) : WinCondition{
         // Convolutional templates for calculation
         val convVertical = Array(this.minimumWin, { Array(1, {1}) })
         val convHorisontal = Array(1, { Array(this.minimumWin, {1}) })
@@ -98,17 +108,16 @@ class Board(
         val convolutionDiagonal1    = positionMap.convolution2D(convDiagonal1)
         val convolutionDiagonal2    = positionMap.convolution2D(convDiagonal2)
 
-        return if(Arrays.stream(convolutionVertical).anyMatch   { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} })
-            Pair("Vertical", true)
-        else if(Arrays.stream(convolutionHorisontal).anyMatch   { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} })
-            Pair("Horisontal", true)
-        else if(Arrays.stream(convolutionDiagonal1).anyMatch    { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
+        return if(Arrays.stream(convolutionVertical).anyMatch   { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
+            || Arrays.stream(convolutionHorisontal).anyMatch    { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
+            || Arrays.stream(convolutionDiagonal1).anyMatch     { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
             || Arrays.stream(convolutionDiagonal2).anyMatch     { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} })
-            Pair("Diagonal", true)
+            WinCondition.WIN
+        else if(this.movesMade == this.width * this.height)
+            WinCondition.DRAW
         else
-            Pair("", false)
+            WinCondition.NO_WIN
     }
-
     /** Convolution2D
      * ---------------
      *  Performs 2D convolution between two 2D arrays
