@@ -1,9 +1,11 @@
 package com.cnc.tictac.ui.components
 
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-
+import androidx.compose.ui.Modifier
 
 // TODO
 /* PRIMARY BUTTON
@@ -12,16 +14,17 @@ import androidx.compose.runtime.Composable
  *  - HomeScreen: Game mode select
  *
  * @param[label] Button text label
- * @param[onClick] function
+ * @param[onClickAction] Action performed on cl
  */
 @Composable
 fun PrimaryButton(
-    label: String,
-    onClick: () -> Unit,
+    label: String
 ) {
-    Button(
-        onClick = onClick,
-    ) {
-        Text(label)
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onPrimary,
+        )
     }
 }

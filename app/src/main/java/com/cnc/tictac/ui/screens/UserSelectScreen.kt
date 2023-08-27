@@ -1,4 +1,8 @@
 package com.cnc.tictac.ui.screens
 
-class UserSelectScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun UserSelectScreen() {
+
 }

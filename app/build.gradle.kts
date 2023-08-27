@@ -6,6 +6,8 @@ plugins {
 android {
     namespace = "com.cnc.tictac"
     compileSdk = 33
+    // Use latest compileSDK version, source: https://stackoverflow.com/questions/76888624/is-the-mincompilesdk-of-jetpack-compose-1-5-api-level-34
+    compileSdkPreview = "UpsideDownCake"
 
     defaultConfig {
         applicationId = "com.cnc.tictac"
@@ -57,6 +59,7 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.5.0")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.1.1") // Set to 1.1.1 to remove experimental features
     testImplementation("junit:junit:4.13.2")

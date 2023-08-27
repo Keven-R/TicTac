@@ -1,4 +1,9 @@
 package com.cnc.tictac.ui.screens
 
-class GameSettingsScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+// Added default TicTacViewModel() arg to enable preview
+fun GameSetingsScreen() {
+
 }

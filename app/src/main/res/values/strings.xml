@@ -1,10 +1,13 @@
 <resources>
+    <!-- App -->
     <string name="app_name">Tic Tac</string>
+    <string name="app_display_name">tic:tac</string>
 
     <!-- TODO -->
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->
     <!-- Buttons -->
-    <string name="button_gamemode_solo">1-player</string>
-    <string name="button_gamemode_multi">2-player</string>
+    <string name="button_play_solo">single player</string>
+    <string name="button_play_multi">multiplayer</string>
+    <string name="button_profile">profile</string>
 
 </resources>
