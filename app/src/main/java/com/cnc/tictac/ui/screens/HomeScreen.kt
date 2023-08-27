@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.cnc.tictac.ui.system.*
 
 // COMPONENT imports
 import com.cnc.tictac.ui.components.PrimaryButton
@@ -21,8 +22,34 @@ import com.cnc.tictac.ui.components.PrimaryButton
 // RESOURCES import
 import com.cnc.tictac.R.string as content
 
+/* TODO
+ * [ ] Test landscape
+ * [ ] DisplayExpandedHomeScreen
+ * [ ] Test landscape
+ */
+
 @Composable
 fun HomeScreen() {
+    // Determine UI layout.
+    val deviceInfo = getDeviceInfo()
+    
+    if(deviceInfo.screenWidthType is DeviceInfo.DeviceType.Compact) {
+        DisplayCompactHomeScreen()
+    } else {
+        DisplayExpandedHomeScreen()
+    }
+}
+
+/* COMPOSABLE
+ * DisplayCompactHomeScreen
+ *
+ * UI for home screen for the following devices and orientation:
+ *      COMPACT (Mobile portrait)
+ *
+ * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
+ */
+@Composable
+fun DisplayCompactHomeScreen() {
     // UI: Screen container
     Box(
         modifier = Modifier
@@ -36,7 +63,8 @@ fun HomeScreen() {
                     top = 64.dp,
                     bottom = 120.dp,
                     start = 16.dp,
-                    end = 16.dp),
+                    end = 16.dp
+                ),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             // UI: App logo
@@ -76,4 +104,17 @@ fun HomeScreen() {
             }
         }
     }
+}
+
+/* COMPOSABLE
+ * DisplayExpandedHomeScreen
+ *
+ * UI for home screen for the following devices and orientation:
+ *      MEDIUM (Mobile landscape, tablet portrait)
+ *      EXPANDED (Tablet landscape)
+ *
+ * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
+ */
+@Composable
+fun DisplayExpandedHomeScreen() {
 }
