@@ -29,6 +29,7 @@ fun TicTacTheme(
         DarkColors
     }
 
+    // App colour scheme and typography
     MaterialTheme(
         colorScheme = colors,
         content = content,
