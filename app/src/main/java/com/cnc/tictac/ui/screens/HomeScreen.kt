@@ -14,10 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.cnc.tictac.Destination
 import com.cnc.tictac.ui.system.*
 
 // COMPONENT imports
 import com.cnc.tictac.ui.components.PrimaryButton
+import com.cnc.tictac.viewmodel.TicTacViewModel
 
 // RESOURCES import
 import com.cnc.tictac.R.string as content
@@ -29,14 +32,14 @@ import com.cnc.tictac.R.string as content
  */
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     // Determine UI layout.
     val deviceInfo = getDeviceInfo()
     
     if(deviceInfo.screenWidthType is DeviceInfo.DeviceType.Compact) {
-        DisplayCompactHomeScreen()
+        DisplayCompactHomeScreen(navController)
     } else {
-        DisplayExpandedHomeScreen()
+        DisplayExpandedHomeScreen(navController)
     }
 }
 
@@ -49,7 +52,7 @@ fun HomeScreen() {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayCompactHomeScreen() {
+fun DisplayCompactHomeScreen(navController: NavHostController) {
     // UI: Screen container
     Box(
         modifier = Modifier
@@ -93,14 +96,14 @@ fun DisplayCompactHomeScreen() {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     // TODO: Add destination (game settings) to onclick event
-                    PrimaryButton(stringResource(id = content.button_play_solo))
+                    PrimaryButton(stringResource(id = content.button_play_solo),navController, Destination.GameSettingsScreen)
                     // TODO: Add destination (player select) to onclick event
-                    PrimaryButton(stringResource(id = content.button_play_multi))
+                    PrimaryButton(stringResource(id = content.button_play_multi),navController, Destination.GameSettingsScreen)
                 }
 
                 // UI: View profile action
                 // TODO: Add destination (player select) to onclick event
-                PrimaryButton(stringResource(id = content.button_profile))
+                PrimaryButton(stringResource(id = content.button_profile),navController, Destination.UserSelectScreen)
             }
         }
     }
@@ -116,5 +119,5 @@ fun DisplayCompactHomeScreen() {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayExpandedHomeScreen() {
+fun DisplayExpandedHomeScreen(navController: NavHostController) {
 }

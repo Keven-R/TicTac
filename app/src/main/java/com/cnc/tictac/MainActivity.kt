@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cnc.tictac.ui.screens.*
 import com.cnc.tictac.ui.theme.TicTacTheme
-//import com.cnc.tictac.viewmodel.TicTacViewModel
+import com.cnc.tictac.viewmodel.TicTacViewModel
 
 private const val TAG = "MainActivity"
 
@@ -35,26 +35,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TicTacTheme {
+                val viewModel = viewModel<TicTacViewModel>()
                 val navController = rememberNavController()
-                // val viewModel = viewModel<TicTacViewModel>()
-
-                NavigationAppHost(navController = navController)
+                NavigationAppHost(navController, viewModel)
             }
         }
     }
 }
 
 @Composable
-fun NavigationAppHost (navController: NavHostController) {
+fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewModel) {
     NavHost(
         navController = navController,
         startDestination = Destination.HomeScreen.route
     ){
-        composable(route = Destination.HomeScreen.route){ HomeScreen() }
-        composable(route = Destination.GameScreen.route){ GameScreen() }
-        composable(route = Destination.GameSettingsScreen.route){ GameSetingsScreen() }
-        composable(route = Destination.UserDetailScreen.route){ UserDetailScreen() }
-        composable(route = Destination.UserSelectScreen.route){ UserSelectScreen() }
-        composable(route = Destination.UserStatsScreen.route){ UserStatsScreen() }
+        composable(route = Destination.HomeScreen.route){ HomeScreen(navController) }
+        composable(route = Destination.GameScreen.route){ GameScreen(navController,viewModel) }
+        composable(route = Destination.GameSettingsScreen.route){ GameSettingsScreen(navController,viewModel) }
+        composable(route = Destination.UserDetailScreen.route){ UserDetailScreen(navController,viewModel) }
+        composable(route = Destination.UserSelectScreen.route){ UserSelectScreen(navController,viewModel) }
+        composable(route = Destination.UserStatsScreen.route){ UserStatsScreen(navController,viewModel) }
     }
 }
