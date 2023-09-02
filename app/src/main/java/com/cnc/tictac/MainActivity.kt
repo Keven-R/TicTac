@@ -23,7 +23,7 @@ sealed class Destination(val route: String){
     object GameSettingsScreen: Destination("settings")
     object UserDetailScreen: Destination("edit_info")
     object UserSelectScreen: Destination("player_select")
-    object UserStatsScreen: Destination("stats")
+    object ProfileScreen: Destination("profile")
 }
 
 /**
@@ -54,6 +54,6 @@ fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewMo
         composable(route = Destination.GameSettingsScreen.route){ GameSettingsScreen(navController,viewModel) }
         composable(route = Destination.UserDetailScreen.route){ UserDetailScreen(navController,viewModel) }
         composable(route = Destination.UserSelectScreen.route){ UserSelectScreen(navController,viewModel) }
-        composable(route = Destination.UserStatsScreen.route){ UserStatsScreen(navController,viewModel) }
+        composable(route = Destination.ProfileScreen.route){ ProfileScreen(navController,viewModel) }
     }
 }

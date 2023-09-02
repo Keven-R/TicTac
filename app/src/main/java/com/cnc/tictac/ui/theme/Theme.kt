@@ -9,13 +9,17 @@ import androidx.compose.runtime.Composable
 // Both DarkColorScheme and LightColorScheme have the same colours for now.
 // TODO: if there is time, add LightColorScheme
 private val DarkColors = darkColorScheme(
-    primary = DarkPrimary,
-    onPrimary = DarkInverse,
+    primary = DarkNeutral100,
+    onPrimary = DarkNeutral00,
+    outline = DarkNeutral00.copy(alpha = 0.16f),
+    outlineVariant = DarkNeutral00.copy(alpha = 0.4f)
 )
 
 private val LightColors = lightColorScheme(
-    primary = DarkPrimary,
-    onPrimary = DarkInverse,
+    primary = DarkNeutral100,
+    onPrimary = DarkNeutral00,
+    outline = DarkNeutral00.copy(alpha = 0.16f),
+    outlineVariant = DarkNeutral00.copy(alpha = 0.4f)
 )
 
 @Composable

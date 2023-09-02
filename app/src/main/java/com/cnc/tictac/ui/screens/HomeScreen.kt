@@ -19,8 +19,7 @@ import com.cnc.tictac.Destination
 import com.cnc.tictac.ui.system.*
 
 // COMPONENT imports
-import com.cnc.tictac.ui.components.PrimaryButton
-import com.cnc.tictac.viewmodel.TicTacViewModel
+import com.cnc.tictac.ui.components.DisplayButton
 
 // RESOURCES import
 import com.cnc.tictac.R.string as content
@@ -96,14 +95,14 @@ fun DisplayCompactHomeScreen(navController: NavHostController) {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     // TODO: Add destination (game settings) to onclick event
-                    PrimaryButton(stringResource(id = content.button_play_solo),navController, Destination.GameSettingsScreen)
+                    DisplayButton(stringResource(id = content.button_play_solo),navController, Destination.GameSettingsScreen)
                     // TODO: Add destination (player select) to onclick event
-                    PrimaryButton(stringResource(id = content.button_play_multi),navController, Destination.GameSettingsScreen)
+                    DisplayButton(stringResource(id = content.button_play_multi),navController, Destination.GameSettingsScreen)
                 }
 
                 // UI: View profile action
                 // TODO: Add destination (player select) to onclick event
-                PrimaryButton(stringResource(id = content.button_profile),navController, Destination.UserSelectScreen)
+                DisplayButton(stringResource(id = content.button_profile),navController, Destination.ProfileScreen)
             }
         }
     }

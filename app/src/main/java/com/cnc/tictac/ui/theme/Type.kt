@@ -26,17 +26,33 @@ val Inter = FontFamily(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    // USES: App logo on HomeScreen.kt
+    /* USES
+     *
+     * - App logo on HomeScreen.kt
+     */
     displaySmall = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight(700),
         fontSize = 24.sp
     ),
 
-    // USE: Links on HomeScreen.kt
+    /* USES
+     *
+     * - Buttons on HomeScreen.kt
+     */
     headlineLarge = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight(700),
         fontSize = 48.sp
-    )
+    ),
+
+    /* USES
+     *
+     * - Buttons on HomeScreen.kt
+     */
+    labelSmall = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight(700),
+        fontSize = 16.sp
+    ),
 )
