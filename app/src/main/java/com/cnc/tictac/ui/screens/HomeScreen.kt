@@ -1,5 +1,8 @@
 package com.cnc.tictac.ui.screens
 
+// COMPONENT imports
+
+// RESOURCES import
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,12 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
-import com.cnc.tictac.ui.system.*
-
-// COMPONENT imports
 import com.cnc.tictac.ui.components.DisplayButton
-
-// RESOURCES import
+import com.cnc.tictac.ui.system.DeviceInfo
+import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.R.string as content
 
 /* TODO
@@ -34,11 +34,18 @@ import com.cnc.tictac.R.string as content
 fun HomeScreen(navController: NavHostController) {
     // Determine UI layout.
     val deviceInfo = getDeviceInfo()
-    
-    if(deviceInfo.screenWidthType is DeviceInfo.DeviceType.Compact) {
-        DisplayCompactHomeScreen(navController)
-    } else {
-        DisplayExpandedHomeScreen(navController)
+
+    // Use same UI layout for COMPACT and EXPANDED
+    when (deviceInfo.screenWidthType) {
+        is DeviceInfo.DeviceType.Compact -> {
+            DisplayCompactHomeScreen(navController)
+        }
+        is DeviceInfo.DeviceType.Expanded -> {
+            DisplayCompactHomeScreen(navController)
+        }
+        else -> {
+            DisplayMediumHomeScreen(navController)
+        }
     }
 }
 
@@ -118,5 +125,5 @@ fun DisplayCompactHomeScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayExpandedHomeScreen(navController: NavHostController) {
+fun DisplayMediumHomeScreen(navController: NavHostController) {
 }

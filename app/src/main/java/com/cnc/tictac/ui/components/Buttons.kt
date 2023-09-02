@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -103,7 +104,7 @@ fun BackButton(
  * Filled bg, fills container with, and min height of 44dp.
  *
  * Knows uses:
- *  -
+ *  - Game settings screen
  *
  * @param[label] Button text label
  * @param[onClickAction] Action performed on click
@@ -111,8 +112,23 @@ fun BackButton(
 @Composable
 fun PrimaryButton(
     label: String,
-    onClickEvent: () -> Unit
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
+    Button(
+        onClick = onClick,
+        colors = buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+        ),
+        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.secondary)),
+        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSecondary)
+    }
 }
 
 /* SecondaryButton

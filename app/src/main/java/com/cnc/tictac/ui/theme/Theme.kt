@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 private val DarkColors = darkColorScheme(
     primary = DarkNeutral100,
     onPrimary = DarkNeutral00,
+    secondary = DarkNeutral00,
+    onSecondary = DarkNeutral100,
     outline = DarkNeutral00.copy(alpha = 0.16f),
     outlineVariant = DarkNeutral00.copy(alpha = 0.4f)
 )
@@ -18,6 +20,8 @@ private val DarkColors = darkColorScheme(
 private val LightColors = lightColorScheme(
     primary = DarkNeutral100,
     onPrimary = DarkNeutral00,
+    secondary = DarkNeutral00,
+    onSecondary = DarkNeutral100,
     outline = DarkNeutral00.copy(alpha = 0.16f),
     outlineVariant = DarkNeutral00.copy(alpha = 0.4f)
 )

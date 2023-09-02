@@ -97,6 +97,7 @@ dependencies {
 
     // Compose ViewModels
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
 
     // Navigation (Has to be 2.6.0 to work with sdk 33)
     implementation("androidx.navigation:navigation-compose:2.6.0")

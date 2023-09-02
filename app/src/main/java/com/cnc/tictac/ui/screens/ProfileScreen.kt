@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -53,7 +55,7 @@ fun ProfileScreen(navController: NavHostController, viewModel: TicTacViewModel) 
 /* COMPOSABLE
  * DisplayDefaultProfileScreen
  *
- * UI for home screen for the following devices and orientation:
+ * UI for profile screen for the following devices and orientation:
  *      COMPACT (Mobile portrait)
  *      EXPANDED (Tablet landscape)
  *
@@ -87,12 +89,12 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                 )
             }
 
-            // TODO: content fill container
             // CONTAINER: User info and stats
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(1f),
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(
                     space = 32.dp,
                     alignment = Alignment.CenterVertically
@@ -118,7 +120,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                     }
 
                     // TODO: Replace string with user's name.
-                    titleMedium("jasmine")
+                    titleMedium("jasmine", modifier = Modifier.fillMaxWidth())
                 }
 
                 // CONTAINER: User's stats
@@ -127,10 +129,10 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     // TODO: replace with actual stats
-                    bodyMedium(content = "wins: 8 (33%)")
-                    bodyMedium(content = "draws: 13 (54%)")
-                    bodyMedium(content = "losses: 3 (13%)")
-                    bodyMedium(content = "total games 24", modifier = Modifier.padding(top = 8.dp))
+                    bodyMedium(content = "wins: 8 (33%)", modifier = Modifier.fillMaxWidth())
+                    bodyMedium(content = "draws: 13 (54%)", modifier = Modifier.fillMaxWidth())
+                    bodyMedium(content = "losses: 3 (13%)", modifier = Modifier.fillMaxWidth())
+                    bodyMedium(content = "total games 24", modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
                 }
             }
 
@@ -169,12 +171,10 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
     }
 }
 
-
-
 /* COMPOSABLE
  * DisplayMediumProfileScreen
  *
- * UI for home screen for the following devices and orientation:
+ * UI for profile screen for the following devices and orientation:
  *      MEDIUM (Mobile landscape, tablet portrait)
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
