@@ -87,24 +87,23 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(space = 24.dp),
+                    .verticalScroll(rememberScrollState())
+                    .padding(vertical = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(space = 32.dp),
             ) {
                 // ELEMENTS: All setting items needed to start game
                 // TODO: Remove hard coded args
                 Radio(
                     title = "your marker",
                     labels = arrayOf("x", "o"),
-                    selectedIndex = 1,
-                    modifier = Modifier.padding(top = 32.dp)
+                    selectedIndex = 0,
                 )
 
                 // TODO: Remove hard coded args
                 Radio(
                     title = "who goes first?",
                     labels = arrayOf("jasmine", "guest"),
-                    selectedIndex = 1,
-                    modifier = Modifier.padding(top = 16.dp)
+                    selectedIndex = 0,
                 )
 
                 // TODO: Remove hard coded args
@@ -112,7 +111,6 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
                     title = "board size",
                     labels = arrayOf("3x3", "4x4", "5x5"),
                     selectedIndex = 0,
-                    modifier = Modifier.padding(top = 16.dp)
                 )
 
                 // TODO: Remove hard coded args
@@ -120,19 +118,6 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
                     title = "win condition (in a row)",
                     labels = arrayOf("3", "4", "5"),
                     selectedIndex = 0,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                Radio(
-                    title = "win condition (in a row)",
-                    labels = arrayOf("3", "4", "5"),
-                    selectedIndex = 0,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                Radio(
-                    title = "win condition (in a row)",
-                    labels = arrayOf("3", "4", "5"),
-                    selectedIndex = 0,
-                    modifier = Modifier.padding(top = 16.dp)
                 )
             }
 
@@ -157,7 +142,7 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
 /* COMPOSABLE
  * DisplayMediumSettingsScreen
  *
- * UI for profile screen for the following devices and orientation:
+ * UI for game settings screen for the following devices and orientation:
  *      MEDIUM (Mobile landscape, tablet portrait)
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes

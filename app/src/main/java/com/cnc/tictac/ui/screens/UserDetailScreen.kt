@@ -12,12 +12,6 @@ import androidx.navigation.NavHostController
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 @Composable
-/* TODO
- * - Create portrait
- * - Test portrait
- * - Create landscape
- * - Test landscape
- */
 fun UserDetailScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     Box(
         modifier = Modifier

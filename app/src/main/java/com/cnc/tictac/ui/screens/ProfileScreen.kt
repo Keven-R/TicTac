@@ -163,8 +163,8 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // TODO: ADD ACTION HERE TO GO TO SWITCH USER
-                    println("switch user")
+                    // TODO: ADD CORRECT ACTION HERE not hard coded
+                    navController.navigate(Destination.UserSelectScreen.route)
                 }
             }
         }

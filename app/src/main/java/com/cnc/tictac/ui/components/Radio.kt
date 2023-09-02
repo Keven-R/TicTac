@@ -31,7 +31,7 @@ fun Radio(
     // CONTAINER: for both title and radio choices
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         titleMedium(title)
 

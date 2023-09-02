@@ -7,6 +7,8 @@
     <string name="page_title_home">home</string>
     <string name="page_title_profile">profile</string>
     <string name="page_title_settings">game settings</string>
+    <string name="page_title_select_player">select player</string>
+    <string name="page_title_switch_user">switch user</string>
 
     <!-- Profile screen content -->
     <string name="profile_action_left">edit profile</string>
