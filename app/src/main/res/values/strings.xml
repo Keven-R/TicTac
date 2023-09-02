@@ -11,7 +11,6 @@
     <string name="profile_action_left">edit profile</string>
     <string name="profile_action_right">switch user</string>
 
-
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->
     <!-- Buttons -->
     <string name="button_play_solo">single player</string>

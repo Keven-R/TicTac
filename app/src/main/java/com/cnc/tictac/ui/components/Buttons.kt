@@ -12,7 +12,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -118,7 +117,7 @@ fun PrimaryButton(
 
 /* SecondaryButton
  * Used for non-primary actions on the page.
- * Uses OutlinedButton with custom colours + fillMaxWidth.
+ * Uses OutlinedButton with custom colours + min height 44dp.
  * https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#OutlinedButton(kotlin.Function0,androidx.compose.ui.Modifier,kotlin.Boolean,androidx.compose.ui.graphics.Shape,androidx.compose.material3.ButtonColors,androidx.compose.material3.ButtonElevation,androidx.compose.foundation.BorderStroke,androidx.compose.foundation.layout.PaddingValues,androidx.compose.foundation.interaction.MutableInteractionSource,kotlin.Function1)
  *
  * Knows uses:
@@ -140,8 +139,11 @@ fun SecondaryButton(
             contentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
-        modifier = modifier
+        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
     ) {
-        Text(text = label)
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onPrimary)
     }
 }
