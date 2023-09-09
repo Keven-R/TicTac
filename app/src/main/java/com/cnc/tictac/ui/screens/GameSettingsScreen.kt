@@ -32,15 +32,12 @@ fun GameSettingsScreen(navController: NavHostController, viewModel: TicTacViewMo
     val deviceInfo = getDeviceInfo()
 
     // Use same UI layout for COMPACT and EXPANDED
-    when (deviceInfo.screenWidthType) {
+    when (deviceInfo.screenHeightType) {
         is DeviceInfo.DeviceType.Compact -> {
-            DisplayDefaultSettingsScreen(navController)
-        }
-        is DeviceInfo.DeviceType.Expanded -> {
-            DisplayDefaultSettingsScreen(navController)
+            DisplayShortSettingsScreen(navController)
         }
         else -> {
-            DisplayMediumSettingsScreen(navController)
+            DisplayDefaultSettingsScreen(navController)
         }
     }
 }
@@ -92,21 +89,20 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(space = 32.dp),
             ) {
                 // ELEMENTS: All setting items needed to start game
-                // TODO: Remove hard coded args
                 Radio(
+                    // TODO: change to "<player 1 name>'s marker"
                     title = "your marker",
                     labels = arrayOf("x", "o"),
                     selectedIndex = 0,
                 )
 
-                // TODO: Remove hard coded args
                 Radio(
                     title = "who goes first?",
+                    // TODO: change labels to "<p1 name>", "<p2 name>"
                     labels = arrayOf("jasmine", "guest"),
                     selectedIndex = 0,
                 )
 
-                // TODO: Remove hard coded args
                 Radio(
                     title = "board size",
                     labels = arrayOf("3x3", "4x4", "5x5"),
@@ -140,7 +136,7 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
 }
 
 /* COMPOSABLE
- * DisplayMediumSettingsScreen
+ * DisplayShortSettingsScreen
  *
  * UI for game settings screen for the following devices and orientation:
  *      MEDIUM (Mobile landscape, tablet portrait)
@@ -148,5 +144,91 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayMediumSettingsScreen(navController: NavHostController) {
+fun DisplayShortSettingsScreen(navController: NavHostController) {
+    // CONTAINER: Set bg colour
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primary)
+    ) {
+        // CONTAINER: All content on screen
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 32.dp, start = 16.dp, end = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
+        ) {
+            // CONTAINER: Top nav
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(32.dp)) {
+                // ELEMENT: Back button showing current page title "game settings")
+                BackButton(
+                    stringResource(id = copy.page_title_settings),
+                    Destination.HomeScreen,
+                    navController,
+                    modifier = Modifier.weight(1f).fillMaxWidth()
+                )
+
+//                // ELEMENT: Button to start game
+//                PrimaryButton(
+//                    stringResource(id = copy.settings_action_start),
+//                    modifier = Modifier.weight(1f).fillMaxWidth()
+//                )
+            }
+
+            // CONTAINER: All game settings found here
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(space = 32.dp),
+            ) {
+                // ELEMENTS: All setting items needed to start game
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(32.dp)
+                ) {
+                    Radio(
+                        // TODO: change to "<player 1 name>'s marker"
+                        title = "your marker",
+                        labels = arrayOf("x", "o"),
+                        selectedIndex = 0,
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    )
+                    Radio(
+                        title = "board size",
+                        labels = arrayOf("3x3", "4x4", "5x5"),
+                        selectedIndex = 0,
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(32.dp)
+                ) {
+                    Radio(
+                        title = "who goes first?",
+                        // TODO: change labels to "<p1 name>", "<p2 name>"
+                        labels = arrayOf("jasmine", "guest"),
+                        selectedIndex = 0,
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    )
+
+                    Radio(
+                        title = "win condition (in a row)",
+                        labels = arrayOf("3", "4", "5"),
+                        selectedIndex = 0,
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    )
+                }
+
+                // ELEMENT: Button to start game
+                PrimaryButton(
+                    stringResource(id = copy.settings_action_start),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    // TODO: ADD ACTION HERE TO START GAME
+                    println("start game")
+                }
+            }
+        }
+    }
 }

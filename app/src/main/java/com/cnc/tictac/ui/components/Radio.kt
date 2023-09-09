@@ -26,11 +26,11 @@ fun Radio(
     numOptions: Int = 2,
     labels: Array<String> = arrayOf("1", "2"),
     selectedIndex: Int = 0,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     // CONTAINER: for both title and radio choices
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         titleMedium(title)

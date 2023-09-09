@@ -85,12 +85,13 @@ fun DisplayButton(
 fun BackButton(
     currentPageLabel: String,
     destination: Destination,
-    navController: NavHostController
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     val label = "← $currentPageLabel"
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .widthIn(min = 44.dp)
             .heightIn(min = 44.dp)
             .clickable { navController.navigate(destination.route) }

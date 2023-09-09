@@ -32,21 +32,21 @@ fun HomeScreen(navController: NavHostController) {
     val deviceInfo = getDeviceInfo()
 
     // Use same UI layout for COMPACT and EXPANDED
-    when (deviceInfo.screenWidthType) {
+    when (deviceInfo.screenHeightType) {
         is DeviceInfo.DeviceType.Compact -> {
-            DisplayCompactHomeScreen(navController)
+            DisplayWideHomeScreen(navController)
         }
         is DeviceInfo.DeviceType.Medium -> {
-            DisplayMediumHomeScreen(navController)
+            DisplayNarrowHomeScreen(navController)
         }
         else -> {
-            DisplayMediumHomeScreen(navController)
+            DisplayWideHomeScreen(navController)
         }
     }
 }
 
 /* COMPOSABLE
- * DisplayCompactHomeScreen
+ * DisplayNarrowHomeScreen
  *
  * UI for home screen for the following devices and orientation:
  *      COMPACT (Mobile portrait)
@@ -54,7 +54,7 @@ fun HomeScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayCompactHomeScreen(navController: NavHostController) {
+fun DisplayNarrowHomeScreen(navController: NavHostController) {
     // UI: Screen container
     Box(
         modifier = Modifier
@@ -111,7 +111,7 @@ fun DisplayCompactHomeScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayMediumHomeScreen(navController: NavHostController) {
+fun DisplayWideHomeScreen(navController: NavHostController) {
     // UI: Screen container
     Box(
         modifier = Modifier
