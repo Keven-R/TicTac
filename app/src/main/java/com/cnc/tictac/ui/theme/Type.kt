@@ -35,6 +35,12 @@ val Inter = FontFamily(
         fontProvider = provider,
         weight = FontWeight.Bold
     ),
+
+    Font(
+        googleFont = GoogleFont("Inter"),
+        fontProvider = provider,
+        weight = FontWeight.ExtraBold
+    ),
 )
 
 // Set of Material typography styles to start with
@@ -67,6 +73,17 @@ val Typography = Typography(
         fontFamily = Inter,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp
+    ),
+
+    /* USES
+     *
+     * - Win graphic in ProfileScreen
+     * - Timer countdown in GameScreen
+     */
+    labelMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 24.sp
     ),
 
 

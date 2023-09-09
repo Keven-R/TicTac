@@ -1,6 +1,5 @@
 package com.cnc.tictac.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,19 +9,17 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
+import com.cnc.tictac.ui.components.Avatar
 import com.cnc.tictac.ui.components.BackButton
 import com.cnc.tictac.ui.components.SecondaryButton
 import com.cnc.tictac.ui.components.bodyMedium
@@ -30,7 +27,6 @@ import com.cnc.tictac.ui.components.titleMedium
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacViewModel
-import com.cnc.tictac.R.drawable as images
 import com.cnc.tictac.R.string as copy
 
 @Composable
@@ -111,12 +107,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = images.avatar_1),
-                            contentDescription = "Avatar",
-                            modifier = Modifier.size(160.dp),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-                        )
+                        Avatar()
                     }
 
                     // TODO: Replace string with user's name.

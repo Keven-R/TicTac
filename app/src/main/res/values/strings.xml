@@ -22,4 +22,7 @@
     <string name="button_play_solo">single player</string>
     <string name="button_play_multi">multiplayer</string>
     <string name="button_profile">profile</string>
+
+    <!-- Assets description -->
+    <string name="avatar">Avatar</string>
 </resources>

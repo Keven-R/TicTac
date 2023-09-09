@@ -48,17 +48,21 @@ fun DisplayButton(
 fun DisplayButton(
     label: String,
     navController: NavHostController,
-    destination: Destination
+    destination: Destination,
+    textModifier: Modifier = Modifier,
+    rowModifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = rowModifier
+//            .fillMaxWidth()
+//            TODO: Removed for home page, fix for everything else
             .clickable { navController.navigate(destination.route) }
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onPrimary,
+            modifier = textModifier
         )
     }
 }

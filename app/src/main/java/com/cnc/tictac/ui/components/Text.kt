@@ -6,7 +6,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.cnc.tictac.R.string as content
 
 @Composable
 fun titleMedium(
@@ -41,4 +43,16 @@ fun bodyMedium(
             color = MaterialTheme.colorScheme.onPrimary,
         )
     }
+}
+
+@Composable
+fun logoText(
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = stringResource(id = content.app_display_name),
+        style = MaterialTheme.typography.displaySmall,
+        color = MaterialTheme.colorScheme.onPrimary,
+        modifier = modifier
+    )
 }

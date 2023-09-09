@@ -8,27 +8,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.ui.components.DisplayButton
+import com.cnc.tictac.ui.components.logoText
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
-import com.cnc.tictac.R.string as content
-
-/* TODO
- * [ ] Test landscape
- * [ ] DisplayExpandedHomeScreen
- * [ ] Test landscape
- */
+import com.cnc.tictac.R.string as copy
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -40,8 +36,8 @@ fun HomeScreen(navController: NavHostController) {
         is DeviceInfo.DeviceType.Compact -> {
             DisplayCompactHomeScreen(navController)
         }
-        is DeviceInfo.DeviceType.Expanded -> {
-            DisplayCompactHomeScreen(navController)
+        is DeviceInfo.DeviceType.Medium -> {
+            DisplayMediumHomeScreen(navController)
         }
         else -> {
             DisplayMediumHomeScreen(navController)
@@ -77,17 +73,7 @@ fun DisplayCompactHomeScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             // UI: App logo
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(id = content.app_display_name),
-                    style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            logoText(modifier = Modifier.fillMaxWidth())
 
             // UI: Home screen actions (start game + view profile)
             Column(
@@ -101,15 +87,15 @@ fun DisplayCompactHomeScreen(navController: NavHostController) {
                         .fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // TODO: Add destination (game settings) to onclick event
-                    DisplayButton(stringResource(id = content.button_play_solo),navController, Destination.GameSettingsScreen)
-                    // TODO: Add destination (player select) to onclick event
-                    DisplayButton(stringResource(id = content.button_play_multi),navController, Destination.GameSettingsScreen)
+                    // TODO: Add correct destination to on click event
+                    DisplayButton(stringResource(id = copy.button_play_solo),navController, Destination.GameSettingsScreen)
+                    // TODO: Add correct destination to on click event
+                    DisplayButton(stringResource(id = copy.button_play_multi), navController, Destination.GameSettingsScreen)
                 }
 
                 // UI: View profile action
-                // TODO: Add destination (player select) to onclick event
-                DisplayButton(stringResource(id = content.button_profile),navController, Destination.ProfileScreen)
+                // TODO: Add correct destination to on click event
+                DisplayButton(stringResource(id = copy.button_profile), navController, Destination.ProfileScreen)
             }
         }
     }
@@ -126,4 +112,58 @@ fun DisplayCompactHomeScreen(navController: NavHostController) {
  */
 @Composable
 fun DisplayMediumHomeScreen(navController: NavHostController) {
+    // UI: Screen container
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primary)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(
+                    vertical = 64.dp,
+                    horizontal = 16.dp
+                ),
+            horizontalArrangement = Arrangement.spacedBy(40.dp),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            // UI: Home screen actions (start game + view profile)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .align(Alignment.Bottom),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                // UI: App logo
+                logoText()
+
+                // UI: Solo or multi game mode action
+                Column (
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    // TODO: Add correct destination to on click event
+                    DisplayButton(stringResource(id = copy.button_play_solo),navController, Destination.GameSettingsScreen)
+                    // TODO: Add correct destination to on click event
+                    DisplayButton(stringResource(id = copy.button_play_multi), navController, Destination.GameSettingsScreen)
+                }
+            }
+
+            Column(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                horizontalAlignment = Alignment.End) {
+                // UI: View profile action
+                // TODO: Add correct destination to on click event
+                DisplayButton(stringResource(
+                    id = copy.button_profile),
+                    navController,
+                    Destination.ProfileScreen,
+                )
+            }
+        }
+    }
 }
