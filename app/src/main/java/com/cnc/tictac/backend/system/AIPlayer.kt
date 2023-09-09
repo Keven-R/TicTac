@@ -4,9 +4,9 @@ class AIPlayer(
     // Player-set username.
     playerID        : Int?                   = null,
     // Unique player ID (system generated).
-    playerIcon      : Pair<Int, String>     = Pair(0, "Null Player Icon"),
+    playerIcon      : Pair<String, String>     = Pair("", "Null Player Icon"),
     // Pair for player icon: Resource, and description.
-    playerAvatar    : Pair<Int, String>     = Pair(0, "Null Player Icon"),
+    playerAvatar    : Pair<String, String>     = Pair("", "Null Player Icon"),
     // Pair for avatar image: Resource, and description.
 ) : Player (playerName, playerID, playerIcon, playerAvatar) {
 

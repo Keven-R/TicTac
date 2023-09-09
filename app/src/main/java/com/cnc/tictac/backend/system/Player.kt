@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 abstract class Player(
     var playerName      : String, // Player-set username.
     var playerID        : Int?, // Unique player ID (system generated).
-    var playerIcon      : Pair<Int, String>, // Pair for player icon: Resource, and description.
-    var playerAvatar    : Pair<Int, String>, // Pair for avatar image: Resource, and description.
+    var playerIcon      : Pair<String, String>, // Pair for player icon: Resource, and description.
+    var playerAvatar    : Pair<String, String>, // Pair for avatar image: Resource, and description.
 ) {
     abstract override fun toString() : String
     abstract fun copy() : Player
