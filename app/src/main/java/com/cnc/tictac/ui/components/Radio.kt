@@ -18,13 +18,15 @@ import androidx.compose.ui.unit.dp
  * @param[title] Describes what the user is choosing
  * @param[numOptions] Number of options to choose from, 2-3
  * @param[labels] Labels for each option item
- * @param[selected] Index of the current selected item
+ * @param[selectedIndex] Index of the current selected item
+ * @param[isDisabled] Array with length == numOptions. Each item = true if disabled, false if enabled.
  */
 @Composable
 fun Radio(
     title: String = "Select one: ",
     numOptions: Int = 2,
     labels: Array<String> = arrayOf("1", "2"),
+    isDisabled: Array<Boolean> = arrayOf(false, false, false),
     selectedIndex: Int = 0,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
@@ -44,25 +46,29 @@ fun Radio(
                 alignment = Alignment.CenterHorizontally
             )) {
 
+            // Style radio button depending on if it's selected, disabled, or default
+            var ind = 0
             for (currIndex in labels.indices) {
                 if (currIndex == selectedIndex) {
                     PrimaryButton(
                         label = labels[currIndex],
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        // TODO: what does clicking on button do????
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    ) { // TODO: what does clicking on button do????
+                    }
+                } else if (isDisabled[ind]) {
+                    SecondaryButtonDisabled(
+                        label = labels[currIndex],
+                        modifier = Modifier.fillMaxWidth().weight(1f))
+                    { // TODO: what does clicking on button do????
                     }
                 } else {
                     SecondaryButton(
                         label = labels[currIndex],
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)) {
-                        // TODO: what does clicking on button do????
+                        modifier = Modifier.fillMaxWidth().weight(1f))
+                    { // TODO: what does clicking on button do????
                     }
                 }
+                ind++
             }
         }
     }

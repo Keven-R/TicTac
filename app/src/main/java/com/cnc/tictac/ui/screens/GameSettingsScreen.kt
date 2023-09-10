@@ -92,28 +92,25 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
                 Radio(
                     // TODO: change to "<player 1 name>'s marker"
                     title = "your marker",
-                    labels = arrayOf("x", "o"),
-                    selectedIndex = 0,
+                    labels = arrayOf("x", "o")
                 )
 
                 Radio(
                     title = "who goes first?",
                     // TODO: change labels to "<p1 name>", "<p2 name>"
                     labels = arrayOf("jasmine", "guest"),
-                    selectedIndex = 0,
                 )
 
                 Radio(
                     title = "board size",
                     labels = arrayOf("3x3", "4x4", "5x5"),
-                    selectedIndex = 0,
                 )
 
-                // TODO: Remove hard coded args
                 Radio(
                     title = "win condition (in a row)",
                     labels = arrayOf("3", "4", "5"),
-                    selectedIndex = 0,
+                    // TODO: Remove this, this was just to test that disabled buttons are working
+                    isDisabled = arrayOf(false, true, true)
                 )
             }
 

@@ -57,6 +57,16 @@ val Typography = Typography(
 
     /* USES
      *
+     * - Game pause/restart/exit overlays.
+     */
+    headlineMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp
+    ),
+
+    /* USES
+     *
      * - Buttons on HomeScreen.kt
      */
     headlineLarge = TextStyle(

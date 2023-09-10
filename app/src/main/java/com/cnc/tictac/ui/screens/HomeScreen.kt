@@ -31,7 +31,7 @@ fun HomeScreen(navController: NavHostController) {
     // Determine UI layout.
     val deviceInfo = getDeviceInfo()
 
-    // Use same UI layout for COMPACT and EXPANDED
+    // Use different layout for mobile landscape only
     when (deviceInfo.screenHeightType) {
         is DeviceInfo.DeviceType.Compact -> {
             DisplayWideHomeScreen(navController)
@@ -74,8 +74,7 @@ fun DisplayNarrowHomeScreen(navController: NavHostController) {
 
             // UI: Home screen actions (start game + view profile)
             Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(64.dp)
             ) {
                 // UI: Solo or multi game mode action
