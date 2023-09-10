@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.cnc.tictac.R.string as content
 
 @Composable
-fun titleMedium(
+fun TitleMedium(
     content: String,
     modifier: Modifier = Modifier
 ) {
@@ -29,7 +29,7 @@ fun titleMedium(
 }
 
 @Composable
-fun bodyMedium(
+fun BodyMedium(
     content: String,
     modifier: Modifier = Modifier
 ) {
@@ -46,7 +46,25 @@ fun bodyMedium(
 }
 
 @Composable
-fun logoText(
+fun BodyLarge(
+    content: String = "bodyLarge",
+    rowModifier: Modifier = Modifier,
+    textModifier: Modifier = Modifier
+) {
+    Row(
+        modifier = rowModifier,
+    ) {
+        Text(
+            text = content,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = textModifier
+        )
+    }
+}
+
+@Composable
+fun LogoText(
     modifier: Modifier = Modifier
 ) {
     Text(

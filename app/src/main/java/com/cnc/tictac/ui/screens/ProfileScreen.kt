@@ -23,8 +23,8 @@ import com.cnc.tictac.ui.components.Avatar
 import com.cnc.tictac.ui.components.BackButton
 import com.cnc.tictac.ui.components.MarkerGraphics
 import com.cnc.tictac.ui.components.SecondaryButton
-import com.cnc.tictac.ui.components.bodyMedium
-import com.cnc.tictac.ui.components.titleMedium
+import com.cnc.tictac.ui.components.BodyMedium
+import com.cnc.tictac.ui.components.TitleMedium
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacViewModel
@@ -108,7 +108,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                     }
 
                     // TODO: Replace string with user's name.
-                    titleMedium("jasmine", modifier = Modifier.fillMaxWidth())
+                    TitleMedium("jasmine", modifier = Modifier.fillMaxWidth())
                 }
 
                 // CONTAINER: User's stats
@@ -121,10 +121,10 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                     MarkerGraphics(content = "ooo/////xx", rowModifier = Modifier.fillMaxWidth())
 
                     // TODO: replace with actual stats
-                    bodyMedium(content = "wins: 8 (33%)", modifier = Modifier.fillMaxWidth().padding(top = 24.dp))
-                    bodyMedium(content = "draws: 13 (54%)", modifier = Modifier.fillMaxWidth())
-                    bodyMedium(content = "losses: 3 (13%)", modifier = Modifier.fillMaxWidth())
-                    bodyMedium(content = "total games 24", modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                    BodyMedium(content = "wins: 8 (33%)", modifier = Modifier.fillMaxWidth().padding(top = 24.dp))
+                    BodyMedium(content = "draws: 13 (54%)", modifier = Modifier.fillMaxWidth())
+                    BodyMedium(content = "losses: 3 (13%)", modifier = Modifier.fillMaxWidth())
+                    BodyMedium(content = "total games 24", modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
                 }
             }
 
@@ -215,7 +215,7 @@ fun DisplayShortProfileScreen(navController: NavHostController) {
                     Avatar()
 
                     // TODO: Replace string with user's name.
-                    titleMedium("jasmine")
+                    TitleMedium("jasmine")
                 }
 
                 // CONTAINER: User's stats
@@ -227,10 +227,10 @@ fun DisplayShortProfileScreen(navController: NavHostController) {
                     MarkerGraphics(content = "ooo/////xx", alignCenter = false)
 
                     // TODO: replace with actual stats
-                    bodyMedium(content = "wins: 8 (33%)", modifier = Modifier.padding(top = 16.dp))
-                    bodyMedium(content = "draws: 13 (54%)")
-                    bodyMedium(content = "losses: 3 (13%)")
-                    bodyMedium(content = "total games 24", modifier = Modifier.padding(top = 8.dp))
+                    BodyMedium(content = "wins: 8 (33%)", modifier = Modifier.padding(top = 16.dp))
+                    BodyMedium(content = "draws: 13 (54%)")
+                    BodyMedium(content = "losses: 3 (13%)")
+                    BodyMedium(content = "total games 24", modifier = Modifier.padding(top = 8.dp))
                 }
             }
 

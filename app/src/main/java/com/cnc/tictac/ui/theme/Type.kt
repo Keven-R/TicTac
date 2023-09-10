@@ -67,7 +67,7 @@ val Typography = Typography(
 
     /* USES
      *
-     * - Buttons on HomeScreen.kt
+     * - Buttons.kt
      */
     labelSmall = TextStyle(
         fontFamily = Inter,
@@ -77,23 +77,33 @@ val Typography = Typography(
 
     /* USES
      *
+     * MarkerGraphics
      * - Win graphic in ProfileScreen
      * - Timer countdown in GameScreen
      */
-    labelMedium = TextStyle(
+    labelLarge = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 24.sp
     ),
 
-
     /* USES
      *
-     * - Buttons on HomeScreen.kt
+     * - Regular text
      */
     bodyMedium = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp
+    ),
+
+    /* USES
+     *
+     * - Multiplayer settings: player name display
+     */
+    bodyLarge = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp
     ),
 )

@@ -33,7 +33,7 @@ fun Radio(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        titleMedium(title)
+        TitleMedium(title)
 
         // CONTAINER: for all radio choices, 2-3
         Row(

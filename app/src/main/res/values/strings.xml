@@ -7,6 +7,7 @@
     <string name="page_title_home">home</string>
     <string name="page_title_profile">profile</string>
     <string name="page_title_settings">game settings</string>
+    <string name="page_title_multiplayer">multiplayer</string>
     <string name="page_title_select_player">select player</string>
     <string name="page_title_switch_user">switch user</string>
 
@@ -16,6 +17,9 @@
 
     <!-- Game settings screen content -->
     <string name="settings_action_start">start</string>
+    <string name="settings_action_next">next</string>
+    <string name="settings_p1">player 1</string>
+    <string name="settings_p2">player 2</string>
 
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->
     <!-- Buttons -->

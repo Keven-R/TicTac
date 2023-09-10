@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.ui.components.DisplayButton
-import com.cnc.tictac.ui.components.logoText
+import com.cnc.tictac.ui.components.LogoText
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.R.string as copy
@@ -73,7 +73,7 @@ fun DisplayNarrowHomeScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             // UI: App logo
-            logoText(modifier = Modifier.fillMaxWidth())
+            LogoText(modifier = Modifier.fillMaxWidth())
 
             // UI: Home screen actions (start game + view profile)
             Column(
@@ -139,7 +139,7 @@ fun DisplayWideHomeScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 // UI: App logo
-                logoText()
+                LogoText()
 
                 // UI: Solo or multi game mode action
                 Column (

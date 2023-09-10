@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
+import com.cnc.tictac.R.drawable as images
+import com.cnc.tictac.R.string as copy
 
 /* GamePlayerCard
  *
@@ -81,7 +83,7 @@ fun MarkerGraphics (
             if (currIndex >= transparentIndex) {
                 Text(
                     text = content[currIndex].toString(),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onPrimary,
                     modifier = textModifier.alpha(0.16f),
                 )
@@ -89,11 +91,31 @@ fun MarkerGraphics (
             } else {
                 Text(
                     text = content[currIndex].toString(),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onPrimary,
                     modifier = textModifier,
                 )
             }
         }
     }
+}
+
+/* PlayerSelectCard
+ *
+ * Knows uses:
+ *  - MultiplayerSettingsScreen
+ *
+ * @param[content] 10 char long string to display e.g. "ooo/////xx"
+ * @param[transparentIndex] String index of when transparency begins (timer).
+ * @param[rowModifier] Modifier for row
+ * @param[textModifier] Modifier for text
+ */
+@Composable
+fun PlayerSelectCard (
+    playerName: String = "Guest",
+    isPlayerOne: Boolean = true,
+    avatarResourceId: Int = images.avatar_1,
+    contentDescriptionId: Int = copy.avatar,
+) {
+
 }
