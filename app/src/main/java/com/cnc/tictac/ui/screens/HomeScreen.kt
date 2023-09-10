@@ -36,11 +36,8 @@ fun HomeScreen(navController: NavHostController) {
         is DeviceInfo.DeviceType.Compact -> {
             DisplayWideHomeScreen(navController)
         }
-        is DeviceInfo.DeviceType.Medium -> {
-            DisplayNarrowHomeScreen(navController)
-        }
         else -> {
-            DisplayWideHomeScreen(navController)
+            DisplayNarrowHomeScreen(navController)
         }
     }
 }
@@ -49,7 +46,7 @@ fun HomeScreen(navController: NavHostController) {
  * DisplayNarrowHomeScreen
  *
  * UI for home screen for the following devices and orientation:
- *      COMPACT (Mobile portrait)
+ *      Mobile portrait, Tablets and greater
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
@@ -90,7 +87,7 @@ fun DisplayNarrowHomeScreen(navController: NavHostController) {
                     // TODO: Add correct destination to on click event
                     DisplayButton(stringResource(id = copy.button_play_solo),navController, Destination.GameSettingsScreen)
                     // TODO: Add correct destination to on click event
-                    DisplayButton(stringResource(id = copy.button_play_multi), navController, Destination.GameSettingsScreen)
+                    DisplayButton(stringResource(id = copy.button_play_multi), navController, Destination.MultiplayerSettingsScreen)
                 }
 
                 // UI: View profile action
@@ -105,8 +102,7 @@ fun DisplayNarrowHomeScreen(navController: NavHostController) {
  * DisplayExpandedHomeScreen
  *
  * UI for home screen for the following devices and orientation:
- *      MEDIUM (Mobile landscape, tablet portrait)
- *      EXPANDED (Tablet landscape)
+ *      MEDIUM (Mobile landscape)
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
@@ -149,7 +145,7 @@ fun DisplayWideHomeScreen(navController: NavHostController) {
                     // TODO: Add correct destination to on click event
                     DisplayButton(stringResource(id = copy.button_play_solo),navController, Destination.GameSettingsScreen)
                     // TODO: Add correct destination to on click event
-                    DisplayButton(stringResource(id = copy.button_play_multi), navController, Destination.GameSettingsScreen)
+                    DisplayButton(stringResource(id = copy.button_play_multi), navController, Destination.MultiplayerSettingsScreen)
                 }
             }
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -21,9 +22,9 @@ import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.ui.components.Avatar
 import com.cnc.tictac.ui.components.BackButton
+import com.cnc.tictac.ui.components.BodyMedium
 import com.cnc.tictac.ui.components.MarkerGraphics
 import com.cnc.tictac.ui.components.SecondaryButton
-import com.cnc.tictac.ui.components.BodyMedium
 import com.cnc.tictac.ui.components.TitleMedium
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
@@ -104,7 +105,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         // TODO: Change avatarResourceId arg to user selected
-                        Avatar()
+                        Avatar(imageModifier = Modifier.size(160.dp))
                     }
 
                     // TODO: Replace string with user's name.
@@ -212,7 +213,7 @@ fun DisplayShortProfileScreen(navController: NavHostController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // TODO: Change avatarResourceId arg to user selected
-                    Avatar()
+                    Avatar(imageModifier = Modifier.size(160.dp))
 
                     // TODO: Replace string with user's name.
                     TitleMedium("jasmine")

@@ -53,10 +53,75 @@ fun MultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTa
  */
 @Composable
 fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController) {
+    // CONTAINER: Set bg colour
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primary)
+    ) {
+        // CONTAINER: All content on screen
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 32.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // CONTAINER: Top nav
+            Row(modifier = Modifier.fillMaxWidth()) {
+                // ELEMENT: Back button showing current page title)
+                BackButton(
+                    stringResource(id = copy.page_title_multiplayer),
+                    Destination.HomeScreen,
+                    navController
+                )
+            }
+
+            // CONTAINER: for both player cards
+            Row(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(top = 24.dp, bottom = 8.dp)
+                    .weight(1f).fillMaxHeight(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ){
+                // ELEMENT: display current selected player 1
+                // TODO: UPDATE <avatarResourceId> <playerName> <playerName>
+                PlayerSelectCard(
+                    playerName = "Jasmine",
+                    avatarResourceId = images.avatar_1,
+                    isHorizontal = false,
+                    layoutModifier = Modifier.fillMaxWidth().weight(1f),
+                )
+
+                // ELEMENT: display current selected player 2
+                // TODO: UPDATE <avatarResourceId> <playerName> <playerName>
+                PlayerSelectCard(
+                    playerName = "Guest",
+                    isPlayerOne = false,
+                    avatarResourceId = images.avatar_2,
+                    isHorizontal = false,
+                    layoutModifier = Modifier.fillMaxWidth().weight(1f),
+                )
+            }
+
+            // CONTAINER: Primary action
+            Row(modifier = Modifier.fillMaxWidth()) {
+                // ELEMENT: Button to go to game settings screen
+                PrimaryButton(
+                    stringResource(id = copy.settings_action_next),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    // TODO: ADD ACTION HERE TO START GAME
+                    println("go to game settings")
+                }
+            }
+        }
+    }
 }
 
 /* COMPOSABLE
- * DisplayShortSettingsScreen
+ * DisplayDefaultMultiplayerSettingsScreen
  *
  * UI for game settings screen for the following devices and orientation:
  *      Mobile landscape
@@ -76,7 +141,7 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
+                .padding(vertical = 32.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // CONTAINER: Top nav
@@ -99,30 +164,32 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.spacedBy(space = 32.dp)
             ){
                 // ELEMENT: display current selected player 1
-                // TODO: UPDATE THIS with actual player information
+                // TODO: UPDATE <avatarResourceId> <playerName> <playerName>
                 PlayerSelectCard(
                     playerName = "Jasmine",
-                    avatarResourceId = images.avatar_1
+                    avatarResourceId = images.avatar_1,
+                    layoutModifier = Modifier.weight(1f).fillMaxWidth(),
                 )
 
                 // ELEMENT: display current selected player 2
-                // TODO: UPDATE THIS with actual player information
+                // TODO: UPDATE <avatarResourceId> <playerName> <playerName>
                 PlayerSelectCard(
                     playerName = "Guest",
                     isPlayerOne = false,
-                    avatarResourceId = images.avatar_2
+                    avatarResourceId = images.avatar_2,
+                    layoutModifier = Modifier.weight(1f).fillMaxWidth(),
                 )
+            }
 
-                // CONTAINER: Primary action
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    // ELEMENT: Button to go to game settings screen
-                    PrimaryButton(
-                        stringResource(id = copy.settings_action_next),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        // TODO: ADD ACTION HERE TO START GAME
-                        println("go to game settings")
-                    }
+            // CONTAINER: Primary action
+            Row(modifier = Modifier.fillMaxWidth()) {
+                // ELEMENT: Button to go to game settings screen
+                PrimaryButton(
+                    stringResource(id = copy.settings_action_next),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    // TODO: ADD ACTION HERE TO START GAME
+                    println("go to game settings")
                 }
             }
         }

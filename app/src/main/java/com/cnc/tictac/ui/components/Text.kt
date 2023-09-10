@@ -48,15 +48,19 @@ fun BodyMedium(
 @Composable
 fun BodyLarge(
     content: String = "bodyLarge",
+    isCenter: Boolean = false,
     rowModifier: Modifier = Modifier,
     textModifier: Modifier = Modifier
 ) {
+    val arrangement = if (isCenter) Arrangement.Center else Arrangement.Start
+
     Row(
         modifier = rowModifier,
+        horizontalArrangement = arrangement
     ) {
         Text(
             text = content,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onPrimary,
             modifier = textModifier
         )

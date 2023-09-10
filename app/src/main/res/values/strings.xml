@@ -20,6 +20,8 @@
     <string name="settings_action_next">next</string>
     <string name="settings_p1">player 1</string>
     <string name="settings_p2">player 2</string>
+    <string name="settings_change_player">change</string>
+
 
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->
     <!-- Buttons -->
