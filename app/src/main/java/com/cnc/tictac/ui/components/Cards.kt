@@ -1,8 +1,15 @@
 package com.cnc.tictac.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.dp
 
 /* GamePlayerCard
  *
@@ -43,14 +50,50 @@ fun GamePlayerCard (
 //    }
 //}
 
-/* MarkerDiagram
+/* MarkerGraphics
  *
  * Knows uses:
  *  - ProfileScreen: win ratio graphic
- *  - GameScreen: win ratio graphic
+ *  - GameScreen: timer
+ *
+ * @param[content] 10 char long string to display e.g. "ooo/////xx"
+ * @param[transparentIndex] String index of when transparency begins (timer).
+ * @param[rowModifier] Modifier for row
+ * @param[textModifier] Modifier for text
  */
 @Composable
 fun MarkerGraphics (
+    content: String,
+    transparentIndex: Int = 10,
+    alignCenter : Boolean = true,
+    rowModifier: Modifier = Modifier,
+    textModifier: Modifier = Modifier
 ) {
+    // Center align fo profile, start for game screen.
+    val rowAlignment = if (alignCenter) Alignment.CenterHorizontally else Alignment.Start
 
+    Row (
+        modifier = rowModifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp, alignment = rowAlignment)
+    ) {
+        for (currIndex in content.indices) {
+            // Add transparency for timer
+            if (currIndex >= transparentIndex) {
+                Text(
+                    text = content[currIndex].toString(),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = textModifier.alpha(0.16f),
+                )
+            // Default styling
+            } else {
+                Text(
+                    text = content[currIndex].toString(),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = textModifier,
+                )
+            }
+        }
+    }
 }

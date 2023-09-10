@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.ui.components.Avatar
 import com.cnc.tictac.ui.components.BackButton
+import com.cnc.tictac.ui.components.MarkerGraphics
 import com.cnc.tictac.ui.components.SecondaryButton
 import com.cnc.tictac.ui.components.bodyMedium
 import com.cnc.tictac.ui.components.titleMedium
@@ -35,15 +36,12 @@ fun ProfileScreen(navController: NavHostController, viewModel: TicTacViewModel) 
     val deviceInfo = getDeviceInfo()
 
     // Use same UI layout for COMPACT and EXPANDED
-    when (deviceInfo.screenWidthType) {
+    when (deviceInfo.screenHeightType) {
         is DeviceInfo.DeviceType.Compact -> {
-            DisplayDefaultProfileScreen(navController)
-        }
-        is DeviceInfo.DeviceType.Expanded -> {
-            DisplayDefaultProfileScreen(navController)
+            DisplayShortProfileScreen(navController)
         }
         else -> {
-            DisplayMediumProfileScreen(navController)
+            DisplayDefaultProfileScreen(navController)
         }
     }
 }
@@ -52,8 +50,8 @@ fun ProfileScreen(navController: NavHostController, viewModel: TicTacViewModel) 
  * DisplayDefaultProfileScreen
  *
  * UI for profile screen for the following devices and orientation:
- *      COMPACT (Mobile portrait)
- *      EXPANDED (Tablet landscape)
+ *      MEDIUM HEIGHT (Mobile portrait)
+ *      EXPANDED HEIGHT (Tablet and bigger)
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
@@ -96,9 +94,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                     alignment = Alignment.CenterVertically
                 ),
             ) {
-
                 // ELEMENT: User name + avatar
-                // TODO: Change painter to user selected avatar.
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
@@ -107,6 +103,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
+                        // TODO: Change avatarResourceId arg to user selected
                         Avatar()
                     }
 
@@ -116,11 +113,15 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
 
                 // CONTAINER: User's stats
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // ELEMENT: win ratio block
+                    // TODO: replace string with actual player stats
+                    MarkerGraphics(content = "ooo/////xx", rowModifier = Modifier.fillMaxWidth())
+
                     // TODO: replace with actual stats
-                    bodyMedium(content = "wins: 8 (33%)", modifier = Modifier.fillMaxWidth())
+                    bodyMedium(content = "wins: 8 (33%)", modifier = Modifier.fillMaxWidth().padding(top = 24.dp))
                     bodyMedium(content = "draws: 13 (54%)", modifier = Modifier.fillMaxWidth())
                     bodyMedium(content = "losses: 3 (13%)", modifier = Modifier.fillMaxWidth())
                     bodyMedium(content = "total games 24", modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
@@ -154,7 +155,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // TODO: ADD CORRECT ACTION HERE not hard coded
+                    // TODO: ADD ACTIION HERE to switch user
                     navController.navigate(Destination.UserSelectScreen.route)
                 }
             }
@@ -163,14 +164,107 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
 }
 
 /* COMPOSABLE
- * DisplayMediumProfileScreen
+ * DisplayShortProfileScreen
  *
  * UI for profile screen for the following devices and orientation:
- *      MEDIUM (Mobile landscape, tablet portrait)
+ *      COMPACT HEIGHT (Mobile landscape)
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayMediumProfileScreen(navController: NavHostController) {
+fun DisplayShortProfileScreen(navController: NavHostController) {
+    // CONTAINER: Set bg colour
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primary)
+    ) {
+        // CONTAINER: All content on screen
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // CONTAINER: Top nav
+            Row(modifier = Modifier.fillMaxWidth()) {
+                // ELEMENT: Back button showing current page title "profile")
+                BackButton(
+                    stringResource(id = copy.page_title_profile),
+                    Destination.HomeScreen,
+                    navController,
+                )
+            }
 
+            // CONTAINER: All game settings found here
+            Row(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+                    .weight(1f).fillMaxHeight(),
+                horizontalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterHorizontally),
+            ) {
+                // ELEMENT: User name + avatar
+                Column(
+                    modifier = Modifier.padding(end = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // TODO: Change avatarResourceId arg to user selected
+                    Avatar()
+
+                    // TODO: Replace string with user's name.
+                    titleMedium("jasmine")
+                }
+
+                // CONTAINER: User's stats
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    // ELEMENT: win ratio block
+                    // TODO: replace string with actual player stats
+                    MarkerGraphics(content = "ooo/////xx", alignCenter = false)
+
+                    // TODO: replace with actual stats
+                    bodyMedium(content = "wins: 8 (33%)", modifier = Modifier.padding(top = 16.dp))
+                    bodyMedium(content = "draws: 13 (54%)")
+                    bodyMedium(content = "losses: 3 (13%)")
+                    bodyMedium(content = "total games 24", modifier = Modifier.padding(top = 8.dp))
+                }
+            }
+
+            // CONTAINER: Page actions, fixed to bottom of screen
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 8.dp,
+                    alignment = Alignment.CenterHorizontally
+                )
+            ) {
+                // ELEMENT: Button to navigate to "edit profile" screen
+                SecondaryButton(
+                    stringResource(id = copy.profile_action_left),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    // TODO: ADD ACTION HERE TO GO TO EDIT PROFILE
+                    println("edit profile")
+                }
+
+                // ELEMENT: Button to navigate to "switch user" screen
+                SecondaryButton(
+                    stringResource(id = copy.profile_action_right),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    // TODO: ADD ACTION HERE to switch user
+                    navController.navigate(Destination.UserSelectScreen.route)
+                }
+            }
+        }
+    }
 }

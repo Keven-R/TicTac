@@ -47,7 +47,7 @@ fun GameSettingsScreen(navController: NavHostController, viewModel: TicTacViewMo
  *
  * UI for game settings screen for the following devices and orientation:
  *      COMPACT (Mobile portrait)
- *      EXPANDED (Tablet landscape)
+ *      EXPANDED (Tablet and bigger)
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
@@ -139,7 +139,7 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
  * DisplayShortSettingsScreen
  *
  * UI for game settings screen for the following devices and orientation:
- *      MEDIUM (Mobile landscape, tablet portrait)
+ *      MEDIUM (Mobile landscape)
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
@@ -155,30 +155,27 @@ fun DisplayShortSettingsScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 32.dp, start = 16.dp, end = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp)
+                .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // CONTAINER: Top nav
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(32.dp)) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title "game settings")
                 BackButton(
                     stringResource(id = copy.page_title_settings),
                     Destination.HomeScreen,
-                    navController,
-                    modifier = Modifier.weight(1f).fillMaxWidth()
+                    navController
                 )
-
-//                // ELEMENT: Button to start game
-//                PrimaryButton(
-//                    stringResource(id = copy.settings_action_start),
-//                    modifier = Modifier.weight(1f).fillMaxWidth()
-//                )
             }
 
             // CONTAINER: All game settings found here
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(space = 32.dp),
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+                    .weight(1f).fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(space = 16.dp),
             ) {
                 // ELEMENTS: All setting items needed to start game
                 Row (
@@ -219,7 +216,11 @@ fun DisplayShortSettingsScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth().weight(1f)
                     )
                 }
+            }
 
+
+            // CONTAINER: Primary action
+            Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Button to start game
                 PrimaryButton(
                     stringResource(id = copy.settings_action_start),
