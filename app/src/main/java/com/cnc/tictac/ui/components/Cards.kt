@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.cnc.tictac.Destination
 import com.cnc.tictac.R.string as copy
 
 /* GamePlayerCard
@@ -120,6 +122,8 @@ fun MarkerGraphics (
 @Composable
 fun PlayerSelectCard (
     isHorizontal: Boolean = true,
+    navController: NavHostController,
+    destination: Destination,
     playerName: String = "Guest",
     isPlayerOne: Boolean = true,
     avatarResourceId: Int,
@@ -172,11 +176,10 @@ fun PlayerSelectCard (
                 // ELEMENT: BUTTON
                 SecondaryButton(
                     label = stringResource(id = copy.settings_change_player),
+                    navController = navController,
+                    destination = destination,
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    // TODO: ADD ACTION HERE TO GO TO SWITCH PLAYER SCREEN
-                    println("change player")
-                }
+                )
             }
         }
     } else {
@@ -208,11 +211,10 @@ fun PlayerSelectCard (
             // ELEMENT: BUTTON
             SecondaryButton(
                 label = stringResource(id = copy.settings_change_player),
+                navController = navController,
+                destination = destination,
                 modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
-            ) {
-                // TODO: ADD ACTION HERE TO GO TO SWITCH PLAYER SCREEN
-                println("change player")
-            }
+            )
         }
     }
 }

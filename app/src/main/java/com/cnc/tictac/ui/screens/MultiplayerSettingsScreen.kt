@@ -24,7 +24,6 @@ import com.cnc.tictac.ui.components.PrimaryButton
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacViewModel
-import com.cnc.tictac.R.drawable as images
 import com.cnc.tictac.R.string as copy
 
 @Composable
@@ -35,10 +34,10 @@ fun MultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTa
     // Use same UI layout for COMPACT and EXPANDED
     when (deviceInfo.screenWidthType) {
         is DeviceInfo.DeviceType.Compact -> {
-            DisplayCompactMultiplayerSettingsScreen(navController)
+            DisplayCompactMultiplayerSettingsScreen(navController,viewModel)
         }
         else -> {
-            DisplayDefaultMultiplayerSettingsScreen(navController)
+            DisplayDefaultMultiplayerSettingsScreen(navController,viewModel)
         }
     }
 }
@@ -52,7 +51,7 @@ fun MultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTa
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController) {
+fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier
@@ -69,11 +68,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController) {
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title)
-                BackButton(
-                    stringResource(id = copy.page_title_multiplayer),
-                    Destination.HomeScreen,
-                    navController
-                )
+                BackButton(stringResource(id = copy.page_title_multiplayer),Destination.HomeScreen,navController)
             }
 
             // CONTAINER: for both player cards
@@ -86,20 +81,22 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ){
                 // ELEMENT: display current selected player 1
-                // TODO: UPDATE <avatarResourceId> <playerName> <playerName>
                 PlayerSelectCard(
-                    playerName = "Jasmine",
-                    avatarResourceId = images.avatar_1,
+                    navController = navController,
+                    destination = Destination.UserSelectScreen,
+                    playerName = viewModel.player1,
+                    avatarResourceId = viewModel.player1Avatar,
                     isHorizontal = false,
                     layoutModifier = Modifier.fillMaxWidth().weight(1f),
                 )
 
                 // ELEMENT: display current selected player 2
-                // TODO: UPDATE <avatarResourceId> <playerName> <playerName>
                 PlayerSelectCard(
-                    playerName = "Guest",
+                    navController = navController,
+                    destination = Destination.UserSelectScreen,
+                    playerName = viewModel.player2,
                     isPlayerOne = false,
-                    avatarResourceId = images.avatar_2,
+                    avatarResourceId = viewModel.player2Avatar,
                     isHorizontal = false,
                     layoutModifier = Modifier.fillMaxWidth().weight(1f),
                 )
@@ -110,11 +107,10 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController) {
                 // ELEMENT: Button to go to game settings screen
                 PrimaryButton(
                     stringResource(id = copy.settings_action_next),
+                    navController = navController,
+                    destination = Destination.GameSettingsScreen,
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    // TODO: ADD ACTION HERE TO START GAME
-                    println("go to game settings")
-                }
+                )
             }
         }
     }
@@ -130,7 +126,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController) {
+fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier
@@ -147,11 +143,7 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController) {
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title)
-                BackButton(
-                    stringResource(id = copy.page_title_multiplayer),
-                    Destination.HomeScreen,
-                    navController
-                )
+                BackButton(stringResource(id = copy.page_title_multiplayer),Destination.HomeScreen,navController)
             }
 
             // CONTAINER: for both player cards
@@ -164,19 +156,21 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.spacedBy(space = 32.dp)
             ){
                 // ELEMENT: display current selected player 1
-                // TODO: UPDATE <avatarResourceId> <playerName> <playerName>
                 PlayerSelectCard(
-                    playerName = "Jasmine",
-                    avatarResourceId = images.avatar_1,
+                    navController = navController,
+                    destination = Destination.UserSelectScreen,
+                    playerName = viewModel.player1,
+                    avatarResourceId = viewModel.player1Avatar,
                     layoutModifier = Modifier.weight(1f).fillMaxWidth(),
                 )
 
                 // ELEMENT: display current selected player 2
-                // TODO: UPDATE <avatarResourceId> <playerName> <playerName>
                 PlayerSelectCard(
-                    playerName = "Guest",
+                    navController = navController,
+                    destination = Destination.UserSelectScreen,
+                    playerName = viewModel.player2,
                     isPlayerOne = false,
-                    avatarResourceId = images.avatar_2,
+                    avatarResourceId = viewModel.player2Avatar,
                     layoutModifier = Modifier.weight(1f).fillMaxWidth(),
                 )
             }
@@ -186,11 +180,10 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController) {
                 // ELEMENT: Button to go to game settings screen
                 PrimaryButton(
                     stringResource(id = copy.settings_action_next),
+                    navController = navController,
+                    destination = Destination.GameSettingsScreen,
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    // TODO: ADD ACTION HERE TO START GAME
-                    println("go to game settings")
-                }
+                )
             }
         }
     }
