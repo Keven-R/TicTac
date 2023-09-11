@@ -9,14 +9,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.cnc.tictac.ui.components.GameMenuButtonGroup
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacViewModel
@@ -29,28 +27,26 @@ fun GameScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // Use same UI layout for COMPACT and EXPANDED
     when (deviceInfo.screenWidthType) {
         is DeviceInfo.DeviceType.Compact -> {
-            DisplayDefaultGameScreen(navController, viewModel)
+            DisplayPortraitGameScreen(navController, viewModel)
         }
         is DeviceInfo.DeviceType.Expanded -> {
-            DisplayDefaultGameScreen(navController, viewModel)
+            DisplayPortraitGameScreen(navController, viewModel)
         }
         else -> {
-            DisplayMediumGameScreen(navController, viewModel)
+            DisplayPortraitGameScreen(navController, viewModel)
         }
     }
 }
 
 /* COMPOSABLE
- * DisplayDefaultGameScreen
+ * DisplayPortraitGameScreen
  *
- * UI for game screen for the following devices and orientation:
- *      COMPACT (Mobile portrait)
- *      EXPANDED (Tablet landscape)
+ * UI for game screen for all portrait orientation devices:
  *
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayDefaultGameScreen(navController: NavHostController, viewModel: TicTacViewModel) {
+fun DisplayPortraitGameScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier
@@ -61,8 +57,8 @@ fun DisplayDefaultGameScreen(navController: NavHostController, viewModel: TicTac
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 32.dp, horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(vertical = 16.dp, horizontal = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // CONTAINER: top user
             Row(
@@ -73,14 +69,8 @@ fun DisplayDefaultGameScreen(navController: NavHostController, viewModel: TicTac
             }
 
             // CONTAINER: game board
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(vertical = 32.dp),
-                verticalArrangement = Arrangement.spacedBy(space = 32.dp),
-            ) {
+            // TODO: change to lazy grid
+            Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
             }
 
             // CONTAINER: bottom user
@@ -90,15 +80,9 @@ fun DisplayDefaultGameScreen(navController: NavHostController, viewModel: TicTac
             ) {
             }
 
-            // CONTAINER: menu controls
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(
-                    space = 8.dp,
-                    alignment = Alignment.CenterHorizontally
-                )) {
-            }
+            // CONTAINER: all menu controls
+            // TODO: remove "enableUndo" arg if undo is available to use
+            GameMenuButtonGroup(enableUndo = false, modifier = Modifier.fillMaxWidth())
         }
     }
 }

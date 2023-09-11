@@ -22,6 +22,12 @@
     <string name="settings_p2">player 2</string>
     <string name="settings_change_player">change</string>
 
+    <!-- Game screen content -->
+    <string name="game_actions_pause">pause</string>
+    <string name="game_actions_undo">undo</string>
+    <string name="game_actions_restart">restart</string>
+    <string name="game_actions_exit">exit</string>
+
 
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->
     <!-- Buttons -->
