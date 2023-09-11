@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,10 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cnc.tictac.R.string as copy
 
@@ -44,6 +48,7 @@ enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 fun GamePlayerCard (
     modifier: Modifier = Modifier,
     isRowLayout: Boolean,
+    inverse: Boolean = false, // True for P2 in Medium+ width / portrait orientation
     playerName: String,
     playerAvatarResourceId: Int,
     playerMarker: String = "x", // "x" or "o"
@@ -63,6 +68,9 @@ fun GamePlayerCard (
     var playerStatusLabel : String
     var transparentIndex : Int
     val didPlayerWin = playerWinStatus == PLAYERWINSTATUS.WIN
+    var padding = 16
+    val alignment = if (inverse) Alignment.End else Alignment.Start
+    var avatarSize = 104
 
     if (isGameEnded) {
         // Design and content if game has ended
@@ -86,21 +94,22 @@ fun GamePlayerCard (
 
     if (isRowLayout) {
         // Use this layout for mobile landscape and ALL portrait
-        Row (modifier = modifier, horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        ReversibleRow (modifier = modifier, horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically, reverseLayout = inverse) {
             AvatarBlock(
                 avatarResourceId = playerAvatarResourceId,
                 isCircle = true,
                 isFilled = isFilled,
                 isBorderTransparent = borderTransparent,
-                boxModifier = Modifier.width(108.dp)
+                boxModifier = Modifier.width(avatarSize.dp),
+                padding = padding
             )
 
-            Column (verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column (verticalArrangement = Arrangement.spacedBy(4.dp), horizontalAlignment = alignment) {
                 Text(
                     text = playerNameLabel,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    )
+                )
                 MarkerGraphics(
                     content = playerStatusLabel,
                     transparentIndex = transparentIndex,
@@ -112,16 +121,17 @@ fun GamePlayerCard (
         }
     } else {
         // Use this layout for non-mobile landscape
-        Column (modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Column (modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = alignment) {
             AvatarBlock(
                 avatarResourceId = playerAvatarResourceId,
                 isCircle = true,
                 isFilled = isFilled,
                 isBorderTransparent = borderTransparent,
-                boxModifier = Modifier.width(108.dp)
+                boxModifier = Modifier.width(avatarSize.dp),
+                padding = padding
             )
 
-            Column (verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column (verticalArrangement = Arrangement.spacedBy(4.dp), horizontalAlignment = alignment) {
                 Text(
                     text = playerNameLabel,
                     style = MaterialTheme.typography.labelSmall,
@@ -134,6 +144,31 @@ fun GamePlayerCard (
                     rowModifier = Modifier,
                     textModifier = Modifier
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun ReversibleRow(
+    modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
+    reverseLayout: Boolean = false,
+    content: @Composable RowScope.() -> Unit
+) {
+    val originDirection = LocalLayoutDirection.current
+    val direction = when {
+        reverseLayout -> when (originDirection) {
+            LayoutDirection.Rtl -> LayoutDirection.Ltr
+            else -> LayoutDirection.Rtl
+        }
+        else -> originDirection
+    }
+    CompositionLocalProvider(LocalLayoutDirection provides direction) {
+        Row(modifier, horizontalArrangement, verticalAlignment) {
+            CompositionLocalProvider(LocalLayoutDirection provides originDirection) {
+                content()
             }
         }
     }
