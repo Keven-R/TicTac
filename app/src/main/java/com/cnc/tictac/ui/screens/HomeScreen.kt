@@ -24,20 +24,22 @@ import com.cnc.tictac.ui.components.DisplayButton
 import com.cnc.tictac.ui.components.LogoText
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
+import com.cnc.tictac.viewmodel.TicTacEvent
+import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController,viewModel: TicTacViewModel) {
     // Determine UI layout.
     val deviceInfo = getDeviceInfo()
 
     // Use different layout for mobile landscape only
     when (deviceInfo.screenHeightType) {
         is DeviceInfo.DeviceType.Compact -> {
-            DisplayWideHomeScreen(navController)
+            DisplayWideHomeScreen(navController, viewModel)
         }
         else -> {
-            DisplayNarrowHomeScreen(navController)
+            DisplayNarrowHomeScreen(navController, viewModel)
         }
     }
 }
@@ -51,7 +53,7 @@ fun HomeScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayNarrowHomeScreen(navController: NavHostController) {
+fun DisplayNarrowHomeScreen(navController: NavHostController,viewModel: TicTacViewModel) {
     // UI: Screen container
     Box(
         modifier = Modifier
@@ -83,15 +85,10 @@ fun DisplayNarrowHomeScreen(navController: NavHostController) {
                         .fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // TODO: Add correct destination to on click event
-                    DisplayButton(stringResource(id = copy.button_play_solo),navController, Destination.GameSettingsScreen)
-                    // TODO: Add correct destination to on click event
-                    DisplayButton(stringResource(id = copy.button_play_multi), navController, Destination.MultiplayerSettingsScreen)
+                    DisplayButton(stringResource(id = copy.button_play_solo),viewModel,TicTacEvent.NewSinglePlayerGame,navController,Destination.GameSettingsScreen)
+                    DisplayButton(stringResource(id = copy.button_play_multi),viewModel,TicTacEvent.NewMultiPlayerGame,navController,Destination.MultiplayerSettingsScreen)
                 }
-
-                // UI: View profile action
-                // TODO: Add correct destination to on click event
-                DisplayButton(stringResource(id = copy.button_profile), navController, Destination.ProfileScreen)
+                DisplayButton(stringResource(id = copy.button_profile),viewModel,TicTacEvent.ProfileMenuSelect,navController,Destination.ProfileScreen)
             }
         }
     }
@@ -106,7 +103,7 @@ fun DisplayNarrowHomeScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayWideHomeScreen(navController: NavHostController) {
+fun DisplayWideHomeScreen(navController: NavHostController,viewModel: TicTacViewModel) {
     // UI: Screen container
     Box(
         modifier = Modifier
@@ -141,23 +138,15 @@ fun DisplayWideHomeScreen(navController: NavHostController) {
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // TODO: Add correct destination to on click event
-                    DisplayButton(stringResource(id = copy.button_play_solo),navController, Destination.GameSettingsScreen)
-                    // TODO: Add correct destination to on click event
-                    DisplayButton(stringResource(id = copy.button_play_multi), navController, Destination.MultiplayerSettingsScreen)
+                    DisplayButton(stringResource(id = copy.button_play_solo),viewModel,TicTacEvent.NewSinglePlayerGame,navController,Destination.GameSettingsScreen)
+                    DisplayButton(stringResource(id = copy.button_play_multi),viewModel,TicTacEvent.NewMultiPlayerGame,navController,Destination.MultiplayerSettingsScreen)
                 }
             }
 
             Column(
                 modifier = Modifier.fillMaxWidth().weight(1f),
                 horizontalAlignment = Alignment.End) {
-                // UI: View profile action
-                // TODO: Add correct destination to on click event
-                DisplayButton(stringResource(
-                    id = copy.button_profile),
-                    navController,
-                    Destination.ProfileScreen,
-                )
+                DisplayButton(stringResource(id = copy.button_profile),viewModel, TicTacEvent.ProfileMenuSelect,navController,Destination.ProfileScreen)
             }
         }
     }
