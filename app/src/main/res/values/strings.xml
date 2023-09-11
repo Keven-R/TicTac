@@ -27,6 +27,9 @@
     <string name="game_actions_undo">undo</string>
     <string name="game_actions_restart">restart</string>
     <string name="game_actions_exit">exit</string>
+    <string name="game_status_win">winner</string>
+    <string name="game_status_loss">next time...</string>
+    <string name="game_status_draw">it\'s a draw</string>
 
 
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->

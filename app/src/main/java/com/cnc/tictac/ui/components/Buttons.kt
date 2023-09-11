@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
@@ -260,14 +259,14 @@ fun GameMenuButtonGroup (modifier: Modifier = Modifier, enableUndo: Boolean = tr
     ) {
         GameMenuButton(
             label = stringResource(id = copy.game_actions_pause),
-            modifier = Modifier.weight(1f).fillMaxWidth()
+//            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             // TODO: Add action here for pause
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_undo),
-            modifier = Modifier.weight(1f).fillMaxWidth(),
+//            modifier = Modifier.weight(1f).fillMaxWidth(),
             enabled = enableUndo
         ) {
             // TODO: Add action here for undo
@@ -275,14 +274,14 @@ fun GameMenuButtonGroup (modifier: Modifier = Modifier, enableUndo: Boolean = tr
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_restart),
-            modifier = Modifier.weight(1f).fillMaxWidth()
+//            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             // TODO: Add action here for restart
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_exit),
-            modifier = Modifier.weight(1f).fillMaxWidth()
+//            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             // TODO: Add action here for exit
         }
