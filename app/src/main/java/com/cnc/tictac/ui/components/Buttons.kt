@@ -127,6 +127,7 @@ fun BackButton(
 @Composable
 fun PrimaryButton(
     label: String,
+    viewModel: TicTacViewModel, // Needed to process onClick
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -140,6 +141,51 @@ fun PrimaryButton(
         modifier = modifier
             .heightIn(44.dp)
             .widthIn(44.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSecondary)
+    }
+}
+
+@Composable
+fun PrimaryButton(
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        colors = buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+        ),
+        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.secondary)),
+        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSecondary)
+    }
+}
+
+@Composable
+fun PrimaryButton(
+    label: String,
+    navController: NavHostController,
+    destination: Destination,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = {navController.navigate(destination.route)},
+        colors = buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+        ),
+        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.secondary)),
+        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
     ) {
         Text(
             text = label,
@@ -162,6 +208,7 @@ fun PrimaryButton(
 @Composable
 fun SecondaryButton(
     label: String,
+    viewModel: TicTacViewModel, // Needed to process onClick
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -180,6 +227,75 @@ fun SecondaryButton(
             text = label,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onPrimary)
+    }
+}
+
+@Composable
+fun SecondaryButton(
+    label: String,
+    navController: NavHostController,
+    destination: Destination,
+    modifier: Modifier = Modifier
+) {
+    OutlinedButton(
+        onClick = {navController.navigate(destination.route)},
+        colors = buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        ),
+        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
+        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onPrimary)
+    }
+}
+
+@Composable
+fun SecondaryButton(
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        onClick = onClick,
+        colors = buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        ),
+        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
+        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onPrimary)
+    }
+}
+
+@Composable
+fun SecondaryButtonDisabled(
+    label: String,
+    viewModel: TicTacViewModel, // Needed to process onClick
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        onClick = onClick,
+        enabled = false,
+        colors = buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        ),
+        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
+        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.outline)
     }
 }
 

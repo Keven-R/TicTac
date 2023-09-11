@@ -34,10 +34,10 @@ fun GameSettingsScreen(navController: NavHostController, viewModel: TicTacViewMo
     // Use same UI layout for COMPACT and EXPANDED
     when (deviceInfo.screenHeightType) {
         is DeviceInfo.DeviceType.Compact -> {
-            DisplayShortSettingsScreen(navController)
+            DisplayShortSettingsScreen(navController, viewModel)
         }
         else -> {
-            DisplayDefaultSettingsScreen(navController)
+            DisplayDefaultSettingsScreen(navController, viewModel)
         }
     }
 }
@@ -52,7 +52,71 @@ fun GameSettingsScreen(navController: NavHostController, viewModel: TicTacViewMo
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayDefaultSettingsScreen(navController: NavHostController) {
+fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
+    // Radio variables
+    val markerOptions = arrayOf("x", "o")
+    val startOptions = arrayOf(viewModel.player1, viewModel.player2)
+    val boardOptions = arrayOf("3x3", "4x4", "5x5")
+    val winOptions = arrayOf("3", "4", "5")
+
+    // lambda's to pass in
+    val markerUnit: () -> Unit = {
+            when(viewModel.player1Marker){
+                0 -> viewModel.player1Marker = 1
+                1 -> viewModel.player1Marker = 0
+            }
+    }
+
+    val startUnit: () -> Unit = {
+        when(viewModel.startingSelection){
+            0 -> viewModel.startingSelection = 1
+            1 -> viewModel.startingSelection = 0
+        }
+    }
+
+    val sizeUnit: () -> Unit = {
+        when(viewModel.boardSelection){
+            0 -> {
+                viewModel.boardSelection = 1
+                viewModel.winSelectable = arrayOf(false, false, true)
+            }
+            1 -> {
+                viewModel.boardSelection = 2
+                viewModel.winSelectable = arrayOf(false, false, false)
+            }
+            2 -> {
+                viewModel.boardSelection = 0
+                viewModel.winSelectable = arrayOf(false, true, true)
+            }
+        }
+    }
+
+    val winUnit: () -> Unit = {
+        when(viewModel.winConditionSelection){
+            0 -> {
+                if(viewModel.winSelectable[1]){
+                    viewModel.winConditionSelection = 0
+                }
+                else{
+                    viewModel.winConditionSelection = 1
+                }
+            }
+            1 -> {
+                if(viewModel.winSelectable[2]){
+                    viewModel.winConditionSelection = 0
+                }
+                else{
+                    viewModel.winConditionSelection = 2
+                }
+            }
+            2 -> {
+                viewModel.winConditionSelection = 0
+            }
+        }
+    }
+
+//    Log.v("TESTING", "State: " + viewModel.player1Marker)
+
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier
@@ -72,11 +136,7 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
                     .fillMaxWidth()
             ) {
                 // ELEMENT: Back button showing current page title "game settings")
-                BackButton(
-                    stringResource(id = copy.page_title_settings),
-                    Destination.HomeScreen,
-                    navController,
-                )
+                BackButton(stringResource(id = copy.page_title_settings),Destination.HomeScreen,navController,)
             }
 
             // CONTAINER: All game settings found here
@@ -90,27 +150,36 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
             ) {
                 // ELEMENTS: All setting items needed to start game
                 Radio(
-                    // TODO: change to "<player 1 name>'s marker"
-                    title = "your marker",
-                    labels = arrayOf("x", "o")
+                    title = viewModel.player1,
+                    viewModel = viewModel,
+                    onClick = markerUnit,
+                    labels = markerOptions,
+                    selectedIndex = viewModel.player1Marker,
                 )
 
                 Radio(
                     title = "who goes first?",
-                    // TODO: change labels to "<p1 name>", "<p2 name>"
-                    labels = arrayOf("jasmine", "guest"),
+                    viewModel = viewModel,
+                    onClick = startUnit,
+                    labels = startOptions,
+                    selectedIndex = viewModel.startingSelection,
                 )
 
                 Radio(
                     title = "board size",
-                    labels = arrayOf("3x3", "4x4", "5x5"),
+                    viewModel = viewModel,
+                    onClick = sizeUnit,
+                    labels = boardOptions,
+                    selectedIndex = viewModel.boardSelection,
                 )
 
                 Radio(
                     title = "win condition (in a row)",
-                    labels = arrayOf("3", "4", "5"),
-                    // TODO: Remove this, this was just to test that disabled buttons are working
-                    isDisabled = arrayOf(false, true, true)
+                    viewModel = viewModel,
+                    onClick = winUnit,
+                    labels = winOptions,
+                    selectedIndex = viewModel.winConditionSelection,
+                    isDisabled = viewModel.winSelectable
                 )
             }
 
@@ -122,11 +191,10 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
                 // ELEMENT: Button to start game
                 PrimaryButton(
                     stringResource(id = copy.settings_action_start),
+                    navController = navController,
+                    destination = Destination.GameScreen,
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    // TODO: ADD ACTION HERE TO START GAME
-                    println("start game")
-                }
+                )
             }
         }
     }
@@ -141,7 +209,68 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayShortSettingsScreen(navController: NavHostController) {
+fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
+    // Radio variables
+    val markerOptions = arrayOf("x", "o")
+    val startOptions = arrayOf(viewModel.player1, viewModel.player2)
+    val boardOptions = arrayOf("3x3", "4x4", "5x5")
+    val winOptions = arrayOf("3", "4", "5")
+
+    // lambda's to pass in
+    val markerUnit: () -> Unit = {
+        when(viewModel.player1Marker){
+            0 -> viewModel.player1Marker = 1
+            1 -> viewModel.player1Marker = 0
+        }
+    }
+
+    val startUnit: () -> Unit = {
+        when(viewModel.startingSelection){
+            0 -> viewModel.startingSelection = 1
+            1 -> viewModel.startingSelection = 0
+        }
+    }
+
+    val sizeUnit: () -> Unit = {
+        when(viewModel.boardSelection){
+            0 -> {
+                viewModel.boardSelection = 1
+                viewModel.winSelectable = arrayOf(false, false, true)
+            }
+            1 -> {
+                viewModel.boardSelection = 2
+                viewModel.winSelectable = arrayOf(false, false, false)
+            }
+            2 -> {
+                viewModel.boardSelection = 0
+                viewModel.winSelectable = arrayOf(false, true, true)
+            }
+        }
+    }
+
+    val winUnit: () -> Unit = {
+        when(viewModel.winConditionSelection){
+            0 -> {
+                if(viewModel.winSelectable[1]){
+                    viewModel.winConditionSelection = 0
+                }
+                else{
+                    viewModel.winConditionSelection = 1
+                }
+            }
+            1 -> {
+                if(viewModel.winSelectable[2]){
+                    viewModel.winConditionSelection = 0
+                }
+                else{
+                    viewModel.winConditionSelection = 2
+                }
+            }
+            2 -> {
+                viewModel.winConditionSelection = 0
+            }
+        }
+    }
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier
@@ -171,7 +300,8 @@ fun DisplayShortSettingsScreen(navController: NavHostController) {
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
-                    .weight(1f).fillMaxHeight(),
+                    .weight(1f)
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.spacedBy(space = 16.dp),
             ) {
                 // ELEMENTS: All setting items needed to start game
@@ -180,17 +310,24 @@ fun DisplayShortSettingsScreen(navController: NavHostController) {
                     horizontalArrangement = Arrangement.spacedBy(32.dp)
                 ) {
                     Radio(
-                        // TODO: change to "<player 1 name>'s marker"
-                        title = "your marker",
-                        labels = arrayOf("x", "o"),
-                        selectedIndex = 0,
-                        modifier = Modifier.fillMaxWidth().weight(1f)
+                        title = viewModel.player1,
+                        viewModel = viewModel,
+                        onClick = markerUnit,
+                        labels = markerOptions,
+                        selectedIndex = viewModel.player1Marker,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
                     )
                     Radio(
                         title = "board size",
-                        labels = arrayOf("3x3", "4x4", "5x5"),
-                        selectedIndex = 0,
-                        modifier = Modifier.fillMaxWidth().weight(1f)
+                        viewModel = viewModel,
+                        onClick = sizeUnit,
+                        labels = boardOptions,
+                        selectedIndex = viewModel.boardSelection,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
                     )
                 }
 
@@ -200,17 +337,25 @@ fun DisplayShortSettingsScreen(navController: NavHostController) {
                 ) {
                     Radio(
                         title = "who goes first?",
-                        // TODO: change labels to "<p1 name>", "<p2 name>"
-                        labels = arrayOf("jasmine", "guest"),
-                        selectedIndex = 0,
-                        modifier = Modifier.fillMaxWidth().weight(1f)
+                        viewModel = viewModel,
+                        onClick = startUnit,
+                        labels = startOptions,
+                        selectedIndex = viewModel.startingSelection,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
                     )
 
                     Radio(
                         title = "win condition (in a row)",
-                        labels = arrayOf("3", "4", "5"),
-                        selectedIndex = 0,
-                        modifier = Modifier.fillMaxWidth().weight(1f)
+                        viewModel = viewModel,
+                        onClick = winUnit,
+                        labels = winOptions,
+                        selectedIndex = viewModel.winConditionSelection,
+                        isDisabled = viewModel.winSelectable,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
                     )
                 }
             }
@@ -221,11 +366,10 @@ fun DisplayShortSettingsScreen(navController: NavHostController) {
                 // ELEMENT: Button to start game
                 PrimaryButton(
                     stringResource(id = copy.settings_action_start),
+                    navController = navController,
+                    destination = Destination.GameScreen,
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    // TODO: ADD ACTION HERE TO START GAME
-                    println("start game")
-                }
+                )
             }
         }
     }
