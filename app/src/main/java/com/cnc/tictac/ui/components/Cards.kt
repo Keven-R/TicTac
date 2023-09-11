@@ -176,10 +176,10 @@ fun PlayerSelectCard (
                 // ELEMENT: BUTTON
                 SecondaryButton(
                     label = stringResource(id = copy.settings_change_player),
-                    navController = navController,
-                    destination = destination,
                     modifier = Modifier.fillMaxWidth()
-                )
+                ){
+                    navController.navigate(destination.route)
+                }
             }
         }
     } else {
@@ -211,10 +211,10 @@ fun PlayerSelectCard (
             // ELEMENT: BUTTON
             SecondaryButton(
                 label = stringResource(id = copy.settings_change_player),
-                navController = navController,
-                destination = destination,
                 modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
-            )
+            ){
+                navController.navigate(destination.route)
+            }
         }
     }
 }

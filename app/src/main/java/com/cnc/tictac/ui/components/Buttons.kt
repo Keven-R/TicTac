@@ -28,24 +28,6 @@ import com.cnc.tictac.viewmodel.TicTacViewModel
  * @param[onClickAction] Action performed on click
  */
 
-//@Composable
-//fun DisplayButton(
-//    label: String,
-//    onClickEvent: () -> Unit
-//) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .clickable { onClickEvent }
-//    ) {
-//        Text(
-//            text = label,
-//            style = MaterialTheme.typography.headlineLarge,
-//            color = MaterialTheme.colorScheme.onPrimary,
-//        )
-//    }
-//}
-
 @Composable
 fun DisplayButton(
     label: String,
@@ -207,29 +189,6 @@ fun SecondaryButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        colors = buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-        ),
-        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
-        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onPrimary)
-    }
-}
-
-@Composable
-fun SecondaryButton(
-    label: String,
-    navController: NavHostController,
-    destination: Destination,
-    modifier: Modifier = Modifier
-) {
-    OutlinedButton(
-        onClick = {navController.navigate(destination.route)},
         colors = buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
