@@ -1,30 +1,116 @@
 package com.cnc.tictac.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.cnc.tictac.R.drawable as images
 
 /* GameBoard
  *
  * Knows uses:
- *  - GameScreen: Displayes game board
+ *  - GameScreen: Displays game board
  *
  * REQUIRED PARAMS
- * @param[isRowLayout] Layout of card
- * @param[playerName] String of player's name
- * @param[playerAvatarResourceId] Resource ID of player's chosen avatar
- * @param[playerMarker] "x" or "o
- * @param[isGameEnded] True if game completed, false if ongoing
+ * @param[modifier] LazyVerticalGrid modifier
+ * @param[isGameActive] true if game is ongoing (default = true)
+ * @param[board] 1d array of strings containing content for each cell of the board
+ * @param[boardSize] number of cells in 1 row of the board i.e. 3/4/5
+ * @param[winIndices] 1d array of Boolean where true = part of the win condition
  *
- * OPTIONAL PARAMS
- * -- Game is ongoing
- * @param[isPlayerTurn] True if player turn, else false
- * @param[secondsLeft] 0 by default (not player's turn), otherwise 0-10
+ * SAMPLE board (3x3)
+ * [row 1       ][row 2     ][row 3      ]
+ * ["", "o", "x", "", "", "", "", "", "x"]
  *
- * -- Game is ended
- * @param[playerWinStatus] Win/loss/draw status for that player. See enum below.
+ * SAMPLE winIndices (diagonal win)
+ * [true, false, false, false, true, false, false, false, true]
+ *
+ * Matrix view of winIndices above:
+ * [    [true, false, false,],
+ *      [false, true, false],
+ *      [false, false, true]]
  */
 @Composable
 fun GameBoard (
-    board: Array<IntArray>
-
+    modifier: Modifier = Modifier,
+    isGameActive: Boolean = true,
+    boardSize: Int,
+    board: Array<String>, // 3, 4, 5 only
+    winIndices: Array<Boolean>? = null,
 ) {
+        LazyVerticalGrid(
+            modifier = modifier,
+            columns = GridCells.Fixed(count = boardSize),
+            content = {
+                items(boardSize * boardSize) { i ->
+                    BoardCell(
+                        modifier = Modifier.fillMaxSize(),
+                        isGameActive = isGameActive,
+                        win = if (winIndices != null) winIndices[i] else false,
+                        content = board[i]
+                    )
+                }
+            }
+        )
+    }
+
+@Composable
+fun BoardCell (
+    modifier: Modifier = Modifier,
+    isGameActive: Boolean = true,
+    win: Boolean = false,
+    content: String,
+) {
+    var borderColor : Color
+    var bgColor : Color
+    var contentColor : Color
+
+    if (isGameActive) {
+        borderColor = if (content != "") MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.outlineVariant
+        bgColor = MaterialTheme.colorScheme.primary
+        contentColor = if (content != "") MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
+    } else {
+        borderColor = if (win) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.outline
+        bgColor = if (win) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+        contentColor = if (win) MaterialTheme.colorScheme.onSecondary else borderColor
+    }
+
+    Box (
+        modifier = modifier
+            .clip(CircleShape)
+            .border(1.dp, borderColor, CircleShape)
+            .background(bgColor)
+            .aspectRatio(1f),
+        contentAlignment = Alignment.Center
+    ) {
+        if (content != "") {
+            if (content == "o") {
+                Avatar(
+                    avatarResourceId = if (win) images.marker_o_win else images.marker_o_default,
+                    onPrimaryColour = !win,
+                    color = contentColor,
+                )
+            } else {
+                Avatar(
+                    avatarResourceId = if (win) images.marker_x_win else images.marker_x_default,
+                    onPrimaryColour = !win,
+                    color = contentColor,
+                )
+            }
+        } else {
+            Text(text = content)
+        }
+    }
 }

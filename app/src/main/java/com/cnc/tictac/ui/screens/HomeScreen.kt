@@ -38,12 +38,12 @@ fun HomeScreen(navController: NavHostController,viewModel: TicTacViewModel) {
         is DeviceInfo.DeviceType.Compact -> {
             DisplayWideHomeScreen(navController, viewModel)
             // TEMP for testing
-//            GameScreen(navController, viewModel)
+            // GameScreen(navController, viewModel)
         }
         else -> {
             DisplayNarrowHomeScreen(navController, viewModel)
-//             TEMP for testing
-//            GameScreen(navController, viewModel)
+            // TEMP for testing
+            //GameScreen(navController, viewModel)
         }
     }
 }

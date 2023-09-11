@@ -33,7 +33,8 @@ fun TicTacTheme(
     content: @Composable() () -> Unit
 ) {
     val colors = if (!useDarkTheme) {
-        LightColors
+        // LightColors
+        DarkColors
     } else {
         DarkColors
     }
@@ -46,5 +47,5 @@ fun TicTacTheme(
     )
 
     val systemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(color = LightColors.primary)
+    systemUiController.setSystemBarsColor(color = DarkColors.primary)
 }

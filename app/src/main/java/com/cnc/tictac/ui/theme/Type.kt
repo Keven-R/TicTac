@@ -21,6 +21,12 @@ val Inter = FontFamily(
     Font(
         googleFont = GoogleFont("Inter"),
         fontProvider = provider,
+        weight = FontWeight.Light
+    ),
+
+    Font(
+        googleFont = GoogleFont("Inter"),
+        fontProvider = provider,
         weight = FontWeight.Medium
     ),
 
@@ -53,6 +59,22 @@ val Typography = Typography(
         fontFamily = Inter,
         fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp
+    ),
+
+
+    /* USES
+     *
+     * - Markers for game board
+     */
+    displayMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.Light,
+        fontSize = 80.sp,
+    ),
+    displayLarge = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 80.sp
     ),
 
     /* USES
@@ -116,4 +138,6 @@ val Typography = Typography(
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp
     ),
+
+
 )

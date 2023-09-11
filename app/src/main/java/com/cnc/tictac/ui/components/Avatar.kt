@@ -11,8 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ContentScale.Companion.FillWidth
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,15 +36,18 @@ fun Avatar(
     avatarResourceId: Int = images.avatar_1,
     contentDescriptionId: Int = copy.avatar,
     onPrimaryColour: Boolean = true,
+    color: Color? = null,
     imageModifier: Modifier = Modifier
 ) {
-    val color = if (onPrimaryColour) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
+    var recolor = if (onPrimaryColour) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
+    recolor = if (color != null) color else recolor
+
     Image(
         painter = painterResource(id = avatarResourceId),
         contentDescription = stringResource(id = contentDescriptionId),
         modifier = imageModifier,
-        colorFilter = ColorFilter.tint(color),
-        contentScale = ContentScale.FillWidth
+        colorFilter = ColorFilter.tint(recolor),
+        contentScale = FillWidth
     )
 }
 /* AvatarBlock

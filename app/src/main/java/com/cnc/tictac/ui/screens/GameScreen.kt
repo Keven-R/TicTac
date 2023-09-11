@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.R
+import com.cnc.tictac.ui.components.GameBoard
 import com.cnc.tictac.ui.components.GameMenuButtonGroup
 import com.cnc.tictac.ui.components.GamePlayerCard
 import com.cnc.tictac.ui.components.PLAYERWINSTATUS
@@ -73,13 +74,13 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 4.dp)
+                .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 4.dp)
                 .fillMaxHeight(),
             horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // CONTAINER: Left side
             Column (
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight().weight(3f).fillMaxWidth(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 // CONTAINER: Game player cards
@@ -89,7 +90,7 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
                     // ELEMENT: player 1
                     // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                     GamePlayerCard(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier,
                         isRowLayout = true,
 
                         playerName = "jasmine",                         // TODO: ADD player name
@@ -128,12 +129,19 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
 
             // CONTAINER: right side (has game board)
             Column(
-                modifier = Modifier
-                    .weight(1f).fillMaxWidth()
-                    .fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight().weight(2f).fillMaxWidth(),
                 horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center
             ) {
-                // TODO: @JASMINE change to lazy grid
+                // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
+                GameBoard(
+                    modifier = Modifier.fillMaxHeight(),
+                    isGameActive = true,                                        // TODO: REQUIRED arg
+                    boardSize = 3,                                              // TODO: REQUIRED arg
+                    board = arrayOf("o", "x", "x", "", "o", "", "", "", "o"),   // TODO: REQUIRED arg
+                    // TODO: OPTIONAL arg, only add if game is finished
+                    // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
+                )
             }
         }
     }
@@ -164,7 +172,7 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
             horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
             // CONTAINER: Left side (game player cards)
-            Column (
+            Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -209,7 +217,21 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                // TODO: @JASMINE change to lazy grid
+                // CONTAINER: game board
+                Column(
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
+                    GameBoard(
+                        modifier = Modifier.fillMaxWidth(),
+                        isGameActive = true,                                        // TODO: REQUIRED arg
+                        boardSize = 3,                                              // TODO: REQUIRED arg
+                        board = arrayOf("o", "x", "x", "", "o", "", "", "", "o"),   // TODO: REQUIRED arg
+                        // TODO: OPTIONAL arg, only add if game is finished
+                        // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
+                    )
+                }
 
                 // ELEMENT: all menu controls
                 // TODO: remove "enableUndo" arg if undo is available to use
@@ -218,6 +240,7 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
         }
     }
 }
+
 
 /* COMPOSABLE
  * DisplayGameScreenPortraitMobile
@@ -260,8 +283,19 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
             )
 
             // CONTAINER: game board
-            Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
-                // TODO: @JASMINE change to lazy grid
+            Column(
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
+                GameBoard(
+                    modifier = Modifier.fillMaxWidth(),
+                    isGameActive = true,                                        // TODO: REQUIRED arg
+                    boardSize = 3,                                              // TODO: REQUIRED arg
+                    board = arrayOf("o", "x", "x", "", "o", "", "", "", "o"),   // TODO: REQUIRED arg
+                    // TODO: OPTIONAL arg, only add if game is finished
+                    // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
+                )
             }
 
             // ELEMENT: player 2
@@ -311,9 +345,12 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
                 .padding(top = 24.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row (
+
+            // CONTAINER: Player Cards
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween) {
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 // ELEMENT: player 1
                 // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                 GamePlayerCard(
@@ -350,8 +387,28 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
 
             // CONTAINER: game board
             Column(
-                modifier = Modifier.weight(1f).fillMaxHeight()) {
-                // TODO: @JASMINE change to lazy grid
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
+                GameBoard(
+                    modifier = Modifier.fillMaxWidth(),
+                    isGameActive = true,                                        // TODO: REQUIRED arg
+                    boardSize = 3,                                              // TODO: REQUIRED arg
+                    board = arrayOf(
+                        "o",
+                        "x",
+                        "x",
+                        "",
+                        "o",
+                        "",
+                        "",
+                        "",
+                        "o"
+                    ),   // TODO: REQUIRED arg
+                    // TODO: OPTIONAL arg, only add if game is finished
+                    // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
+                )
             }
 
             // CONTAINER: all menu controls
