@@ -195,6 +195,8 @@ fun SecondaryButtonDisabled(
         colors = buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContentColor = MaterialTheme.colorScheme.outline,
+            disabledContainerColor = MaterialTheme.colorScheme.primary,
         ),
         border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
         modifier = modifier
@@ -204,7 +206,8 @@ fun SecondaryButtonDisabled(
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.outline)
+            color = MaterialTheme.colorScheme.outline
+        )
     }
 }
 

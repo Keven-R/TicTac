@@ -36,14 +36,14 @@ fun HomeScreen(navController: NavHostController,viewModel: TicTacViewModel) {
     // Use different layout for mobile landscape only
     when (deviceInfo.screenHeightType) {
         is DeviceInfo.DeviceType.Compact -> {
-//            DisplayWideHomeScreen(navController, viewModel)
+            DisplayWideHomeScreen(navController, viewModel)
             // TEMP for testing
-            GameScreen(navController, viewModel)
+//            GameScreen(navController, viewModel)
         }
         else -> {
-//            DisplayNarrowHomeScreen(navController, viewModel)
-            // TEMP for testing
-            GameScreen(navController, viewModel)
+            DisplayNarrowHomeScreen(navController, viewModel)
+//             TEMP for testing
+//            GameScreen(navController, viewModel)
         }
     }
 }
