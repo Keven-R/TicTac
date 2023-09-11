@@ -57,7 +57,7 @@ fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewMo
         navController = navController,
         startDestination = Destination.HomeScreen.route
     ){
-        composable(route = Destination.HomeScreen.route){ HomeScreen(navController) }
+        composable(route = Destination.HomeScreen.route){ HomeScreen(navController,viewModel) }
         composable(route = Destination.GameScreen.route){ GameScreen(navController,viewModel) }
         composable(route = Destination.GameSettingsScreen.route){ GameSettingsScreen(navController,viewModel) }
         composable(route = Destination.MultiplayerSettingsScreen.route){ MultiplayerSettingsScreen(navController, viewModel) }
