@@ -16,6 +16,13 @@ class TicTacViewModel: ViewModel() {
     /* Mutable states */
     var player1 by mutableStateOf("Jasmine")
     var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
+    var player1StatMarker by mutableStateOf("ooo/////xx")
+    var player1WinString by mutableStateOf("wins: 8 (33%)")    // These stat strings might need to be
+    var player1DrawString by mutableStateOf("draws: 13 (54%)") // processed depending on backend
+    var player1LossesString by mutableStateOf("losses: 3 (13%)")
+    var player1TotalGamesString by mutableStateOf("total games 24")
+
+
     var player2 by mutableStateOf("AI")
     var player2Avatar by mutableIntStateOf(R.drawable.avatar_2)
     var player1Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'

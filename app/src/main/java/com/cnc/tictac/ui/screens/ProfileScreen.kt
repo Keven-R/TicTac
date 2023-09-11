@@ -39,10 +39,10 @@ fun ProfileScreen(navController: NavHostController, viewModel: TicTacViewModel) 
     // Use same UI layout for COMPACT and EXPANDED
     when (deviceInfo.screenHeightType) {
         is DeviceInfo.DeviceType.Compact -> {
-            DisplayShortProfileScreen(navController)
+            DisplayShortProfileScreen(navController,viewModel)
         }
         else -> {
-            DisplayDefaultProfileScreen(navController)
+            DisplayDefaultProfileScreen(navController,viewModel)
         }
     }
 }
@@ -57,7 +57,7 @@ fun ProfileScreen(navController: NavHostController, viewModel: TicTacViewModel) 
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayDefaultProfileScreen(navController: NavHostController) {
+fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier
@@ -77,11 +77,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                     .fillMaxWidth()
             ) {
                 // ELEMENT: Back button showing current page title "profile")
-                BackButton(
-                    stringResource(id = copy.page_title_profile),
-                    Destination.HomeScreen,
-                    navController,
-                )
+                BackButton(stringResource(id = copy.page_title_profile),Destination.HomeScreen,navController)
             }
 
             // CONTAINER: User info and stats
@@ -104,12 +100,13 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        // TODO: Change avatarResourceId arg to user selected
-                        Avatar(imageModifier = Modifier.size(160.dp))
+                        Avatar(
+                            avatarResourceId = viewModel.player1Avatar,
+                            imageModifier = Modifier.size(160.dp)
+                        )
                     }
 
-                    // TODO: Replace string with user's name.
-                    TitleMedium("jasmine", modifier = Modifier.fillMaxWidth())
+                    TitleMedium(viewModel.player1, modifier = Modifier.fillMaxWidth())
                 }
 
                 // CONTAINER: User's stats
@@ -118,14 +115,12 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     // ELEMENT: win ratio block
-                    // TODO: replace string with actual player stats
-                    MarkerGraphics(content = "ooo/////xx", rowModifier = Modifier.fillMaxWidth())
+                    MarkerGraphics(content = viewModel.player1StatMarker, rowModifier = Modifier.fillMaxWidth())
 
-                    // TODO: replace with actual stats
-                    BodyMedium(content = "wins: 8 (33%)", modifier = Modifier.fillMaxWidth().padding(top = 24.dp))
-                    BodyMedium(content = "draws: 13 (54%)", modifier = Modifier.fillMaxWidth())
-                    BodyMedium(content = "losses: 3 (13%)", modifier = Modifier.fillMaxWidth())
-                    BodyMedium(content = "total games 24", modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                    BodyMedium(content = viewModel.player1WinString, modifier = Modifier.fillMaxWidth().padding(top = 24.dp))
+                    BodyMedium(content = viewModel.player1DrawString, modifier = Modifier.fillMaxWidth())
+                    BodyMedium(content = viewModel.player1LossesString, modifier = Modifier.fillMaxWidth())
+                    BodyMedium(content = viewModel.player1TotalGamesString, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
                 }
             }
 
@@ -156,7 +151,6 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // TODO: ADD ACTIION HERE to switch user
                     navController.navigate(Destination.UserSelectScreen.route)
                 }
             }
@@ -173,7 +167,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController) {
  * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
  */
 @Composable
-fun DisplayShortProfileScreen(navController: NavHostController) {
+fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier
@@ -190,11 +184,7 @@ fun DisplayShortProfileScreen(navController: NavHostController) {
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title "profile")
-                BackButton(
-                    stringResource(id = copy.page_title_profile),
-                    Destination.HomeScreen,
-                    navController,
-                )
+                BackButton(stringResource(id = copy.page_title_profile),Destination.HomeScreen,navController)
             }
 
             // CONTAINER: All game settings found here
@@ -212,11 +202,12 @@ fun DisplayShortProfileScreen(navController: NavHostController) {
                     verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // TODO: Change avatarResourceId arg to user selected
-                    Avatar(imageModifier = Modifier.size(160.dp))
+                    Avatar(
+                        avatarResourceId = viewModel.player1Avatar,
+                        imageModifier = Modifier.size(160.dp)
+                    )
 
-                    // TODO: Replace string with user's name.
-                    TitleMedium("jasmine")
+                    TitleMedium(viewModel.player1)
                 }
 
                 // CONTAINER: User's stats
@@ -224,14 +215,12 @@ fun DisplayShortProfileScreen(navController: NavHostController) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     // ELEMENT: win ratio block
-                    // TODO: replace string with actual player stats
-                    MarkerGraphics(content = "ooo/////xx", alignCenter = false)
+                    MarkerGraphics(content = viewModel.player1StatMarker, alignCenter = false)
 
-                    // TODO: replace with actual stats
-                    BodyMedium(content = "wins: 8 (33%)", modifier = Modifier.padding(top = 16.dp))
-                    BodyMedium(content = "draws: 13 (54%)")
-                    BodyMedium(content = "losses: 3 (13%)")
-                    BodyMedium(content = "total games 24", modifier = Modifier.padding(top = 8.dp))
+                    BodyMedium(content = viewModel.player1WinString, modifier = Modifier.padding(top = 16.dp))
+                    BodyMedium(content = viewModel.player1DrawString)
+                    BodyMedium(content = viewModel.player1LossesString)
+                    BodyMedium(content = viewModel.player1TotalGamesString, modifier = Modifier.padding(top = 8.dp))
                 }
             }
 
@@ -262,7 +251,6 @@ fun DisplayShortProfileScreen(navController: NavHostController) {
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // TODO: ADD ACTION HERE to switch user
                     navController.navigate(Destination.UserSelectScreen.route)
                 }
             }

@@ -33,7 +33,7 @@ import com.cnc.tictac.R.string as copy
  */
 @Composable
 fun Avatar(
-    avatarResourceId: Int = images.avatar_1,
+    avatarResourceId: Int,
     contentDescriptionId: Int = copy.avatar,
     onPrimaryColour: Boolean = true,
     color: Color? = null,
