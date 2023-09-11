@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.cnc.tictac.R
 
 private const val TAG = "TicTacViewModel"
 private const val TYPE = "EVENT: "
@@ -13,8 +14,10 @@ private const val TYPE = "EVENT: "
 class TicTacViewModel: ViewModel() {
 
     /* Mutable states */
-    var player1 by mutableStateOf("Player 1")
+    var player1 by mutableStateOf("Jasmine")
+    var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player2 by mutableStateOf("AI")
+    var player2Avatar by mutableIntStateOf(R.drawable.avatar_2)
     var player1Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var startingSelection by mutableIntStateOf(0) // 0 = "Player 1", 1 = "Player 2"
     var boardSelection by mutableIntStateOf(0) // 0 = 3x3, 1 = 4x4, 2 = 5x5
