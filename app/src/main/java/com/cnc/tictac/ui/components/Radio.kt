@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.cnc.tictac.viewmodel.TicTacViewModel
 
 /* Radio
  * Used to enable a user to select 1 out of up to 3 options.
@@ -23,16 +24,17 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun Radio(
+    modifier: Modifier = Modifier,
     title: String = "Select one: ",
-    numOptions: Int = 2,
+    viewModel: TicTacViewModel, // Needed to process onClick
+    onClick: () -> Unit,
     labels: Array<String> = arrayOf("1", "2"),
     isDisabled: Array<Boolean> = arrayOf(false, false, false),
-    selectedIndex: Int = 0,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    selectedIndex: Int = 0
 ) {
     // CONTAINER: for both title and radio choices
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         TitleMedium(title)
@@ -47,28 +49,35 @@ fun Radio(
             )) {
 
             // Style radio button depending on if it's selected, disabled, or default
-            var ind = 0
-            for (currIndex in labels.indices) {
+            for ((ind, currIndex) in labels.indices.withIndex()) {
                 if (currIndex == selectedIndex) {
                     PrimaryButton(
                         label = labels[currIndex],
-                        modifier = Modifier.fillMaxWidth().weight(1f)
-                    ) { // TODO: what does clicking on button do????
-                    }
+                        viewModel,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        onClick = onClick
+                    )
                 } else if (isDisabled[ind]) {
                     SecondaryButtonDisabled(
                         label = labels[currIndex],
-                        modifier = Modifier.fillMaxWidth().weight(1f))
-                    { // TODO: what does clicking on button do????
-                    }
+                        viewModel,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        onClick = onClick
+                    )
                 } else {
                     SecondaryButton(
                         label = labels[currIndex],
-                        modifier = Modifier.fillMaxWidth().weight(1f))
-                    { // TODO: what does clicking on button do????
-                    }
+                        viewModel,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        onClick = onClick
+                    )
                 }
-                ind++
             }
         }
     }
