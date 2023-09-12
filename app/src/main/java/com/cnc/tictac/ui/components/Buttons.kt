@@ -183,6 +183,34 @@ fun PrimaryButton(
     }
 }
 
+@Composable
+fun PrimaryButton(
+    label: String,
+    navController: NavHostController,
+    destination: Destination,
+    viewModel: TicTacViewModel,
+    event: TicTacEvent,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = {
+            viewModel.onEvent(event)
+            navController.navigate(destination.route)
+                  },
+        colors = buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+        ),
+        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.secondary)),
+        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSecondary)
+    }
+}
+
 /* SecondaryButton
  * Used for non-primary actions on the page.
  * Uses OutlinedButton with custom colours + min height 44dp.
@@ -269,33 +297,33 @@ fun SecondaryButtonDisabled(
     }
 }
 
-@Composable
-fun SecondaryButtonDisabled(
-    label: String,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    OutlinedButton(
-        onClick = onClick,
-        enabled = false,
-        colors = buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContentColor = MaterialTheme.colorScheme.outline,
-            disabledContainerColor = MaterialTheme.colorScheme.primary,
-        ),
-        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
-        modifier = modifier
-            .heightIn(44.dp)
-            .widthIn(44.dp)
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.outline
-        )
-    }
-}
+//@Composable
+//fun SecondaryButtonDisabled(
+//    label: String,
+//    modifier: Modifier = Modifier,
+//    onClick: () -> Unit
+//) {
+//    OutlinedButton(
+//        onClick = onClick,
+//        enabled = false,
+//        colors = buttonColors(
+//            containerColor = MaterialTheme.colorScheme.primary,
+//            contentColor = MaterialTheme.colorScheme.onPrimary,
+//            disabledContentColor = MaterialTheme.colorScheme.outline,
+//            disabledContainerColor = MaterialTheme.colorScheme.primary,
+//        ),
+//        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
+//        modifier = modifier
+//            .heightIn(44.dp)
+//            .widthIn(44.dp)
+//    ) {
+//        Text(
+//            text = label,
+//            style = MaterialTheme.typography.labelSmall,
+//            color = MaterialTheme.colorScheme.outline
+//        )
+//    }
+//}
 
 /* GameMenuButton
  * Used for actions in the game screen page.

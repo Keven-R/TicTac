@@ -140,7 +140,6 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // TODO: ADD ACTION HERE TO GO TO EDIT PROFILE
                     navController.navigate(Destination.UserDetailScreen.route)
                 }
 
@@ -239,7 +238,6 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // TODO: ADD ACTION HERE TO GO TO EDIT PROFILE
                     navController.navigate(Destination.UserDetailScreen.route)
                 }
 
