@@ -4,17 +4,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
@@ -25,39 +30,178 @@ import com.cnc.tictac.R.string as copy
  * Knows uses:
  *  - GameScreen: Player information when game active or ended.
  *
- * @param[playerDidWin] Null if game is active, True if player won
- * @param[isPlayerTurn] Whether it's the current player's turn or not
+ * REQUIRED PARAMS
+ * @param[isRowLayout] Layout of card
  * @param[playerName] String of player's name
- * @param[playerAvatarId] Resource ID of player's chosen avatar
- * @param[secondsLeft] Null if not player's turn, otherwise 0-10
+ * @param[playerAvatarResourceId] Resource ID of player's chosen avatar
+ * @param[playerMarker] "x" or "o
+ * @param[isGameEnded] True if game completed, false if ongoing
+ *
+ * OPTIONAL PARAMS
+ * -- Game is ongoing
+ * @param[isPlayerTurn] True if player turn, else false
+ * @param[secondsLeft] 0 by default (not player's turn), otherwise 0-10
+ *
+ * -- Game is ended
+ * @param[playerWinStatus] Win/loss/draw status for that player. See enum below.
  */
+enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 @Composable
 fun GamePlayerCard (
-    playerDidWin: Boolean? = null, // TODO: From ViewModel
-    isPlayerTurn: Boolean? = null, // TODO: From ViewModel
-    playerName: String, // TODO: From ViewModel
-    playerAvatarId: String, // TODO: From ViewModel
-    secondsLeft: Int? = null, // TODO: From ViewModel
-    modifier: Modifier = Modifier.fillMaxWidth()
-) {
+    modifier: Modifier = Modifier,
+    isRowLayout: Boolean,
+    inverse: Boolean = false, // True for P2 in Medium+ width / portrait orientation
+    playerName: String,
+    playerAvatarResourceId: Int,
+    playerMarker: String = "x", // "x" or "o"
+    isGameEnded: Boolean,
 
+    // if Game is ongoing, require:
+    isPlayerTurn: Boolean = false,
+    secondsLeft: Int = 0, // 0 if not player's turn
+
+    // if Game is ended, require:
+    playerWinStatus: Enum<PLAYERWINSTATUS> = PLAYERWINSTATUS.DRAW // TODO: not sure what our viewmodel uses, pls change
+) {
+    // Avatar design and content logic
+    var borderTransparent: Boolean
+    var isFilled: Boolean
+    var playerNameLabel: String
+    var playerStatusLabel: String
+    var transparentIndex: Int
+    val didPlayerWin = playerWinStatus == PLAYERWINSTATUS.WIN
+    var padding = 16
+    val alignment = if (inverse) Alignment.End else Alignment.Start
+    var avatarSize = 104
+
+    if (isGameEnded) {
+        // Design and content if game has ended
+        borderTransparent = !didPlayerWin   // Transparent if not winner
+        isFilled = didPlayerWin // Fill avatar block if player win
+        playerNameLabel = playerName
+        playerStatusLabel = when (playerWinStatus) {
+            PLAYERWINSTATUS.WIN -> {
+                stringResource(id = copy.game_status_win)
+            }
+
+            PLAYERWINSTATUS.LOSS -> {
+                stringResource(id = copy.game_status_loss)
+            }
+
+            else -> {
+                stringResource(id = copy.game_status_draw)
+            }
+        }
+        transparentIndex = playerStatusLabel.length
+    } else {
+        // Design and content if game is ongoing
+        borderTransparent = !isPlayerTurn   // Transparent if not current turn
+        isFilled = isPlayerTurn // Fill if player's turn
+        playerNameLabel = if (isPlayerTurn) {
+            "$playerName's turn"
+        } else {
+            playerName
+        } // Append if current turn
+        playerStatusLabel = playerMarker.repeat(10)
+        transparentIndex = if (isPlayerTurn) secondsLeft else 0
+    }
+
+    if (isRowLayout) {
+        // Use this layout for mobile landscape and ALL portrait
+        ReversibleRow(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            reverseLayout = inverse
+        ) {
+            AvatarBlock(
+                avatarResourceId = playerAvatarResourceId,
+                isCircle = true,
+                isFilled = isFilled,
+                isBorderTransparent = borderTransparent,
+                boxModifier = Modifier.width(avatarSize.dp),
+                padding = padding
+            )
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = alignment
+            ) {
+                Text(
+                    text = playerNameLabel,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+                MarkerGraphics(
+                    content = playerStatusLabel,
+                    transparentIndex = transparentIndex,
+                    alignCenter = false,
+                    rowModifier = Modifier,
+                    textModifier = Modifier
+                )
+            }
+        }
+    } else {
+        // Use this layout for non-mobile landscape
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = alignment
+        ) {
+            AvatarBlock(
+                avatarResourceId = playerAvatarResourceId,
+                isCircle = true,
+                isFilled = isFilled,
+                isBorderTransparent = borderTransparent,
+                boxModifier = Modifier.width(avatarSize.dp),
+                padding = padding
+            )
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = alignment
+            ) {
+                Text(
+                    text = playerNameLabel,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                MarkerGraphics(
+                    content = playerStatusLabel,
+                    transparentIndex = transparentIndex,
+                    alignCenter = false,
+                    rowModifier = Modifier,
+                    textModifier = Modifier
+                )
+            }
+        }
+    }
 }
 
-//@Preview
-//@Composable
-//fun GamePlayerCardPreview () {
-//    Box(modifier = Modifier.fillMaxSize()) {
-//        Row(modifier = Modifier.fillMaxWidth()) {
-//            GamePlayerCard(
-//                playerDidWin =,
-//                isPlayerTurn =,
-//                playerName =,
-//                playerAvatarId =,
-//                secondsLeft =,
-//            )
-//        }
-//    }
-//}
+@Composable
+fun ReversibleRow(
+    modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
+    reverseLayout: Boolean = false,
+    content: @Composable RowScope.() -> Unit
+) {
+    val originDirection = LocalLayoutDirection.current
+    val direction = when {
+        reverseLayout -> when (originDirection) {
+            LayoutDirection.Rtl -> LayoutDirection.Ltr
+            else -> LayoutDirection.Rtl
+        }
+        else -> originDirection
+    }
+    CompositionLocalProvider(LocalLayoutDirection provides direction) {
+        Row(modifier, horizontalArrangement, verticalAlignment) {
+            CompositionLocalProvider(LocalLayoutDirection provides originDirection) {
+                content()
+            }
+        }
+    }
+}
 
 /* MarkerGraphics
  *

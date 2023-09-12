@@ -5,11 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,11 +36,11 @@ fun GameScreen(navController: NavHostController, viewModel: TicTacViewModel) {
 
     if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
         when (deviceInfo.screenHeightType) {
-            // Mobile landscape layout
             is DeviceInfo.DeviceType.Compact -> {
                 DisplayGameScreenLandscapeMobile(navController, viewModel)
-            }
-            else -> {
+            } is DeviceInfo.DeviceType.Medium -> {
+                DisplayGameScreenLandscape(navController, viewModel)
+            } else -> {
                 DisplayGameScreenLandscape(navController, viewModel)
             }
         }
@@ -72,21 +74,18 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
     ) {
         // CONTAINER: All content on screen
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 4.dp)
-                .fillMaxHeight(),
-            horizontalArrangement = Arrangement.spacedBy(24.dp)
+            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 24.dp, end = 24.dp).fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(80.dp)
         ) {
             // CONTAINER: Left side
             Column (
-                modifier = Modifier.fillMaxHeight().weight(3f).fillMaxWidth(),
-                verticalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxHeight().width(IntrinsicSize.Max),
+                verticalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 // CONTAINER: Game player cards
                 Column (
-                    modifier = Modifier,
-                    verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween) {
                     // ELEMENT: player 1
                     // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                     GamePlayerCard(
@@ -129,13 +128,14 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
 
             // CONTAINER: right side (has game board)
             Column(
-                modifier = Modifier.fillMaxHeight().weight(2f).fillMaxWidth(),
+                modifier = Modifier.fillMaxHeight().weight(1f).fillMaxWidth(),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center
             ) {
                 // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
                 GameBoard(
                     modifier = Modifier.fillMaxHeight(),
+                    isContainerNarrow = false,
                     isGameActive = true,                                        // TODO: REQUIRED arg
                     boardSize = 3,                                              // TODO: REQUIRED arg
                     board = arrayOf("o", "x", "x", "", "o", "", "", "", "o"),   // TODO: REQUIRED arg
@@ -164,67 +164,65 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
             .background(color = MaterialTheme.colorScheme.primary)
     ) {
         // CONTAINER: All content on screen
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-                .fillMaxHeight(),
-            horizontalArrangement = Arrangement.spacedBy(32.dp)
+        Column (
+            modifier = Modifier.padding(24.dp).fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            // CONTAINER: Left side (game player cards)
-            Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceBetween
+            // CONTAINER: Left + right side of main content
+            Row(
+                modifier = Modifier.weight(1f).fillMaxHeight().fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(80.dp)
             ) {
-                // ELEMENT: player 1
-                // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
-                GamePlayerCard(
-                    modifier = Modifier,
-                    isRowLayout = true,
-
-                    playerName = "jasmine",                         // TODO: ADD player name
-                    playerAvatarResourceId = R.drawable.avatar_7,   // TODO: ADD player resource id
-                    playerMarker = "x",                             // TODO: ADD player marker
-                    isGameEnded = false,                            // TODO: Game status
-
-                    playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: REQUIRED IF game ended
-
-                    isPlayerTurn = true,                            // TODO: OPTIONAL, required if game ongoing
-                    secondsLeft = 8,                                // TODO: OPTPONAL, required if game ongoing
-                )
-
-                // ELEMENT: player 2
-                // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
-                GamePlayerCard(
-                    modifier = Modifier,
-                    isRowLayout = true,
-
-                    playerName = "guest",                           // TODO: ADD player name
-                    playerAvatarResourceId = R.drawable.avatar_2,   // TODO: ADD player resource id
-                    playerMarker = "o",                             // TODO: ADD player marker
-                    isGameEnded = false,                            // TODO: Game status
-
-                    playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: OPTIONAL, required if game ended
-
-                    isPlayerTurn = false,                           // TODO: OPTIONAL, required if game ongoing
-                    secondsLeft = 10,                               // TODO: OPTPONAL, required if game ongoing
-                )
-            }
-
-            // CONTAINER: right side (game board and menu)
-            Column(
-                modifier = Modifier.weight(1f).fillMaxWidth().fillMaxHeight(),
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween,
-            ) {
-                // CONTAINER: game board
+                // CONTAINER: Left side (game player cards)
                 Column(
-                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // ELEMENT: player 1
+                    // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
+                    GamePlayerCard(
+                        modifier = Modifier,
+                        isRowLayout = true,
+
+                        playerName = "jasmine",                         // TODO: ADD player name
+                        playerAvatarResourceId = R.drawable.avatar_7,   // TODO: ADD player resource id
+                        playerMarker = "x",                             // TODO: ADD player marker
+                        isGameEnded = false,                            // TODO: Game status
+
+                        playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: REQUIRED IF game ended
+
+                        isPlayerTurn = true,                            // TODO: OPTIONAL, required if game ongoing
+                        secondsLeft = 8,                                // TODO: OPTPONAL, required if game ongoing
+                    )
+
+                    // ELEMENT: player 2
+                    // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
+                    GamePlayerCard(
+                        modifier = Modifier,
+                        isRowLayout = true,
+
+                        playerName = "guest",                           // TODO: ADD player name
+                        playerAvatarResourceId = R.drawable.avatar_2,   // TODO: ADD player resource id
+                        playerMarker = "o",                             // TODO: ADD player marker
+                        isGameEnded = false,                            // TODO: Game status
+
+                        playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: OPTIONAL, required if game ended
+
+                        isPlayerTurn = false,                           // TODO: OPTIONAL, required if game ongoing
+                        secondsLeft = 10,                               // TODO: OPTPONAL, required if game ongoing
+                    )
+                }
+
+                // CONTAINER: right side (game board)
+                Column(
+                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
                     horizontalAlignment = Alignment.End,
                 ) {
+                    // ELEMENT: game board (occupy all right side)
                     // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
                     GameBoard(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxHeight(),
+                        isContainerNarrow = false,
                         isGameActive = true,                                        // TODO: REQUIRED arg
                         boardSize = 3,                                              // TODO: REQUIRED arg
                         board = arrayOf("o", "x", "x", "", "o", "", "", "", "o"),   // TODO: REQUIRED arg
@@ -232,11 +230,11 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
                         // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
                     )
                 }
-
-                // ELEMENT: all menu controls
-                // TODO: remove "enableUndo" arg if undo is available to use
-                GameMenuButtonGroup(enableUndo = false, modifier = Modifier.fillMaxWidth())
             }
+
+            // ELEMENT: all menu controls (fixed bottom)
+            // TODO: remove "enableUndo" arg if undo is available to use
+            GameMenuButtonGroup(enableUndo = false, modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -284,7 +282,9 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
 
             // CONTAINER: game board
             Column(
-                modifier = Modifier.weight(1f).fillMaxHeight(),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center
             ) {
                 // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
@@ -387,7 +387,9 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
 
             // CONTAINER: game board
             Column(
-                modifier = Modifier.weight(1f).fillMaxHeight(),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center
             ) {
                 // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
