@@ -140,8 +140,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // TODO: ADD ACTION HERE TO GO TO EDIT PROFILE
-                    println("edit profile")
+                    navController.navigate(Destination.UserDetailScreen.route)
                 }
 
                 // ELEMENT: Button to navigate to "switch user" screen
@@ -240,8 +239,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    // TODO: ADD ACTION HERE TO GO TO EDIT PROFILE
-                    println("edit profile")
+                    navController.navigate(Destination.UserDetailScreen.route)
                 }
 
                 // ELEMENT: Button to navigate to "switch user" screen
