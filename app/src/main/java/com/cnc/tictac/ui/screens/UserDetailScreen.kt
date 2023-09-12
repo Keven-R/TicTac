@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,6 +29,7 @@ import com.cnc.tictac.ui.components.BackButton
 import com.cnc.tictac.ui.components.ImageGridSingleSelect
 import com.cnc.tictac.ui.components.PrimaryButton
 import com.cnc.tictac.ui.components.SingleLineTextField
+import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 @Composable
@@ -49,6 +51,31 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
         .fillMaxSize()
         .background(color = MaterialTheme.colorScheme.primary)) {
         // CONTAINER: All content on screen
+
+        val avatarArray = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3, R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7, R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
+
+        // Should select users current avatar
+        fun getSelectedAvatar(): Int{
+            if(viewModel.newUser){
+                return 0
+            }
+            var currentAvatar = 0
+            if(viewModel.player1Edit){ currentAvatar = viewModel.player1Avatar }else{ viewModel.player2Avatar }
+
+            for((index, avatar) in avatarArray.withIndex()){
+                if(avatar == currentAvatar){
+                    return index
+                }
+            }
+            return 0
+        }
+
+        val selectedAvatar by remember { mutableIntStateOf(getSelectedAvatar()) }
+        var playerTextFieldValue by remember { mutableStateOf(when(viewModel.player1Edit){
+            true -> {if(viewModel.newUser){""}else{viewModel.player1}}
+            false -> {if(viewModel.newUser){""}else{viewModel.player2}}
+        }) }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -59,8 +86,15 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title)
                 BackButton(
-                    stringResource(id = R.string.page_title_edit_profile),  // TODO: ID is either "page_title_new_user" or "page_title_edit_profile'
-                    Destination.ProfileScreen,navController)               // TODO: Change depending on previous page
+                    stringResource(
+                        id = when(viewModel.newUser){
+                                true -> R.string.page_title_new_user
+                                false -> R.string.page_title_edit_profile }),
+                        destination = when(viewModel.newUser){
+                                        true -> Destination.UserSelectScreen
+                                        false -> Destination.ProfileScreen },
+                    navController
+                )
             }
 
             // CONTAINER: Editable user details
@@ -72,19 +106,17 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
                 horizontalArrangement = Arrangement.spacedBy(space = 32.dp),
             ) {
                 // ELEMENT: Text box
-                // TODO: View model -> update this to ensure value is correct.
-                var playerTextFieldValue by remember { mutableStateOf("") }
                 SingleLineTextField(
                     modifier = Modifier.width(160.dp),
                     label = stringResource(id = R.string.user_name_field_label),
-                    value = playerTextFieldValue, // TODO: Value should be empty string if creating new user. If editing profile, value should be player's current name.
+                    value = playerTextFieldValue,
                     placeholder = stringResource(id = R.string.user_name_placeholder)
                 ) {
                     playerTextFieldValue = it
                 }
 
                 // ELEMENT: Avatar select
-                // TODO: View model -> update avatar list + selected index.
+                // TODO: Make avatar selectable
                 ImageGridSingleSelect(
                     modifier = Modifier.weight(1f).fillMaxWidth().fillMaxHeight(),
                     gridModifier = Modifier.weight(1f).fillMaxHeight(),
@@ -94,8 +126,8 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
 //                        }
 //                    ),
                     label = stringResource(id = R.string.user_avatar_select_label),
-                    imageIds = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3, R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7, R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10),
-                    selectedIndex = 2,
+                    imageIds = avatarArray,
+                    selectedIndex = selectedAvatar,
                     isVerticalScroll = false
                 )
             }
@@ -104,10 +136,17 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Button to go to game settings screen
                 PrimaryButton(
-                    stringResource(id = R.string.user_save_action), // TODO: ID is either "user_create_action" or "user_save_action'
+                    stringResource(id = when(viewModel.newUser){
+                        true -> R.string.user_create_action
+                        false -> R.string.user_save_action
+                    }),
                     navController = navController,
-                    destination = Destination.GameSettingsScreen,   // TODO: change to go to either profile or user select screen
-                    modifier = Modifier.fillMaxWidth()
+                    destination = when(viewModel.newUser){
+                        true -> Destination.UserSelectScreen
+                        false -> Destination.ProfileScreen },
+                    viewModel = viewModel,
+                    event = TicTacEvent.SaveUser(playerTextFieldValue,avatarArray[selectedAvatar]),
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -121,6 +160,31 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
         .fillMaxSize()
         .background(color = MaterialTheme.colorScheme.primary)) {
         // CONTAINER: All content on screen
+
+        val avatarArray = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3, R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7, R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
+
+        // Should select users current avatar
+        fun getSelectedAvatar(): Int{
+            if(viewModel.newUser){
+                return 0
+            }
+            var currentAvatar = 0
+            if(viewModel.player1Edit){ currentAvatar = viewModel.player1Avatar }else{ viewModel.player2Avatar }
+
+            for((index, avatar) in avatarArray.withIndex()){
+                if(avatar == currentAvatar){
+                    return index
+                }
+            }
+            return 0
+        }
+
+        val selectedAvatar by remember { mutableIntStateOf(getSelectedAvatar()) }
+        var playerTextFieldValue by remember { mutableStateOf(when(viewModel.player1Edit){
+            true -> {if(viewModel.newUser){""}else{viewModel.player1}}
+            false -> {if(viewModel.newUser){""}else{viewModel.player2}}
+        }) }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -131,8 +195,15 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title)
                 BackButton(
-                    stringResource(id = R.string.page_title_edit_profile),  // TODO: ID is either "page_title_new_user" or "page_title_edit_profile'
-                    Destination.ProfileScreen,navController)               // TODO: Change depending on previous page
+                    stringResource(
+                        id = when(viewModel.newUser){
+                            true -> R.string.page_title_new_user
+                            false -> R.string.page_title_edit_profile }),
+                    destination = when(viewModel.newUser){
+                        true -> Destination.UserSelectScreen
+                        false -> Destination.ProfileScreen },
+                    navController
+                )
             }
 
             // CONTAINER: Editable user details
@@ -146,19 +217,17 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
                 verticalArrangement = Arrangement.spacedBy(space = 40.dp),
             ) {
                 // ELEMENT: Text box
-                // TODO: View model -> update this to ensure value is correct.
-                var playerTextFieldValue by remember { mutableStateOf("") }
                 SingleLineTextField(
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(id = R.string.user_name_field_label),
-                    value = playerTextFieldValue, // TODO: Value should be empty string if creating new user. If editing profile, value should be player's current name.
+                    value = playerTextFieldValue,
                     placeholder = stringResource(id = R.string.user_name_placeholder)
                 ) {
                     playerTextFieldValue = it
                 }
 
                 // ELEMENT: Avatar select
-                // TODO: View model -> update avatar list + selected index.
+                // TODO: Make avatar selectable
                 ImageGridSingleSelect(
                     modifier = Modifier.fillMaxWidth(),
 //                    gridModifier = Modifier.nestedScroll(
@@ -167,8 +236,8 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
 //                        }
 //                    ),
                     label = stringResource(id = R.string.user_avatar_select_label),
-                    imageIds = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3, R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7, R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10),
-                    selectedIndex = 2,
+                    imageIds = avatarArray,
+                    selectedIndex = selectedAvatar,
                 )
             }
 
@@ -176,9 +245,16 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Button to go to game settings screen
                 PrimaryButton(
-                    stringResource(id = R.string.user_save_action), // TODO: ID is either "user_create_action" or "user_save_action'
+                    stringResource(id = when(viewModel.newUser){
+                        true -> R.string.user_create_action
+                        false -> R.string.user_save_action
+                    }),
                     navController = navController,
-                    destination = Destination.GameSettingsScreen,   // TODO: change to go to either profile or user select screen
+                    destination = when(viewModel.newUser){
+                        true -> Destination.UserSelectScreen
+                        false -> Destination.ProfileScreen },
+                    viewModel = viewModel,
+                    event = TicTacEvent.SaveUser(playerTextFieldValue,avatarArray[selectedAvatar]),
                     modifier = Modifier.fillMaxWidth()
                 )
             }

@@ -52,10 +52,15 @@ class TicTacViewModel: ViewModel() {
     var undoAvailable by mutableStateOf(false)
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
 
+    /* UI States*/
+    var newUser by mutableStateOf(false)
+    var player1Edit by mutableStateOf(true)
+
     init {
         Log.v(TAG,"TicTacViewModel Created")
     }
 
+    // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
     fun onEvent(event: TicTacEvent){
         when(event){
             TicTacEvent.NewSinglePlayerGame -> {Log.v(TAG, TYPE+"NewSinglePlayerGame")}
@@ -65,6 +70,7 @@ class TicTacViewModel: ViewModel() {
             TicTacEvent.Undo -> {Log.v(TAG, TYPE+"Undo")}
             TicTacEvent.Restart -> {Log.v(TAG, TYPE+"Restart")}
             TicTacEvent.Exit -> {Log.v(TAG, TYPE+"Exit")}
+            is TicTacEvent.SaveUser -> {Log.v(TAG, TYPE+"SaveUser? name= " + event.name + " avatar: " + event.avatar)}
         }
     }
 
