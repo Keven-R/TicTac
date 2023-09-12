@@ -51,7 +51,7 @@ fun GameBoard (
     isGameActive: Boolean = true,
     boardSize: Int,
     board: Array<String>, // 3, 4, 5 only
-    winIndices: Array<Boolean>? = null,
+    winIndices: Array<Boolean>,
 ) {
     if (isContainerNarrow) {
         LazyVerticalGrid(
@@ -62,7 +62,7 @@ fun GameBoard (
                     BoardCell(
                         modifier = cellModifier.fillMaxSize(),
                         isGameActive = isGameActive,
-                        win = if (winIndices != null) winIndices[i] else false,
+                        win = if (winIndices.isNotEmpty()) winIndices[i] else false,
                         content = board[i]
                     )
                 }
@@ -89,7 +89,7 @@ fun GameBoard (
                     BoardCell(
                         modifier = cellModifier.fillMaxSize(),
                         isGameActive = isGameActive,
-                        win = if (winIndices != null) winIndices[i] else false,
+                        win = if (winIndices.isNotEmpty()) winIndices[i] else false,
                         content = boardContent[i]
                     )
                 }
