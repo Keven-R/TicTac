@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -74,7 +73,6 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
                     .padding(top = 16.dp)
-                    .background(Color.Red)
                     .weight(1f).fillMaxHeight(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ){

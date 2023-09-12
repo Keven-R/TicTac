@@ -4,8 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -91,8 +94,8 @@ fun Radio(
 
 @Composable
 fun ImageGridSingleSelect (
-    gridModifier: Modifier = Modifier,
     modifier: Modifier = Modifier,
+    gridModifier: Modifier = Modifier,
     label: String = "Select one",
     imageIds: Array<Int>, // List of resource id's containing all images in the selection
     selectedIndex: Int = 0, // Index of currently selected image, defaults to 0 if none,
@@ -105,7 +108,7 @@ fun ImageGridSingleSelect (
     // CONTAINER: Contains both text field and label
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         // ELEMENT: Label
         Text(
@@ -121,6 +124,7 @@ fun ImageGridSingleSelect (
                 columns = GridCells.Adaptive(minSize = minItemSize),
                 horizontalArrangement = Arrangement.spacedBy(colSpacing),
                 verticalArrangement = Arrangement.spacedBy(rowSpacing),
+                userScrollEnabled = true,
                 content = {
                     items(imageIds.count()) { i ->
                         ImageGridItem(
@@ -134,6 +138,27 @@ fun ImageGridSingleSelect (
                     }
                 }
             )
+        } else {
+            LazyHorizontalGrid(
+                modifier = gridModifier.fillMaxWidth(),
+                rows = GridCells.Adaptive(minSize = minItemSize),
+                horizontalArrangement = Arrangement.spacedBy(colSpacing, Alignment.Start),
+                verticalArrangement = Arrangement.spacedBy(rowSpacing, Alignment.Top),
+                userScrollEnabled = true,
+                content =  {
+                    items(imageIds.count()) { i ->
+                        ImageGridItem(
+                            modifier = Modifier.aspectRatio(1f).fillMaxSize(),
+                            avatarResourceId = imageIds[i],
+                            isSelected = i == selectedIndex,
+                            padding = imagePadding,
+                        ) {
+                            // TODO: Add onclick event to handle single select
+                        }
+                    }
+                }
+            )
+
         }
     }
 }
