@@ -330,7 +330,12 @@ fun GameMenuButton(
  * @param[modifier] Row modifier
  */
 @Composable
-fun GameMenuButtonGroup (modifier: Modifier = Modifier, enableUndo: Boolean = true) {
+fun GameMenuButtonGroup (
+    viewModel: TicTacViewModel,
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    enableUndo: Boolean = viewModel.undoAvailable
+) {
     Row (
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -339,7 +344,7 @@ fun GameMenuButtonGroup (modifier: Modifier = Modifier, enableUndo: Boolean = tr
             label = stringResource(id = copy.game_actions_pause),
 //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
-            // TODO: Add action here for pause
+            viewModel.onEvent(TicTacEvent.PauseGame)
         }
 
         GameMenuButton(
@@ -347,21 +352,22 @@ fun GameMenuButtonGroup (modifier: Modifier = Modifier, enableUndo: Boolean = tr
 //            modifier = Modifier.weight(1f).fillMaxWidth(),
             enabled = enableUndo
         ) {
-            // TODO: Add action here for undo
+            viewModel.onEvent(TicTacEvent.Undo)
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_restart),
 //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
-            // TODO: Add action here for restart
+            viewModel.onEvent(TicTacEvent.Restart)
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_exit),
 //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
-            // TODO: Add action here for exit
+            viewModel.onEvent(TicTacEvent.Exit)
+            navController.navigate(Destination.HomeScreen.route)
         }
     }
 }

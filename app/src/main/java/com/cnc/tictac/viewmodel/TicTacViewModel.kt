@@ -50,9 +50,7 @@ class TicTacViewModel: ViewModel() {
     var winConditionSelection by mutableIntStateOf(0) // 0 = 3, 1 = 4, 2 = 5
     var winSelectable by mutableStateOf(arrayOf(false, true, true)) // Controls button selection
     var undoAvailable by mutableStateOf(false)
-    var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win
-
-
+    var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
 
     init {
         Log.v(TAG,"TicTacViewModel Created")
@@ -63,6 +61,10 @@ class TicTacViewModel: ViewModel() {
             TicTacEvent.NewSinglePlayerGame -> {Log.v(TAG, TYPE+"NewSinglePlayerGame")}
             TicTacEvent.NewMultiPlayerGame  -> {Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")}
             TicTacEvent.ProfileMenuSelect -> {Log.v(TAG, TYPE+"ProfileMenuSelect")}
+            TicTacEvent.PauseGame -> {Log.v(TAG, TYPE+"PauseGame")}
+            TicTacEvent.Undo -> {Log.v(TAG, TYPE+"Undo")}
+            TicTacEvent.Restart -> {Log.v(TAG, TYPE+"Restart")}
+            TicTacEvent.Exit -> {Log.v(TAG, TYPE+"Exit")}
         }
     }
 
