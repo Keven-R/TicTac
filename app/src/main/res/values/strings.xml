@@ -24,7 +24,6 @@
     <string name="user_name_field_label">player name</string>
     <string name="user_avatar_select_label">avatar</string>
 
-
     <!-- Game settings screen content -->
     <string name="settings_action_start">start</string>
     <string name="settings_action_next">next</string>
@@ -40,6 +39,22 @@
     <string name="game_status_win">winner</string>
     <string name="game_status_loss">next time...</string>
     <string name="game_status_draw">it\'s a draw</string>
+
+    <!-- Game menu content -->
+    <string name="game_menu_pause_title">game paused</string>
+    <string name="game_menu_pause_description"> </string>
+    <string name="game_menu_pause_confirm"> </string>
+    <string name="game_menu_pause_dismiss">resume</string>
+    <string name="game_menu_restart_title">restart game?</string>
+    <string name="game_menu_restart_description">this will not affect player statistics</string>
+    <string name="game_menu_restart_confirm">restart</string>
+    <string name="game_menu_restart_dismiss">resume</string>
+    <string name="game_menu_exit_title">exit game?</string>
+    <string name="game_menu_exit_description">this will end the game and count as a loss for the current player</string>
+    <string name="game_menu_exit_confirm">exit</string>
+    <string name="game_menu_exit_dismiss">resume</string>
+
+
 
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->
     <!-- Buttons -->

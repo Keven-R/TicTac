@@ -62,9 +62,17 @@ fun SingleLineTextField(
                 // CONTAINER: Text field
                 Row(
                     Modifier
-                        .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(percent = 100))
-                        .border(BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.onPrimary)), RoundedCornerShape(percent = 100))
-                        .fillMaxWidth().heightIn(44.dp).widthIn(44.dp)
+                        .background(
+                            MaterialTheme.colorScheme.primary,
+                            RoundedCornerShape(percent = 100)
+                        )
+                        .border(
+                            BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.onPrimary)),
+                            RoundedCornerShape(percent = 100)
+                        )
+                        .fillMaxWidth()
+                        .heightIn(44.dp)
+                        .widthIn(44.dp)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -149,4 +157,55 @@ fun LogoText(
         color = MaterialTheme.colorScheme.onPrimary,
         modifier = modifier
     )
+}
+
+// TODO: View model, probably move this out of here?
+enum class CurrentMenu {
+    PAUSE, RESTART, EXIT, UNDO
+}
+@Composable
+fun GameMenuText (
+    modifier: Modifier = Modifier,
+    menu: CurrentMenu,
+) {
+    // Access correct content for each menu
+    val (menuTitle, menuDesc) = getMenuContent(menu)
+
+    Column (modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        // ELEMENT: Title
+        Text(
+            text = stringResource(id = menuTitle),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // ELEMENT: Description
+        Text(
+            text = stringResource(id = menuDesc),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+// Returns string resource id
+// TODO: Viewmodel, should this be moved there?
+fun getMenuContent(menu: CurrentMenu): Pair<Int, Int> {
+    when (menu) {
+        CurrentMenu.PAUSE -> {
+            return Pair(R.string.game_menu_pause_title, R.string.game_menu_pause_description)
+        }
+        CurrentMenu.RESTART -> {
+            return Pair(R.string.game_menu_restart_title, R.string.game_menu_restart_description)
+        }
+        CurrentMenu.EXIT -> {
+            return Pair(R.string.game_menu_exit_title, R.string.game_menu_exit_description)
+        }
+        else -> {
+            // IGNORE, just needed something here lol
+            return Pair(R.string.user_name_placeholder, R.string.user_name_placeholder)
+        }
+    }
 }

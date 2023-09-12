@@ -3,6 +3,7 @@ package com.cnc.tictac.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
@@ -13,6 +14,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -20,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
+import com.cnc.tictac.R
 import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
@@ -144,7 +147,9 @@ fun PrimaryButton(
             contentColor = MaterialTheme.colorScheme.onSecondary,
         ),
         border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.secondary)),
-        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+        modifier = modifier
+            .heightIn(44.dp)
+            .widthIn(44.dp)
     ) {
         Text(
             text = label,
@@ -167,7 +172,9 @@ fun PrimaryButton(
             contentColor = MaterialTheme.colorScheme.onSecondary,
         ),
         border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.secondary)),
-        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+        modifier = modifier
+            .heightIn(44.dp)
+            .widthIn(44.dp)
     ) {
         Text(
             text = label,
@@ -225,7 +232,9 @@ fun SecondaryButton(
             contentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
-        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+        modifier = modifier
+            .heightIn(44.dp)
+            .widthIn(44.dp)
     ) {
         Text(
             text = label,
@@ -249,7 +258,9 @@ fun SecondaryButtonDisabled(
             contentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.outline)),
-        modifier = modifier.heightIn(44.dp).widthIn(44.dp)
+        modifier = modifier
+            .heightIn(44.dp)
+            .widthIn(44.dp)
     ) {
         Text(
             text = label,
@@ -342,14 +353,14 @@ fun GameMenuButtonGroup (
     ) {
         GameMenuButton(
             label = stringResource(id = copy.game_actions_pause),
-//            modifier = Modifier.weight(1f).fillMaxWidth()
+    //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             viewModel.onEvent(TicTacEvent.PauseGame)
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_undo),
-//            modifier = Modifier.weight(1f).fillMaxWidth(),
+    //            modifier = Modifier.weight(1f).fillMaxWidth(),
             enabled = enableUndo
         ) {
             viewModel.onEvent(TicTacEvent.Undo)
@@ -357,17 +368,143 @@ fun GameMenuButtonGroup (
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_restart),
-//            modifier = Modifier.weight(1f).fillMaxWidth()
+    //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             viewModel.onEvent(TicTacEvent.Restart)
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_exit),
-//            modifier = Modifier.weight(1f).fillMaxWidth()
+    //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             viewModel.onEvent(TicTacEvent.Exit)
             navController.navigate(Destination.HomeScreen.route)
         }
+    }
+}
+
+@Composable
+fun GameMenuButtonGroup(
+    modifier: Modifier = Modifier,
+    menu: CurrentMenu,
+    stackVertically: Boolean = true,
+) {
+    val buttonGroupContent = getGameMenuLabelAndEvents(menu)
+    val (confirmLabelId, confirmEvent) = buttonGroupContent[0]
+    val (dismissLabelId, dismissEvent) = buttonGroupContent[1]
+
+    if (stackVertically) {
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(space = 32.dp, alignment = Alignment.Bottom),
+            horizontalAlignment = Alignment.Start
+        ) {
+            GameMenuButton(
+                onClick = confirmEvent,
+                label = stringResource(id = confirmLabelId),
+                modifier = Modifier,
+                )
+            GameMenuButton(
+                onClick = dismissEvent,
+                label = stringResource(id = dismissLabelId),
+                modifier = Modifier,
+            )
+        }
+    } else {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            GameMenuButton(
+                onClick = confirmEvent,
+                label = stringResource(id = confirmLabelId),
+            )
+            GameMenuButton(
+                onClick = dismissEvent,
+                label = stringResource(id = dismissLabelId),
+            )
+        }
+
+    }
+}
+
+// Returns content required for game menu buttons as list of pairs
+// List[i] is content for 1 button (in a Pair)
+// Pair(a,b) A = label, B = onclick action
+fun getGameMenuLabelAndEvents (menu: CurrentMenu) : Array<Pair<Int, () -> Unit >> {
+    when (menu) {
+        CurrentMenu.PAUSE -> {
+            return arrayOf(
+                Pair(
+                    R.string.game_menu_pause_confirm,
+                    { /* TODO: RESUME GAME on click action */}
+                ),
+                Pair(
+                    R.string.game_menu_pause_dismiss,
+                    { /* TODO: RESUME GAME on click action */}
+                )
+            )
+        }
+        CurrentMenu.RESTART -> {
+            return arrayOf(
+                Pair(
+                    R.string.game_menu_restart_confirm,
+                    { /* TODO: RESTART GAME on click action */}
+                ),
+                Pair(
+                    R.string.game_menu_restart_dismiss,
+                    { /* TODO: RESUME GAME on click action */}
+                )
+            )
+        }
+        CurrentMenu.EXIT -> {
+            return arrayOf(
+                Pair(
+                    R.string.game_menu_exit_confirm,
+                    { /* TODO: EXIT GAME on click action */}
+                ),
+                Pair(
+                    R.string.game_menu_exit_dismiss,
+                    { /* TODO: RESUME GAME on click action */}
+                )
+            )
+        }
+        else -> {
+            // IGNORE, just needed something here lol
+            return arrayOf(
+                Pair(
+                    R.string.user_name_placeholder,
+                    { /* TODO: ERROR handler?? cos why did it even get here lol */}
+                ),
+                Pair(
+                    R.string.user_name_placeholder,
+                    { /* TODO: ERROR handler?? cos why did it even get here lol */}
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun GameMenuButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    label: String,
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier ,
+        enabled = true,
+        colors = buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        ),
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onPrimary,
+        )
     }
 }
