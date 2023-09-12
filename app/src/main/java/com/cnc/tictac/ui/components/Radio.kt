@@ -1,12 +1,18 @@
 package com.cnc.tictac.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
@@ -81,4 +87,71 @@ fun Radio(
             }
         }
     }
+}
+
+@Composable
+fun ImageGridSingleSelect (
+    gridModifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
+    label: String = "Select one",
+    imageIds: Array<Int>, // List of resource id's containing all images in the selection
+    selectedIndex: Int = 0, // Index of currently selected image, defaults to 0 if none,
+    isVerticalScroll: Boolean = true, // True for vertical scroll, false otherwise
+    minItemSize: Dp = 140.dp, // 3 by default, use 2 for phones
+    imagePadding: Int = 24, // Default value, make larger for bigger screens
+    colSpacing: Dp = 8.dp,
+    rowSpacing: Dp = 8.dp,
+) {
+    // CONTAINER: Contains both text field and label
+    Column (
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // ELEMENT: Label
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
+        )
+
+        // CONTAINER: Images to select from
+        if (isVerticalScroll) {
+            LazyVerticalGrid(
+                modifier = gridModifier.fillMaxWidth(),
+                columns = GridCells.Adaptive(minSize = minItemSize),
+                horizontalArrangement = Arrangement.spacedBy(colSpacing),
+                verticalArrangement = Arrangement.spacedBy(rowSpacing),
+                content = {
+                    items(imageIds.count()) { i ->
+                        ImageGridItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            avatarResourceId = imageIds[i],
+                            isSelected = i == selectedIndex,
+                            padding = imagePadding,
+                        ) {
+                            // TODO: Add onclick event to handle single select
+                        }
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun ImageGridItem (
+    modifier: Modifier = Modifier,
+    avatarResourceId: Int,
+    isSelected: Boolean,
+    padding: Int = 24,
+    onClick: () -> Unit
+) {
+    AvatarBlock(
+        avatarResourceId = avatarResourceId,
+        isCircle = false,
+        isFilled = isSelected,
+        isBorderTransparent = !isSelected,
+        padding = padding,
+        boxModifier = modifier.clickable { onClick }
+    )
 }

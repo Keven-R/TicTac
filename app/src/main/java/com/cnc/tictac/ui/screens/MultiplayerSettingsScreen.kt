@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -53,11 +54,7 @@ fun MultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTa
 @Composable
 fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // CONTAINER: Set bg colour
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.primary)
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary)) {
         // CONTAINER: All content on screen
         Column(
             modifier = Modifier
@@ -76,7 +73,8 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
-                    .padding(top = 24.dp, bottom = 8.dp)
+                    .padding(top = 16.dp)
+                    .background(Color.Red)
                     .weight(1f).fillMaxHeight(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ){
@@ -128,11 +126,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
 @Composable
 fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // CONTAINER: Set bg colour
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.primary)
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary)) {
         // CONTAINER: All content on screen
         Column(
             modifier = Modifier

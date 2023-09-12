@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -142,8 +143,7 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: Ti
             // CONTAINER: All game settings found here
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
+                    .fillMaxHeight().weight(1f)
                     .verticalScroll(rememberScrollState())
                     .padding(vertical = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(space = 32.dp),
@@ -272,27 +272,18 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
         }
     }
     // CONTAINER: Set bg colour
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.primary)
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary)) {
         // CONTAINER: All content on screen
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
+                .padding(vertical = 32.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title "game settings")
-                BackButton(
-                    stringResource(id = copy.page_title_settings),
-                    Destination.HomeScreen,
-                    navController
-                )
-            }
+                BackButton(stringResource(id = copy.page_title_settings), Destination.HomeScreen, navController) }
 
             // CONTAINER: All game settings found here
             Column(
@@ -300,8 +291,8 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
-                    .weight(1f)
-                    .fillMaxHeight(),
+                    .background(Color.Red)
+                    .weight(1f).fillMaxHeight(),
                 verticalArrangement = Arrangement.spacedBy(space = 16.dp),
             ) {
                 // ELEMENTS: All setting items needed to start game
@@ -359,7 +350,6 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
                     )
                 }
             }
-
 
             // CONTAINER: Primary action
             Row(modifier = Modifier.fillMaxWidth()) {

@@ -141,7 +141,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                         .weight(1f)
                 ) {
                     // TODO: ADD ACTION HERE TO GO TO EDIT PROFILE
-                    println("edit profile")
+                    navController.navigate(Destination.UserDetailScreen.route)
                 }
 
                 // ELEMENT: Button to navigate to "switch user" screen
@@ -178,7 +178,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
+                .padding(vertical = 32.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // CONTAINER: Top nav
@@ -226,8 +226,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
 
             // CONTAINER: Page actions, fixed to bottom of screen
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(
                     space = 8.dp,
                     alignment = Alignment.CenterHorizontally
@@ -241,7 +240,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                         .weight(1f)
                 ) {
                     // TODO: ADD ACTION HERE TO GO TO EDIT PROFILE
-                    println("edit profile")
+                    navController.navigate(Destination.UserDetailScreen.route)
                 }
 
                 // ELEMENT: Button to navigate to "switch user" screen

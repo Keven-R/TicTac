@@ -10,10 +10,20 @@
     <string name="page_title_multiplayer">multiplayer</string>
     <string name="page_title_select_player">select player</string>
     <string name="page_title_switch_user">switch user</string>
+    <string name="page_title_new_user">new user</string>
+    <string name="page_title_edit_profile">edit profile</string>
 
     <!-- Profile screen content -->
     <string name="profile_action_left">edit profile</string>
     <string name="profile_action_right">switch user</string>
+
+    <!-- User detail screen content -->
+    <string name="user_create_action">create</string>
+    <string name="user_save_action">save</string>
+    <string name="user_name_placeholder">player</string>
+    <string name="user_name_field_label">player name</string>
+    <string name="user_avatar_select_label">avatar</string>
+
 
     <!-- Game settings screen content -->
     <string name="settings_action_start">start</string>
