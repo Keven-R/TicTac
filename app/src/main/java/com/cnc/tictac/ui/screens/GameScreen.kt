@@ -118,7 +118,7 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
                 }
 
                 // ELEMENT: all menu controls
-                GameMenuButtonGroup(enableUndo = viewModel.undoAvailable, modifier = Modifier.fillMaxWidth())
+                GameMenuButtonGroup(viewModel = viewModel, navController = navController, modifier = Modifier.fillMaxWidth())
             }
 
             // CONTAINER: right side (has game board)
@@ -222,7 +222,7 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
             }
 
             // ELEMENT: all menu controls (fixed bottom)
-            GameMenuButtonGroup(enableUndo = viewModel.undoAvailable, modifier = Modifier.fillMaxWidth())
+            GameMenuButtonGroup(viewModel = viewModel, navController = navController, modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -300,7 +300,7 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
             )
 
             // CONTAINER: all menu controls
-            GameMenuButtonGroup(enableUndo = viewModel.undoAvailable, modifier = Modifier.fillMaxWidth())
+            GameMenuButtonGroup(viewModel = viewModel, navController = navController, modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -383,7 +383,7 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
             }
 
             // CONTAINER: all menu controls
-            GameMenuButtonGroup(enableUndo = viewModel.undoAvailable, modifier = Modifier.fillMaxWidth())
+            GameMenuButtonGroup(viewModel = viewModel, navController = navController, modifier = Modifier.fillMaxWidth())
         }
     }
 }
