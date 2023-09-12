@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
+import com.cnc.tictac.viewmodel.PLAYERWINSTATUS
 import com.cnc.tictac.R.string as copy
 
 /* GamePlayerCard
@@ -45,7 +46,7 @@ import com.cnc.tictac.R.string as copy
  * -- Game is ended
  * @param[playerWinStatus] Win/loss/draw status for that player. See enum below.
  */
-enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
+//enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 @Composable
 fun GamePlayerCard (
     modifier: Modifier = Modifier,

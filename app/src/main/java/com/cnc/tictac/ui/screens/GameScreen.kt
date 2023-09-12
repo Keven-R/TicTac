@@ -19,11 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.cnc.tictac.R
 import com.cnc.tictac.ui.components.GameBoard
 import com.cnc.tictac.ui.components.GameMenuButtonGroup
 import com.cnc.tictac.ui.components.GamePlayerCard
-import com.cnc.tictac.ui.components.PLAYERWINSTATUS
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacViewModel
@@ -87,43 +85,40 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
                     modifier = Modifier.weight(1f).fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceBetween) {
                     // ELEMENT: player 1
-                    // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                     GamePlayerCard(
                         modifier = Modifier,
                         isRowLayout = true,
 
-                        playerName = "jasmine",                         // TODO: ADD player name
-                        playerAvatarResourceId = R.drawable.avatar_7,   // TODO: ADD player resource id
-                        playerMarker = "x",                             // TODO: ADD player marker
-                        isGameEnded = false,                            // TODO: Game status
+                        playerName = viewModel.player1,
+                        playerAvatarResourceId = viewModel.player1Avatar,
+                        playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
+                        isGameEnded = viewModel.gameEnded,
 
-                        playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: REQUIRED IF game ended
+                        playerWinStatus = viewModel.player1WinStatus,
 
-                        isPlayerTurn = true,                            // TODO: OPTIONAL, required if game ongoing
-                        secondsLeft = 8,                                // TODO: OPTPONAL, required if game ongoing
+                        isPlayerTurn = viewModel.player1Turn,
+                        secondsLeft = viewModel.player1Timer,
                     )
 
                     // ELEMENT: player 2
-                    // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                     GamePlayerCard(
                         modifier = Modifier,
                         isRowLayout = true,
 
-                        playerName = "guest",                           // TODO: ADD player name
-                        playerAvatarResourceId = R.drawable.avatar_2,   // TODO: ADD player resource id
-                        playerMarker = "o",                             // TODO: ADD player marker
-                        isGameEnded = false,                            // TODO: Game status
+                        playerName = viewModel.player2,
+                        playerAvatarResourceId = viewModel.player2Avatar,
+                        playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
+                        isGameEnded = viewModel.gameEnded,
 
-                        playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: OPTIONAL, required if game ended
+                        playerWinStatus = viewModel.player2WinStatus,
 
-                        isPlayerTurn = false,                           // TODO: OPTIONAL, required if game ongoing
-                        secondsLeft = 10,                               // TODO: OPTPONAL, required if game ongoing
+                        isPlayerTurn = viewModel.player2Turn,
+                        secondsLeft = viewModel.player2Timer,
                     )
                 }
 
                 // ELEMENT: all menu controls
-                // TODO: remove "enableUndo" arg if undo is available to use
-                GameMenuButtonGroup(enableUndo = false, modifier = Modifier.fillMaxWidth())
+                GameMenuButtonGroup(enableUndo = viewModel.undoAvailable, modifier = Modifier.fillMaxWidth())
             }
 
             // CONTAINER: right side (has game board)
@@ -132,15 +127,13 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center
             ) {
-                // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
                 GameBoard(
                     modifier = Modifier.fillMaxHeight(),
                     isContainerNarrow = false,
-                    isGameActive = true,                                        // TODO: REQUIRED arg
-                    boardSize = 3,                                              // TODO: REQUIRED arg
-                    board = arrayOf("o", "x", "x", "", "o", "", "", "", "o"),   // TODO: REQUIRED arg
-                    // TODO: OPTIONAL arg, only add if game is finished
-                    // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
+                    isGameActive = viewModel.gameActive,
+                    boardSize = viewModel.getBoardSize(),
+                    board = viewModel.boardState,
+                    winIndices = viewModel.winIndices // should be empty unless win happens
                 )
             }
         }
@@ -179,37 +172,35 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     // ELEMENT: player 1
-                    // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                     GamePlayerCard(
                         modifier = Modifier,
                         isRowLayout = true,
 
-                        playerName = "jasmine",                         // TODO: ADD player name
-                        playerAvatarResourceId = R.drawable.avatar_7,   // TODO: ADD player resource id
-                        playerMarker = "x",                             // TODO: ADD player marker
-                        isGameEnded = false,                            // TODO: Game status
+                        playerName = viewModel.player1,
+                        playerAvatarResourceId = viewModel.player1Avatar,
+                        playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
+                        isGameEnded = viewModel.gameEnded,
 
-                        playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: REQUIRED IF game ended
+                        playerWinStatus = viewModel.player1WinStatus,
 
-                        isPlayerTurn = true,                            // TODO: OPTIONAL, required if game ongoing
-                        secondsLeft = 8,                                // TODO: OPTPONAL, required if game ongoing
+                        isPlayerTurn = viewModel.player1Turn,
+                        secondsLeft = viewModel.player1Timer,
                     )
 
                     // ELEMENT: player 2
-                    // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                     GamePlayerCard(
                         modifier = Modifier,
                         isRowLayout = true,
 
-                        playerName = "guest",                           // TODO: ADD player name
-                        playerAvatarResourceId = R.drawable.avatar_2,   // TODO: ADD player resource id
-                        playerMarker = "o",                             // TODO: ADD player marker
-                        isGameEnded = false,                            // TODO: Game status
+                        playerName = viewModel.player2,
+                        playerAvatarResourceId = viewModel.player2Avatar,
+                        playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
+                        isGameEnded = viewModel.gameEnded,
 
-                        playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: OPTIONAL, required if game ended
+                        playerWinStatus = viewModel.player2WinStatus,
 
-                        isPlayerTurn = false,                           // TODO: OPTIONAL, required if game ongoing
-                        secondsLeft = 10,                               // TODO: OPTPONAL, required if game ongoing
+                        isPlayerTurn = viewModel.player2Turn,
+                        secondsLeft = viewModel.player2Timer,
                     )
                 }
 
@@ -219,22 +210,19 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
                     horizontalAlignment = Alignment.End,
                 ) {
                     // ELEMENT: game board (occupy all right side)
-                    // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
                     GameBoard(
                         modifier = Modifier.fillMaxHeight(),
                         isContainerNarrow = false,
-                        isGameActive = true,                                        // TODO: REQUIRED arg
-                        boardSize = 3,                                              // TODO: REQUIRED arg
-                        board = arrayOf("o", "x", "x", "", "o", "", "", "", "o"),   // TODO: REQUIRED arg
-                        // TODO: OPTIONAL arg, only add if game is finished
-                        // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
+                        isGameActive = viewModel.gameActive,
+                        boardSize = viewModel.getBoardSize(),
+                        board = viewModel.boardState,
+                        winIndices = viewModel.winIndices // should be empty unless win happens
                     )
                 }
             }
 
             // ELEMENT: all menu controls (fixed bottom)
-            // TODO: remove "enableUndo" arg if undo is available to use
-            GameMenuButtonGroup(enableUndo = false, modifier = Modifier.fillMaxWidth())
+            GameMenuButtonGroup(enableUndo = viewModel.undoAvailable, modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -264,20 +252,19 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // ELEMENT: player 1
-            // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
             GamePlayerCard(
                 modifier = Modifier.fillMaxWidth(),
                 isRowLayout = true,
 
-                playerName = "jasmine",                         // TODO: ADD player name
-                playerAvatarResourceId = R.drawable.avatar_7,   // TODO: ADD player resource id
-                playerMarker = "x",                             // TODO: ADD player marker
-                isGameEnded = false,                            // TODO: Game status
+                playerName = viewModel.player1,
+                playerAvatarResourceId = viewModel.player1Avatar,
+                playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
+                isGameEnded = viewModel.gameEnded,
 
-                playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: REQUIRED IF game ended
+                playerWinStatus = viewModel.player1WinStatus,
 
-                isPlayerTurn = true,                            // TODO: OPTIONAL, required if game ongoing
-                secondsLeft = 8,                                // TODO: OPTPONAL, required if game ongoing
+                isPlayerTurn = viewModel.player1Turn,
+                secondsLeft = viewModel.player1Timer,
             )
 
             // CONTAINER: game board
@@ -287,37 +274,33 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center
             ) {
-                // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
                 GameBoard(
                     modifier = Modifier.fillMaxWidth(),
-                    isGameActive = true,                                        // TODO: REQUIRED arg
-                    boardSize = 3,                                              // TODO: REQUIRED arg
-                    board = arrayOf("o", "x", "x", "", "o", "", "", "", "o"),   // TODO: REQUIRED arg
-                    // TODO: OPTIONAL arg, only add if game is finished
-                    // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
+                    isGameActive = viewModel.gameActive,
+                    boardSize = viewModel.getBoardSize(),
+                    board = viewModel.boardState,
+                    winIndices = viewModel.winIndices // should be empty unless win happens
                 )
             }
 
             // ELEMENT: player 2
-            // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
             GamePlayerCard(
                 modifier = Modifier.fillMaxWidth(),
                 isRowLayout = true,
 
-                playerName = "guest",                           // TODO: ADD player name
-                playerAvatarResourceId = R.drawable.avatar_2,   // TODO: ADD player resource id
-                playerMarker = "o",                             // TODO: ADD player marker
-                isGameEnded = false,                            // TODO: Game status
+                playerName = viewModel.player2,
+                playerAvatarResourceId = viewModel.player2Avatar,
+                playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
+                isGameEnded = viewModel.gameEnded,
 
-                playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: OPTIONAL, required if game ended
+                playerWinStatus = viewModel.player2WinStatus,
 
-                isPlayerTurn = false,                           // TODO: OPTIONAL, required if game ongoing
-                secondsLeft = 10,                               // TODO: OPTPONAL, required if game ongoing
+                isPlayerTurn = viewModel.player2Turn,
+                secondsLeft = viewModel.player2Timer,
             )
 
             // CONTAINER: all menu controls
-            // TODO: remove "enableUndo" arg if undo is available to use
-            GameMenuButtonGroup(enableUndo = false, modifier = Modifier.fillMaxWidth())
+            GameMenuButtonGroup(enableUndo = viewModel.undoAvailable, modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -352,36 +335,34 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // ELEMENT: player 1
-                // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                 GamePlayerCard(
                     isRowLayout = true,
 
-                    playerName = "jasmine",                         // TODO: ADD player name
-                    playerAvatarResourceId = R.drawable.avatar_7,   // TODO: ADD player resource id
-                    playerMarker = "x",                             // TODO: ADD player marker
-                    isGameEnded = false,                            // TODO: Game status
+                    playerName = viewModel.player1,
+                    playerAvatarResourceId = viewModel.player1Avatar,
+                    playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
+                    isGameEnded = viewModel.gameEnded,
 
-                    playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: REQUIRED IF game ended
+                    playerWinStatus = viewModel.player1WinStatus,
 
-                    isPlayerTurn = true,                            // TODO: OPTIONAL, required if game ongoing
-                    secondsLeft = 8,                                // TODO: OPTPONAL, required if game ongoing
+                    isPlayerTurn = viewModel.player1Turn,
+                    secondsLeft = viewModel.player1Timer,
                 )
 
                 // ELEMENT: player 2
-                // TODO: VIEWMODEL -> pls add args, see Cards.kt docs
                 GamePlayerCard(
                     isRowLayout = true,
                     inverse = true,
 
-                    playerName = "guest",                           // TODO: ADD player name
-                    playerAvatarResourceId = R.drawable.avatar_2,   // TODO: ADD player resource id
-                    playerMarker = "o",                             // TODO: ADD player marker
-                    isGameEnded = false,                            // TODO: Game status
+                    playerName = viewModel.player2,
+                    playerAvatarResourceId = viewModel.player2Avatar,
+                    playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
+                    isGameEnded = viewModel.gameEnded,
 
-                    playerWinStatus = PLAYERWINSTATUS.DRAW,         // TODO: OPTIONAL, required if game ended
+                    playerWinStatus = viewModel.player2WinStatus,
 
-                    isPlayerTurn = false,                           // TODO: OPTIONAL, required if game ongoing
-                    secondsLeft = 10,                               // TODO: OPTPONAL, required if game ongoing
+                    isPlayerTurn = viewModel.player2Turn,
+                    secondsLeft = viewModel.player2Timer,
                 )
             }
 
@@ -392,30 +373,17 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center
             ) {
-                // TODO: VIEWMODEL -> pls add args, see GameBoard.kt docs
                 GameBoard(
                     modifier = Modifier.fillMaxWidth(),
-                    isGameActive = true,                                        // TODO: REQUIRED arg
-                    boardSize = 3,                                              // TODO: REQUIRED arg
-                    board = arrayOf(
-                        "o",
-                        "x",
-                        "x",
-                        "",
-                        "o",
-                        "",
-                        "",
-                        "",
-                        "o"
-                    ),   // TODO: REQUIRED arg
-                    // TODO: OPTIONAL arg, only add if game is finished
-                    // winIndices = arrayOf(true, false, false, false, true, false, false, false, true),
+                    isGameActive = viewModel.gameActive,
+                    boardSize = viewModel.getBoardSize(),
+                    board = viewModel.boardState,
+                    winIndices = viewModel.winIndices // should be empty unless win happens
                 )
             }
 
             // CONTAINER: all menu controls
-            // TODO: remove "enableUndo" arg if undo is available to use
-            GameMenuButtonGroup(enableUndo = false, modifier = Modifier.fillMaxWidth())
+            GameMenuButtonGroup(enableUndo = viewModel.undoAvailable, modifier = Modifier.fillMaxWidth())
         }
     }
 }
