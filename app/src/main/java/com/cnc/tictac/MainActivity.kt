@@ -69,7 +69,7 @@ fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewMo
         composable(route = Destination.ProfileScreen.route){ ProfileScreen(navController,viewModel) }
         composable(route = Destination.GameMenuScreen.route){
             BackHandler(true) {} // Back button turned off
-            viewModel.onEvent(TicTacEvent.TimerStop)
+//            viewModel.onEvent(TicTacEvent.TimerStop)
             GameMenuScreen(navController,viewModel) // TODO: Check if timer is actually going off twice
         }
     }
