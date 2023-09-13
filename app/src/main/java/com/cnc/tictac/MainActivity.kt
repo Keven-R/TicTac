@@ -3,6 +3,7 @@ package com.cnc.tictac
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,6 +20,7 @@ import com.cnc.tictac.ui.screens.UserDetailScreen
 import com.cnc.tictac.ui.screens.UserSelectScreen
 import com.cnc.tictac.ui.screens.MultiplayerSettingsScreen
 import com.cnc.tictac.ui.theme.TicTacTheme
+import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 private const val TAG = "MainActivity"
@@ -65,6 +67,10 @@ fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewMo
         composable(route = Destination.UserDetailScreen.route){ UserDetailScreen(navController,viewModel) }
         composable(route = Destination.UserSelectScreen.route){ UserSelectScreen(navController,viewModel) }
         composable(route = Destination.ProfileScreen.route){ ProfileScreen(navController,viewModel) }
-        composable(route = Destination.GameMenuScreen.route){ GameMenuScreen(navController,viewModel)}
+        composable(route = Destination.GameMenuScreen.route){
+            BackHandler(true) {} // Back button turned off
+            viewModel.onEvent(TicTacEvent.TimerStop)
+            GameMenuScreen(navController,viewModel) // TODO: Check if timer is actually going off twice
+        }
     }
 }
