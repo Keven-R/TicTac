@@ -23,8 +23,8 @@ private val LightColors = lightColorScheme(
     onPrimary = DarkNeutral100,
     secondary = DarkNeutral100,
     onSecondary = DarkNeutral00,
-    outline = DarkNeutral100.copy(alpha = 0.16f),
-    outlineVariant = DarkNeutral100.copy(alpha = 0.4f)
+    outline = DarkNeutral100.copy(alpha = 0.32f),
+    outlineVariant = DarkNeutral100.copy(alpha = 0.64f)
 )
 
 @Composable
@@ -33,8 +33,7 @@ fun TicTacTheme(
     content: @Composable() () -> Unit
 ) {
     val colors = if (!useDarkTheme) {
-        // LightColors
-        DarkColors
+        LightColors
     } else {
         DarkColors
     }
@@ -46,6 +45,11 @@ fun TicTacTheme(
         typography = Typography,
     )
 
+    // Switch colours depending on system status
     val systemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(color = DarkColors.primary)
+    val mainColor = if (!useDarkTheme) DarkColors.primary else LightColors.primary
+    val onMainColor = if (!useDarkTheme) DarkColors.onPrimary else LightColors.onPrimary
+    systemUiController.setSystemBarsColor(mainColor)
+    systemUiController.setNavigationBarColor(onMainColor)
+    systemUiController.setStatusBarColor(onMainColor)
 }
