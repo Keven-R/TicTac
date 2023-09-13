@@ -9,4 +9,5 @@ sealed class TicTacEvent{
     object Undo: TicTacEvent()
     object Restart: TicTacEvent()
     object Exit: TicTacEvent()
+    object SaveUser: TicTacEvent()
 }

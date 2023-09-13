@@ -63,11 +63,12 @@ class TicTacViewModel() : ViewModel(){
     /* UI States*/
     var newUser by mutableStateOf(false)
     var player1Edit by mutableStateOf(true)
-    val selectedAvatar by mutableIntStateOf(findAvatar())
+    var selectedAvatar by mutableIntStateOf(findAvatar())
     var playerTextFieldValue by mutableStateOf(findEditTextValue())
 
     init {
         Log.v(TAG,"TicTacViewModel Created")
+//        Log.v("Test", "Test")
     }
 
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
@@ -81,6 +82,7 @@ class TicTacViewModel() : ViewModel(){
             TicTacEvent.Undo -> {Log.v(TAG, TYPE+"Undo")}
             TicTacEvent.Restart -> {Log.v(TAG, TYPE+"Restart")}
             TicTacEvent.Exit -> {Log.v(TAG, TYPE+"Exit")}
+            TicTacEvent.SaveUser -> {Log.v(TAG, TYPE+"SaveUser")}
         }
     }
 

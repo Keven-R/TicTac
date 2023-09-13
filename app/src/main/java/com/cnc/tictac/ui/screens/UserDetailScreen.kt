@@ -95,6 +95,7 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
                 // TODO: Make avatar selectable
                 ImageGridSingleSelect(
                     modifier = Modifier.weight(1f).fillMaxWidth().fillMaxHeight(),
+                    viewModel = viewModel,
                     gridModifier = Modifier.weight(1f).fillMaxHeight(),
 //                    gridModifier = Modifier.nestedScroll(
 //                        connection = object : NestedScrollConnection {
@@ -121,7 +122,7 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
                         true -> Destination.UserSelectScreen
                         false -> Destination.ProfileScreen },
                     viewModel = viewModel,
-                    event = TicTacEvent.TempEvent,
+                    event = TicTacEvent.SaveUser,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -182,6 +183,7 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
                 // TODO: Make avatar selectable
                 ImageGridSingleSelect(
                     modifier = Modifier.fillMaxWidth(),
+                    viewModel = viewModel,
 //                    gridModifier = Modifier.nestedScroll(
 //                        connection = object : NestedScrollConnection {
 //                            override fun onPreScroll(available: Offset, source: NestedScrollSource) = available.copy(x = 0f)
@@ -206,7 +208,7 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
                         true -> Destination.UserSelectScreen
                         false -> Destination.ProfileScreen },
                     viewModel = viewModel,
-                    event = TicTacEvent.TempEvent,
+                    event = TicTacEvent.SaveUser,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
