@@ -64,7 +64,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title)
-                BackButton(stringResource(id = copy.page_title_multiplayer),Destination.HomeScreen,navController)
+                BackButton(stringResource(id = copy.page_title_multiplayer),navController)
             }
 
             // CONTAINER: for both player cards
@@ -135,7 +135,7 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController, vi
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title)
-                BackButton(stringResource(id = copy.page_title_multiplayer),Destination.HomeScreen,navController)
+                BackButton(stringResource(id = copy.page_title_multiplayer),navController)
             }
 
             // CONTAINER: for both player cards

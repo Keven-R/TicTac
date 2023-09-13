@@ -76,11 +76,12 @@ fun DisplayDefaultUserSelectScreen(navController: NavHostController, viewModel: 
                     .fillMaxWidth()
             ) {
                 // ELEMENT: Back button showing current page title
-                // TODO: destination + label should change depending on nav controller
                 // either "page_title_select_player" or "page_title_switch_user"
                 BackButton(
-                    stringResource(id = R.string.page_title_select_player),
-                    Destination.ProfileScreen,
+                    stringResource(id =  when(viewModel.playerSwitchUI){
+                        true -> R.string.page_title_switch_user
+                        false -> R.string.page_title_select_player
+                    }),
                     navController,
                 )
             }
@@ -171,12 +172,12 @@ fun DisplayCompactUserSelectScreen(navController: NavHostController, viewModel: 
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title
-                // TODO: destination + label should change depending on nav controller
                 // either "page_title_select_player" or "page_title_switch_user"
                 BackButton(
-                    // TODO: action
-                    stringResource(id = R.string.page_title_select_player),
-                    Destination.MultiplayerSettingsScreen,
+                    stringResource(id = when(viewModel.playerSwitchUI){
+                        true -> R.string.page_title_switch_user
+                        false -> R.string.page_title_select_player
+                    }),
                     navController,
                 )
             }
