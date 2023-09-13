@@ -1,9 +1,12 @@
 package com.cnc.tictac.viewmodel
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.cnc.tictac.R
@@ -13,14 +16,19 @@ private const val TYPE = "EVENT: "
 
 enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 
-class TicTacViewModel: ViewModel() {
+class TicTacViewModel() : ViewModel(){
+
+    val avatarArray = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3,
+        R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7,
+        R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
+
 
     /* Player 1 States */
-    var player1 by mutableStateOf("Jasmine")
+    var player1 by mutableStateOf("Annie")
     var player1Timer by mutableIntStateOf(9)
     var player1Turn by mutableStateOf(true)
     var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
-    var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
+    var player1Avatar by mutableIntStateOf(R.drawable.avatar_5)
     var player1Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player1StatMarker by mutableStateOf("ooo/////xx")
     var player1WinString by mutableStateOf("wins: 8 (33%)")    // These stat strings might need to be
@@ -55,6 +63,8 @@ class TicTacViewModel: ViewModel() {
     /* UI States*/
     var newUser by mutableStateOf(false)
     var player1Edit by mutableStateOf(true)
+    val selectedAvatar by mutableIntStateOf(findAvatar())
+    var playerTextFieldValue by mutableStateOf(findEditTextValue())
 
     init {
         Log.v(TAG,"TicTacViewModel Created")
@@ -63,6 +73,7 @@ class TicTacViewModel: ViewModel() {
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
     fun onEvent(event: TicTacEvent){
         when(event){
+            TicTacEvent.TempEvent -> {Log.v(TAG, TYPE+"Temp Event For Testing")}
             TicTacEvent.NewSinglePlayerGame -> {Log.v(TAG, TYPE+"NewSinglePlayerGame")}
             TicTacEvent.NewMultiPlayerGame  -> {Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")}
             TicTacEvent.ProfileMenuSelect -> {Log.v(TAG, TYPE+"ProfileMenuSelect")}
@@ -70,7 +81,6 @@ class TicTacViewModel: ViewModel() {
             TicTacEvent.Undo -> {Log.v(TAG, TYPE+"Undo")}
             TicTacEvent.Restart -> {Log.v(TAG, TYPE+"Restart")}
             TicTacEvent.Exit -> {Log.v(TAG, TYPE+"Exit")}
-            is TicTacEvent.SaveUser -> {Log.v(TAG, TYPE+"SaveUser? name= " + event.name + " avatar: " + event.avatar)}
         }
     }
 
@@ -90,6 +100,38 @@ class TicTacViewModel: ViewModel() {
             1 -> 4
             2 -> 5
             else -> {3}
+        }
+    }
+
+    // Should select users current avatar
+    fun findAvatar(): Int{
+        if(newUser){
+            return 0
+        }
+        var currentAvatar = 0
+        if(player1Edit){ currentAvatar = player1Avatar }else{ player2Avatar }
+
+        for((index, avatar) in avatarArray.withIndex()){
+            if(avatar == currentAvatar){
+                return index
+            }
+        }
+        return 0
+    }
+
+    fun findEditTextValue(): String{
+        return when(player1Edit){
+            true -> {if(newUser){
+                ""
+            }else{
+                player1
+            }}
+
+            false -> {if(newUser){
+                ""
+            }else{
+                player2
+            }}
         }
     }
 }
