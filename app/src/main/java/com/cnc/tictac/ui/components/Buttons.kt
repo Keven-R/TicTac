@@ -385,6 +385,7 @@ fun GameMenuButtonGroup (
             label = stringResource(id = copy.game_actions_pause),
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
+            viewModel.onEvent(TicTacEvent.TimerStop)
             viewModel.gameUIState = MENU.PAUSE
             navController.navigate(Destination.GameMenuScreen.route)
         }
@@ -394,6 +395,7 @@ fun GameMenuButtonGroup (
     //            modifier = Modifier.weight(1f).fillMaxWidth(),
             enabled = enableUndo
         ) {
+            viewModel.onEvent(TicTacEvent.TimerStop)
             viewModel.gameUIState = MENU.UNDO
             navController.navigate(Destination.GameMenuScreen.route)
         }
@@ -402,6 +404,7 @@ fun GameMenuButtonGroup (
             label = stringResource(id = copy.game_actions_restart),
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
+            viewModel.onEvent(TicTacEvent.TimerStop)
             viewModel.gameUIState = MENU.RESTART
             navController.navigate(Destination.GameMenuScreen.route)
         }
@@ -410,6 +413,7 @@ fun GameMenuButtonGroup (
             label = stringResource(id = copy.game_actions_exit),
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
+            viewModel.onEvent(TicTacEvent.TimerStop)
             viewModel.gameUIState = MENU.EXIT
             navController.navigate(Destination.GameMenuScreen.route)
         }
