@@ -95,6 +95,7 @@ fun Radio(
 @Composable
 fun ImageGridSingleSelect (
     modifier: Modifier = Modifier,
+    viewModel: TicTacViewModel,
     gridModifier: Modifier = Modifier,
     label: String = "Select one",
     imageIds: Array<Int>, // List of resource id's containing all images in the selection
@@ -129,12 +130,12 @@ fun ImageGridSingleSelect (
                     items(imageIds.count()) { i ->
                         ImageGridItem(
                             modifier = Modifier.fillMaxWidth(),
+                            viewModel = viewModel,
                             avatarResourceId = imageIds[i],
                             isSelected = i == selectedIndex,
                             padding = imagePadding,
-                        ) {
-                            // TODO: Add onclick event to handle single select
-                        }
+                            position = i
+                        )
                     }
                 }
             )
@@ -149,12 +150,12 @@ fun ImageGridSingleSelect (
                     items(imageIds.count()) { i ->
                         ImageGridItem(
                             modifier = Modifier.aspectRatio(1f).fillMaxSize(),
+                            viewModel = viewModel,
                             avatarResourceId = imageIds[i],
                             isSelected = i == selectedIndex,
                             padding = imagePadding,
-                        ) {
-                            // TODO: Add onclick event to handle single select
-                        }
+                            position = i
+                        )
                     }
                 }
             )
@@ -166,10 +167,11 @@ fun ImageGridSingleSelect (
 @Composable
 fun ImageGridItem (
     modifier: Modifier = Modifier,
+    viewModel: TicTacViewModel,
     avatarResourceId: Int,
     isSelected: Boolean,
     padding: Int = 24,
-    onClick: () -> Unit
+    position: Int
 ) {
     AvatarBlock(
         avatarResourceId = avatarResourceId,
@@ -177,6 +179,8 @@ fun ImageGridItem (
         isFilled = isSelected,
         isBorderTransparent = !isSelected,
         padding = padding,
-        boxModifier = modifier.clickable { onClick }
+        boxModifier = modifier.clickable {
+            viewModel.selectedAvatar = position
+        }
     )
 }
