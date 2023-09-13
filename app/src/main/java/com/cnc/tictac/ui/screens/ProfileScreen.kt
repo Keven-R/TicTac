@@ -77,7 +77,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                     .fillMaxWidth()
             ) {
                 // ELEMENT: Back button showing current page title "profile")
-                BackButton(stringResource(id = copy.page_title_profile),Destination.HomeScreen,navController)
+                BackButton(stringResource(id = copy.page_title_profile),navController)
             }
 
             // CONTAINER: User info and stats
@@ -183,7 +183,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title "profile")
-                BackButton(stringResource(id = copy.page_title_profile),Destination.HomeScreen,navController)
+                BackButton(stringResource(id = copy.page_title_profile),navController)
             }
 
             // CONTAINER: All game settings found here

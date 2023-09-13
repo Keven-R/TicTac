@@ -58,9 +58,6 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
                         id = when(viewModel.newUser){
                                 true -> R.string.page_title_new_user
                                 false -> R.string.page_title_edit_profile }),
-                        destination = when(viewModel.newUser){
-                                        true -> Destination.UserSelectScreen
-                                        false -> Destination.ProfileScreen },
                     navController
                 )
             }
@@ -144,9 +141,6 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
                         id = when(viewModel.newUser){
                             true -> R.string.page_title_new_user
                             false -> R.string.page_title_edit_profile }),
-                    destination = when(viewModel.newUser){
-                        true -> Destination.UserSelectScreen
-                        false -> Destination.ProfileScreen },
                     navController
                 )
             }

@@ -65,6 +65,7 @@ class TicTacViewModel() : ViewModel(){
     var player1Edit by mutableStateOf(true)
     var selectedAvatar by mutableIntStateOf(findAvatar())
     var playerTextFieldValue by mutableStateOf(findEditTextValue())
+    var playerSwitchUI by mutableStateOf(true)
 
     init {
         Log.v(TAG,"TicTacViewModel Created")

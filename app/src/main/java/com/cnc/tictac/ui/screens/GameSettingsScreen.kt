@@ -136,7 +136,7 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: Ti
                     .fillMaxWidth()
             ) {
                 // ELEMENT: Back button showing current page title "game settings")
-                BackButton(stringResource(id = copy.page_title_settings),Destination.HomeScreen,navController,)
+                BackButton(stringResource(id = copy.page_title_settings),navController,)
             }
 
             // CONTAINER: All game settings found here
@@ -282,7 +282,7 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
             // CONTAINER: Top nav
             Row(modifier = Modifier.fillMaxWidth()) {
                 // ELEMENT: Back button showing current page title "game settings")
-                BackButton(stringResource(id = copy.page_title_settings), Destination.HomeScreen, navController) }
+                BackButton(stringResource(id = copy.page_title_settings), navController) }
 
             // CONTAINER: All game settings found here
             Column(

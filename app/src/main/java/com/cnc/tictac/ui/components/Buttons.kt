@@ -82,7 +82,6 @@ fun DisplayButton(
 @Composable
 fun BackButton(
     currentPageLabel: String,
-    destination: Destination,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -92,7 +91,7 @@ fun BackButton(
         modifier = modifier
             .widthIn(min = 44.dp)
             .heightIn(min = 44.dp)
-            .clickable { navController.navigate(destination.route) }
+            .clickable { navController.popBackStack() }
     ) {
         Text(
             text = label,
