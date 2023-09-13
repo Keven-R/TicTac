@@ -1,5 +1,6 @@
 package com.cnc.tictac.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,9 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.R
+import com.cnc.tictac.viewmodel.MENU
 import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
@@ -383,7 +386,8 @@ fun GameMenuButtonGroup (
             label = stringResource(id = copy.game_actions_pause),
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
-            viewModel.onEvent(TicTacEvent.PauseGame)
+            viewModel.gameUIState = MENU.PAUSE
+            navController.navigate(Destination.GameMenuScreen.route)
         }
 
         GameMenuButton(
@@ -391,22 +395,24 @@ fun GameMenuButtonGroup (
     //            modifier = Modifier.weight(1f).fillMaxWidth(),
             enabled = enableUndo
         ) {
-            viewModel.onEvent(TicTacEvent.Undo)
+            viewModel.gameUIState = MENU.UNDO
+            navController.navigate(Destination.GameMenuScreen.route)
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_restart),
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
-            viewModel.onEvent(TicTacEvent.Restart)
+            viewModel.gameUIState = MENU.RESTART
+            navController.navigate(Destination.GameMenuScreen.route)
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_exit),
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
-            viewModel.onEvent(TicTacEvent.Exit)
-            navController.navigate(Destination.HomeScreen.route)
+            viewModel.gameUIState = MENU.EXIT
+            navController.navigate(Destination.GameMenuScreen.route)
         }
     }
 }
@@ -414,10 +420,13 @@ fun GameMenuButtonGroup (
 @Composable
 fun GameMenuButtonGroup(
     modifier: Modifier = Modifier,
-    menu: CurrentMenu,
+    menu: MENU,
     stackVertically: Boolean = true,
+    navController: NavHostController,
+    viewModel: TicTacViewModel
 ) {
-    val buttonGroupContent = getGameMenuLabelAndEvents(menu)
+
+    val buttonGroupContent = getGameMenuLabelAndEvents(menu,navController,viewModel)
     val (confirmLabelId, confirmEvent) = buttonGroupContent[0]
     val (dismissLabelId, dismissEvent) = buttonGroupContent[1]
 
@@ -460,41 +469,60 @@ fun GameMenuButtonGroup(
 // Returns content required for game menu buttons as list of pairs
 // List[i] is content for 1 button (in a Pair)
 // Pair(a,b) A = label, B = onclick action
-fun getGameMenuLabelAndEvents (menu: CurrentMenu) : Array<Pair<Int, () -> Unit >> {
+fun getGameMenuLabelAndEvents (menu: MENU, navController: NavHostController, viewModel: TicTacViewModel) : Array<Pair<Int, () -> Unit >> {
     when (menu) {
-        CurrentMenu.PAUSE -> {
+        MENU.PAUSE -> {
             return arrayOf(
                 Pair(
                     R.string.game_menu_pause_confirm,
-                    { /* TODO: RESUME GAME on click action */}
+                    {
+                        viewModel.onEvent(TicTacEvent.TimerStart)
+                        navController.popBackStack()
+                    }
                 ),
                 Pair(
                     R.string.game_menu_pause_dismiss,
-                    { /* TODO: RESUME GAME on click action */}
+                    {
+                        viewModel.onEvent(TicTacEvent.TimerStart)
+                        navController.popBackStack()
+                    }
                 )
             )
         }
-        CurrentMenu.RESTART -> {
+        MENU.RESTART -> {
             return arrayOf(
                 Pair(
                     R.string.game_menu_restart_confirm,
-                    { /* TODO: RESTART GAME on click action */}
+                    {
+                        viewModel.onEvent(TicTacEvent.Restart)
+                        viewModel.onEvent(TicTacEvent.TimerStart)
+                        navController.popBackStack()
+                    }
                 ),
                 Pair(
                     R.string.game_menu_restart_dismiss,
-                    { /* TODO: RESUME GAME on click action */}
+                    {
+                        viewModel.onEvent(TicTacEvent.TimerStart)
+                        navController.popBackStack()
+                    }
                 )
             )
         }
-        CurrentMenu.EXIT -> {
+        MENU.EXIT -> {
             return arrayOf(
                 Pair(
                     R.string.game_menu_exit_confirm,
-                    { /* TODO: EXIT GAME on click action */}
+                    {
+                        viewModel.onEvent(TicTacEvent.Exit)
+                        navController.navigate(Destination.HomeScreen.route)
+                    }
                 ),
                 Pair(
                     R.string.game_menu_exit_dismiss,
-                    { /* TODO: RESUME GAME on click action */}
+                    {
+                        viewModel.onEvent(TicTacEvent.TimerStart)
+                        navController.popBackStack()
+                    }
                 )
             )
         }
@@ -503,11 +531,11 @@ fun getGameMenuLabelAndEvents (menu: CurrentMenu) : Array<Pair<Int, () -> Unit >
             return arrayOf(
                 Pair(
                     R.string.user_name_placeholder,
-                    { /* TODO: ERROR handler?? cos why did it even get here lol */}
+                    { Log.d("Buttons", "Game Menu Button Error")}
                 ),
                 Pair(
                     R.string.user_name_placeholder,
-                    { /* TODO: ERROR handler?? cos why did it even get here lol */}
+                    { navController.popBackStack()}
                 )
             )
         }

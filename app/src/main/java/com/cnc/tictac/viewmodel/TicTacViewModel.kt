@@ -1,12 +1,9 @@
 package com.cnc.tictac.viewmodel
 
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.cnc.tictac.R
@@ -15,6 +12,8 @@ private const val TAG = "TicTacViewModel"
 private const val TYPE = "EVENT: "
 
 enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
+
+enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
 
 class TicTacViewModel() : ViewModel(){
 
@@ -61,6 +60,7 @@ class TicTacViewModel() : ViewModel(){
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
 
     /* UI States*/
+    var gameUIState by mutableStateOf(MENU.RUNNING)
     var newUser by mutableStateOf(false)
     var player1Edit by mutableStateOf(true)
     var selectedAvatar by mutableIntStateOf(findAvatar())
@@ -78,11 +78,12 @@ class TicTacViewModel() : ViewModel(){
             TicTacEvent.NewSinglePlayerGame -> {Log.v(TAG, TYPE+"NewSinglePlayerGame")}
             TicTacEvent.NewMultiPlayerGame  -> {Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")}
             TicTacEvent.ProfileMenuSelect -> {Log.v(TAG, TYPE+"ProfileMenuSelect")}
-            TicTacEvent.PauseGame -> {Log.v(TAG, TYPE+"PauseGame")}
             TicTacEvent.Undo -> {Log.v(TAG, TYPE+"Undo")}
             TicTacEvent.Restart -> {Log.v(TAG, TYPE+"Restart")}
             TicTacEvent.Exit -> {Log.v(TAG, TYPE+"Exit")}
             TicTacEvent.SaveUser -> {Log.v(TAG, TYPE+"SaveUser")}
+            TicTacEvent.TimerStart -> {Log.v(TAG, TYPE+"TimerStart")}
+            TicTacEvent.TimerStop -> {Log.v(TAG, TYPE+"TimerStop")}
         }
     }
 

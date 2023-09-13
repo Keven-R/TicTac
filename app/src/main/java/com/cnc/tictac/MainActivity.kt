@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cnc.tictac.ui.screens.GameMenuScreen
 import com.cnc.tictac.ui.screens.GameScreen
 import com.cnc.tictac.ui.screens.GameSettingsScreen
 import com.cnc.tictac.ui.screens.HomeScreen
@@ -28,10 +29,10 @@ sealed class Destination(val route: String){
     object GameScreen: Destination("game")
     object GameSettingsScreen: Destination("settings")
     object MultiplayerSettingsScreen: Destination("multi")
-
     object UserDetailScreen: Destination("edit_info")
     object UserSelectScreen: Destination("player_select")
     object ProfileScreen: Destination("profile")
+    object GameMenuScreen: Destination("game_menu")
 }
 
 /**
@@ -64,5 +65,6 @@ fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewMo
         composable(route = Destination.UserDetailScreen.route){ UserDetailScreen(navController,viewModel) }
         composable(route = Destination.UserSelectScreen.route){ UserSelectScreen(navController,viewModel) }
         composable(route = Destination.ProfileScreen.route){ ProfileScreen(navController,viewModel) }
+        composable(route = Destination.GameMenuScreen.route){ GameMenuScreen(navController,viewModel)}
     }
 }
