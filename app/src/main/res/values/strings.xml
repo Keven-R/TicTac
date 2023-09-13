@@ -24,6 +24,10 @@
     <string name="user_name_field_label">player name</string>
     <string name="user_avatar_select_label">avatar</string>
 
+    <!-- User select screen content -->
+    <string name="select_player_action">select</string>
+    <string name="switch_user_action">switch</string>
+
     <!-- Game settings screen content -->
     <string name="settings_action_start">start</string>
     <string name="settings_action_next">next</string>
@@ -55,12 +59,13 @@
     <string name="game_menu_exit_dismiss">resume</string>
 
 
-
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->
     <!-- Buttons -->
     <string name="button_play_solo">single player</string>
     <string name="button_play_multi">multiplayer</string>
     <string name="button_profile">profile</string>
+    <string name="button_new_user_icon">+</string>
+    <string name="button_new_user_label">new user</string>
 
     <!-- Assets description -->
     <string name="avatar">Avatar</string>

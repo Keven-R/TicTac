@@ -1,15 +1,21 @@
 package com.cnc.tictac.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,8 +23,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -343,7 +351,9 @@ fun PlayerSelectCard (
             // ELEMENT: Player 1 or 2
             BodyMedium (
                 content = stringResource(id = playerDescId),
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
             )
 
             // ELEMENT: Player name
@@ -356,10 +366,92 @@ fun PlayerSelectCard (
             // ELEMENT: BUTTON
             SecondaryButton(
                 label = stringResource(id = copy.settings_change_player),
-                modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp)
             ){
                 navController.navigate(destination.route)
             }
         }
+    }
+}
+
+@Composable
+fun UserCell(
+    modifier: Modifier = Modifier,
+    avatarModifier: Modifier= Modifier,
+//    viewModel: TicTacViewModel,
+    playerName: String = "Guest",
+    isSelected: Boolean = true,
+    avatarResourceId: Int,
+    padding: Int = 24,
+) {
+    Column (
+        // TODO: Viewmodel, uncomment this when ready to add selected position
+//        modifier = modifier.clickable {
+//            viewModel.selectedAvatar = position
+//        },
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        // ELEMENT: Player avatar
+        AvatarBlock(
+        avatarResourceId = avatarResourceId,
+            isCircle = false,
+            isFilled = isSelected,
+            isBorderTransparent = false,
+            padding = padding,
+            boxModifier = avatarModifier.fillMaxWidth()
+        )
+
+        // ELEMENT: Player name
+        Text(
+            text = playerName,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onPrimary,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+fun CardButton(
+    modifier: Modifier = Modifier,
+    boxModifier: Modifier = Modifier,
+    label: String = "card button",
+    icon: String = "+",
+    onclick: () -> Unit,
+) {
+    Column (
+        modifier = modifier.clickable { onclick },
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        val shape = RoundedCornerShape(16.dp)
+        val color = MaterialTheme.colorScheme.outline
+        Box (
+            modifier = boxModifier
+                .clip(shape)
+                .border(1.dp, color, shape)
+                .background(MaterialTheme.colorScheme.primary)
+                .aspectRatio(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            // ELEMENT: Icon
+            Text(
+                text = icon,
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.outline,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+        // ELEMENT: Label
+        BodyLarge(
+            content = label,
+            rowModifier = Modifier.fillMaxWidth(),
+            isCenter = true
+        )
     }
 }

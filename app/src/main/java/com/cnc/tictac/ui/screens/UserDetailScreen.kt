@@ -13,11 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -47,10 +42,7 @@ fun UserDetailScreen(navController: NavHostController, viewModel: TicTacViewMode
 @Composable
 fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel: TicTacViewModel) {
     // CONTAINER: Set bg colour
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.primary)) {
-
+    Box(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary)) {
         // CONTAINER: All content on screen
         Column(
             modifier = Modifier
