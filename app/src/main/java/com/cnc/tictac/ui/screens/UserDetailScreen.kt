@@ -50,32 +50,8 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
     Box(modifier = Modifier
         .fillMaxSize()
         .background(color = MaterialTheme.colorScheme.primary)) {
+
         // CONTAINER: All content on screen
-
-        val avatarArray = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3, R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7, R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
-
-        // Should select users current avatar
-        fun getSelectedAvatar(): Int{
-            if(viewModel.newUser){
-                return 0
-            }
-            var currentAvatar = 0
-            if(viewModel.player1Edit){ currentAvatar = viewModel.player1Avatar }else{ viewModel.player2Avatar }
-
-            for((index, avatar) in avatarArray.withIndex()){
-                if(avatar == currentAvatar){
-                    return index
-                }
-            }
-            return 0
-        }
-
-        val selectedAvatar by remember { mutableIntStateOf(getSelectedAvatar()) }
-        var playerTextFieldValue by remember { mutableStateOf(when(viewModel.player1Edit){
-            true -> {if(viewModel.newUser){""}else{viewModel.player1}}
-            false -> {if(viewModel.newUser){""}else{viewModel.player2}}
-        }) }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -109,10 +85,10 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
                 SingleLineTextField(
                     modifier = Modifier.width(160.dp),
                     label = stringResource(id = R.string.user_name_field_label),
-                    value = playerTextFieldValue,
+                    value = viewModel.playerTextFieldValue,
                     placeholder = stringResource(id = R.string.user_name_placeholder)
                 ) {
-                    playerTextFieldValue = it
+                    viewModel.playerTextFieldValue = it
                 }
 
                 // ELEMENT: Avatar select
@@ -126,8 +102,8 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
 //                        }
 //                    ),
                     label = stringResource(id = R.string.user_avatar_select_label),
-                    imageIds = avatarArray,
-                    selectedIndex = selectedAvatar,
+                    imageIds = viewModel.avatarArray,
+                    selectedIndex = viewModel.selectedAvatar,
                     isVerticalScroll = false
                 )
             }
@@ -145,7 +121,7 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
                         true -> Destination.UserSelectScreen
                         false -> Destination.ProfileScreen },
                     viewModel = viewModel,
-                    event = TicTacEvent.SaveUser(playerTextFieldValue,avatarArray[selectedAvatar]),
+                    event = TicTacEvent.TempEvent,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -159,32 +135,8 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
     Box(modifier = Modifier
         .fillMaxSize()
         .background(color = MaterialTheme.colorScheme.primary)) {
+
         // CONTAINER: All content on screen
-
-        val avatarArray = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3, R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7, R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
-
-        // Should select users current avatar
-        fun getSelectedAvatar(): Int{
-            if(viewModel.newUser){
-                return 0
-            }
-            var currentAvatar = 0
-            if(viewModel.player1Edit){ currentAvatar = viewModel.player1Avatar }else{ viewModel.player2Avatar }
-
-            for((index, avatar) in avatarArray.withIndex()){
-                if(avatar == currentAvatar){
-                    return index
-                }
-            }
-            return 0
-        }
-
-        val selectedAvatar by remember { mutableIntStateOf(getSelectedAvatar()) }
-        var playerTextFieldValue by remember { mutableStateOf(when(viewModel.player1Edit){
-            true -> {if(viewModel.newUser){""}else{viewModel.player1}}
-            false -> {if(viewModel.newUser){""}else{viewModel.player2}}
-        }) }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -220,10 +172,10 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
                 SingleLineTextField(
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(id = R.string.user_name_field_label),
-                    value = playerTextFieldValue,
+                    value = viewModel.playerTextFieldValue,
                     placeholder = stringResource(id = R.string.user_name_placeholder)
                 ) {
-                    playerTextFieldValue = it
+                    viewModel.playerTextFieldValue = it
                 }
 
                 // ELEMENT: Avatar select
@@ -236,8 +188,8 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
 //                        }
 //                    ),
                     label = stringResource(id = R.string.user_avatar_select_label),
-                    imageIds = avatarArray,
-                    selectedIndex = selectedAvatar,
+                    imageIds = viewModel.avatarArray,
+                    selectedIndex = viewModel.selectedAvatar,
                 )
             }
 
@@ -254,7 +206,7 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
                         true -> Destination.UserSelectScreen
                         false -> Destination.ProfileScreen },
                     viewModel = viewModel,
-                    event = TicTacEvent.SaveUser(playerTextFieldValue,avatarArray[selectedAvatar]),
+                    event = TicTacEvent.TempEvent,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
