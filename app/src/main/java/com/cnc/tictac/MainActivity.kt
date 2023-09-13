@@ -3,6 +3,7 @@ package com.cnc.tictac
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -10,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cnc.tictac.ui.screens.GameMenuScreen
 import com.cnc.tictac.ui.screens.GameScreen
 import com.cnc.tictac.ui.screens.GameSettingsScreen
 import com.cnc.tictac.ui.screens.HomeScreen
@@ -18,6 +20,7 @@ import com.cnc.tictac.ui.screens.UserDetailScreen
 import com.cnc.tictac.ui.screens.UserSelectScreen
 import com.cnc.tictac.ui.screens.MultiplayerSettingsScreen
 import com.cnc.tictac.ui.theme.TicTacTheme
+import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 private const val TAG = "MainActivity"
@@ -28,10 +31,10 @@ sealed class Destination(val route: String){
     object GameScreen: Destination("game")
     object GameSettingsScreen: Destination("settings")
     object MultiplayerSettingsScreen: Destination("multi")
-
     object UserDetailScreen: Destination("edit_info")
     object UserSelectScreen: Destination("player_select")
     object ProfileScreen: Destination("profile")
+    object GameMenuScreen: Destination("game_menu")
 }
 
 /**
@@ -64,5 +67,10 @@ fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewMo
         composable(route = Destination.UserDetailScreen.route){ UserDetailScreen(navController,viewModel) }
         composable(route = Destination.UserSelectScreen.route){ UserSelectScreen(navController,viewModel) }
         composable(route = Destination.ProfileScreen.route){ ProfileScreen(navController,viewModel) }
+        composable(route = Destination.GameMenuScreen.route){
+            BackHandler(true) {} // Back button turned off
+            viewModel.onEvent(TicTacEvent.TimerStop)
+            GameMenuScreen(navController,viewModel) // TODO: Check if timer is actually going off twice
+        }
     }
 }

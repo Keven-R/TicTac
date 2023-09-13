@@ -16,10 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.cnc.tictac.ui.components.CurrentMenu
+import com.cnc.tictac.viewmodel.MENU
 import com.cnc.tictac.ui.components.GameMenuButtonGroup
 import com.cnc.tictac.ui.components.GameMenuText
 import com.cnc.tictac.ui.system.getDeviceInfo
+import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 @Composable
@@ -52,14 +53,16 @@ fun DisplayDefaultGameMenuScreen(navController: NavHostController, viewModel: Ti
         ) {
             // ELEMENT: Menu title & description
             GameMenuText(
-                menu = CurrentMenu.RESTART,  // TODO: Viewmodel, change to correct menu opened
+                menu = viewModel.gameUIState,
                 modifier = Modifier.widthIn(200.dp).padding(top = 32.dp)
             )
 
             // ELEMENT: Menu buttons
             GameMenuButtonGroup(
-                menu = CurrentMenu.RESTART, // TODO: Viewmodel, change to correct menu opened
-                modifier = Modifier.weight(1f).fillMaxHeight().fillMaxWidth().padding(bottom = 160.dp)
+                menu = viewModel.gameUIState,
+                modifier = Modifier.weight(1f).fillMaxHeight().fillMaxWidth().padding(bottom = 160.dp),
+                navController = navController,
+                viewModel = viewModel
             )
         }
     }
@@ -80,14 +83,16 @@ fun DisplayWideGameMenuScreen(navController: NavHostController, viewModel: TicTa
         ) {
             // ELEMENT: Menu title & description
             GameMenuText(
-                menu = CurrentMenu.RESTART,  // TODO: Viewmodel, change to correct menu opened
+                menu = viewModel.gameUIState,
                 modifier = Modifier.widthIn(200.dp).padding(top = 32.dp, start = 12.dp, end = 12.dp))
 
             // ELEMENT: Menu buttons
             GameMenuButtonGroup(
-                menu = CurrentMenu.RESTART, // TODO: Viewmodel, change to correct menu opened
+                menu = viewModel.gameUIState,
                 modifier = Modifier.fillMaxWidth(),
-                stackVertically = false
+                stackVertically = false,
+                navController = navController,
+                viewModel = viewModel
             )
         }
     }
