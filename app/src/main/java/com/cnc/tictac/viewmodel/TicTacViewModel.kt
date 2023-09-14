@@ -69,7 +69,7 @@ class TicTacViewModel() : ViewModel(){
 
     init {
         Log.v(TAG,"TicTacViewModel Created")
-//        Log.v("Test", "Test")
+//        Log.v("Test", "Test Log Working")
     }
 
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
@@ -85,6 +85,7 @@ class TicTacViewModel() : ViewModel(){
             TicTacEvent.SaveUser -> {Log.v(TAG, TYPE+"SaveUser")}
             TicTacEvent.TimerStart -> {Log.v(TAG, TYPE+"TimerStart")}
             TicTacEvent.TimerStop -> {Log.v(TAG, TYPE+"TimerStop")}
+            is TicTacEvent.MarkerPlaced -> {Log.v(TAG, TYPE+"MarkerPlaced: Position = " + event.position)}
         }
     }
 
