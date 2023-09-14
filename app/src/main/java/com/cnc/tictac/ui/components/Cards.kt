@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.viewmodel.PLAYERWINSTATUS
+import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
 
 /* GamePlayerCard
@@ -380,30 +381,31 @@ fun PlayerSelectCard (
 fun UserCell(
     modifier: Modifier = Modifier,
     avatarModifier: Modifier= Modifier,
-//    viewModel: TicTacViewModel,
+    viewModel: TicTacViewModel,
     playerName: String = "Guest",
     isSelected: Boolean = true,
-    avatarResourceId: Int,
+    avatarResourceId: Int?,
     padding: Int = 24,
+    position: Int
 ) {
     Column (
-        // TODO: Viewmodel, uncomment this when ready to add selected position
-//        modifier = modifier.clickable {
-//            viewModel.selectedAvatar = position
-//        },
-        modifier = modifier,
+        modifier = modifier.clickable {
+            viewModel.userSelectIndex = position
+        },
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // ELEMENT: Player avatar
-        AvatarBlock(
-        avatarResourceId = avatarResourceId,
-            isCircle = false,
-            isFilled = isSelected,
-            isBorderTransparent = false,
-            padding = padding,
-            boxModifier = avatarModifier.fillMaxWidth()
-        )
+        if (avatarResourceId != null) {
+            AvatarBlock(
+                avatarResourceId = avatarResourceId,
+                isCircle = false,
+                isFilled = isSelected,
+                isBorderTransparent = false,
+                padding = padding,
+                boxModifier = avatarModifier.fillMaxWidth()
+            )
+        }
 
         // ELEMENT: Player name
         Text(
@@ -425,6 +427,53 @@ fun CardButton(
 ) {
     Column (
         modifier = modifier.clickable { onclick },
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        val shape = RoundedCornerShape(16.dp)
+        val color = MaterialTheme.colorScheme.outline
+        Box (
+            modifier = boxModifier
+                .clip(shape)
+                .border(1.dp, color, shape)
+                .background(MaterialTheme.colorScheme.primary)
+                .aspectRatio(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            // ELEMENT: Icon
+            Text(
+                text = icon,
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.outline,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+        // ELEMENT: Label
+        BodyLarge(
+            content = label,
+            rowModifier = Modifier.fillMaxWidth(),
+            isCenter = true
+        )
+    }
+}
+
+@Composable
+fun NewUserCardButton(
+    modifier: Modifier = Modifier,
+    boxModifier: Modifier = Modifier,
+    viewModel: TicTacViewModel,
+    navController: NavHostController,
+    label: String = "card button",
+    icon: String = "+"
+) {
+    Column (
+        modifier = modifier.clickable {
+            viewModel.newUser = true
+            viewModel.playerTextFieldValue = viewModel.findEditTextValue()
+            viewModel.selectedAvatar = 0
+            navController.navigate(Destination.UserDetailScreen.route)
+        },
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

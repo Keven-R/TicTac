@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.cnc.tictac.R
+import com.cnc.tictac.backend.system.HumanPlayer
 
 private const val TAG = "TicTacViewModel"
 private const val TYPE = "EVENT: "
@@ -21,6 +22,15 @@ class TicTacViewModel : ViewModel(){
         R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7,
         R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
 
+    var users by mutableStateOf(listOf(
+        HumanPlayer("Ryan",null,"O", R.drawable.avatar_8),
+        HumanPlayer("Jasmine",null,"O", R.drawable.avatar_1),
+        HumanPlayer("Keven",null,"O", R.drawable.avatar_3),
+        HumanPlayer("Sajib",null,"O", R.drawable.avatar_3),
+        HumanPlayer("Kathy",null,"O", R.drawable.avatar_6),
+        HumanPlayer("John",null,"O", R.drawable.avatar_2),
+        HumanPlayer("Lilly",null,"O", R.drawable.avatar_10)
+    ))
 
     /* Player 1 States */
     var player1 by mutableStateOf("Annie")
@@ -66,6 +76,7 @@ class TicTacViewModel : ViewModel(){
     var selectedAvatar by mutableIntStateOf(findAvatar())
     var playerTextFieldValue by mutableStateOf(findEditTextValue())
     var playerSwitchUI by mutableStateOf(true)
+    var userSelectIndex by mutableIntStateOf(1)
 
     init {
         Log.v(TAG,"TicTacViewModel Created")
@@ -148,7 +159,7 @@ class TicTacViewModel : ViewModel(){
         return 0
     }
 
-    private fun findEditTextValue(): String{
+    fun findEditTextValue(): String{
         return when(player1Edit){
             true -> {if(newUser){
                 ""

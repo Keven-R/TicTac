@@ -81,7 +81,6 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
                 }
 
                 // ELEMENT: Avatar select
-                // TODO: Make avatar selectable
                 ImageGridSingleSelect(
                     modifier = Modifier.weight(1f).fillMaxWidth().fillMaxHeight(),
                     viewModel = viewModel,
