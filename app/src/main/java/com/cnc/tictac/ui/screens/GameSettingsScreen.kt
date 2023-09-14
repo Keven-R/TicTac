@@ -24,6 +24,7 @@ import com.cnc.tictac.ui.components.PrimaryButton
 import com.cnc.tictac.ui.components.Radio
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
+import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
 
@@ -193,6 +194,8 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: Ti
                     stringResource(id = copy.settings_action_start),
                     navController = navController,
                     destination = Destination.GameScreen,
+                    viewModel = viewModel,
+                    event = TicTacEvent.StartGame,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -357,6 +360,8 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
                     stringResource(id = copy.settings_action_start),
                     navController = navController,
                     destination = Destination.GameScreen,
+                    viewModel = viewModel,
+                    event = TicTacEvent.StartGame,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

@@ -2,6 +2,7 @@ package com.cnc.tictac.viewmodel
 
 sealed class TicTacEvent{
     object TempEvent: TicTacEvent()
+    object StartGame: TicTacEvent()
     object NewSinglePlayerGame: TicTacEvent()
     object NewMultiPlayerGame: TicTacEvent()
     object ProfileMenuSelect: TicTacEvent()
