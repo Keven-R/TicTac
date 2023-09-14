@@ -35,12 +35,9 @@ class AIPlayer(
         return Pair(0, 0)
     }
     override fun equals(player : Player?) : Boolean {
-        return if (player == null) {
-            false
-        } else if (player.playerName == this.playerName && player.playerID == this.playerID) {
-            true
-        } else {
-            false
+        if (player?.playerName == this.playerName && player?.playerID == this.playerID) {
+            return true
         }
+        return false
     }
 }

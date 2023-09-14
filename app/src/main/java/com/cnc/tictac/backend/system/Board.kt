@@ -15,9 +15,9 @@ class Board(
     private val width       : Int = 3,
     private val height      : Int = 3,
     private val minimumWin  : Int = 3,
-    private var boardState          : BoardState
+    private var boardState  : BoardState
                             = Array(width, { Array(height, { null }) }),
-    private var boardHistory        : Stack<BoardState>
+    private var boardHistory : Stack<BoardState>
                             = Stack(),
     private var movesMade   : Int = 0,
 ){

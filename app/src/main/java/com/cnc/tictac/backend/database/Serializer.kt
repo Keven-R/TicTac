@@ -1,6 +1,6 @@
 package com.cnc.tictac.backend.database
 
-import com.cnc.tictac.backend.system.*
+import com.cnc.tictac.backend.system.HumanPlayer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -28,8 +28,8 @@ object PlayerSerializer : KSerializer<HumanPlayer> {
         var player = HumanPlayer(
             playerName  = arr[0],
             playerID    = arr[1].toInt(),
-            playerAvatar = Pair(arr[3].toInt(), arr[2]),
-            playerIcon = Pair(arr[5].toInt(), arr[4])
+            playerAvatar = Pair(arr[3], arr[2]),
+            playerIcon = Pair(arr[5], arr[4])
         )
         return player
     }

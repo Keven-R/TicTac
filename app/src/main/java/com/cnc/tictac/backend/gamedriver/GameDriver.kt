@@ -160,8 +160,8 @@ class GameDriver(
         when(attribute){
             "playerName"    -> player.playerName = value as String
             "playerID"      -> player.playerID = value as Int
-            "playerAvatar"  -> player.playerAvatar = Pair(value as Int, "Player Avatar")
-            "playerIcon"    -> player.playerIcon = Pair(value as Int, "Player Icon")
+            "playerAvatar"  -> player.playerAvatar = Pair(value as String, "Player Avatar")
+            "playerIcon"    -> player.playerIcon = Pair(value as String, "Player Icon")
         }
         playerDAO.removePlayer(player.playerID)
         playerDAO.addNewPlayer(player.playerID, player.playerName, player as HumanPlayer)
