@@ -24,6 +24,7 @@ import com.cnc.tictac.ui.components.GameMenuButtonGroup
 import com.cnc.tictac.ui.components.GamePlayerCard
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
+import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 @Composable

@@ -49,7 +49,7 @@ class TicTacViewModel() : ViewModel(){
 //    var player2TotalGamesString by mutableStateOf("total games 24")
 
     /* Game States */
-    var boardState by mutableStateOf(arrayOf("o", "x", "x", "", "o", "", "", "o", ""))
+    var boardState by mutableStateOf(arrayOf("o", "x", "x", "", "o", "", "", "o", "","","","","","","",""))
     var gameActive by mutableStateOf(true) // This and gameEnded could probably be the same
     var gameEnded by mutableStateOf(false)
     var startingSelection by mutableIntStateOf(0) // 0 = "Player 1", 1 = "Player 2"
@@ -69,13 +69,14 @@ class TicTacViewModel() : ViewModel(){
 
     init {
         Log.v(TAG,"TicTacViewModel Created")
-//        Log.v("Test", "Test Log Working")
+        Log.v("Test", "Test Log Working")
     }
 
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
     fun onEvent(event: TicTacEvent){
         when(event){
             TicTacEvent.TempEvent -> {Log.v(TAG, TYPE+"Temp Event For Testing")}
+            TicTacEvent.StartGame -> {gameStart()}
             TicTacEvent.NewSinglePlayerGame -> {Log.v(TAG, TYPE+"NewSinglePlayerGame")}
             TicTacEvent.NewMultiPlayerGame  -> {Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")}
             TicTacEvent.ProfileMenuSelect -> {Log.v(TAG, TYPE+"ProfileMenuSelect")}
@@ -86,6 +87,15 @@ class TicTacViewModel() : ViewModel(){
             TicTacEvent.TimerStart -> {Log.v(TAG, TYPE+"TimerStart")}
             TicTacEvent.TimerStop -> {Log.v(TAG, TYPE+"TimerStop")}
             is TicTacEvent.MarkerPlaced -> {Log.v(TAG, TYPE+"MarkerPlaced: Position = " + event.position)}
+        }
+    }
+
+    private fun gameStart(){
+        Log.v(TAG, TYPE+"StartGame")
+        when(boardSelection){
+            0 -> boardState = (arrayOf("","","","","","","","",""))
+            1 -> boardState = (arrayOf("","","","","","","","","","","","","","","",""))
+            2 -> boardState = (arrayOf("","","","","","","","","","","","","","","","","","","","","","","","",""))
         }
     }
 

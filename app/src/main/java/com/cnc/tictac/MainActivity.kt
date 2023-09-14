@@ -61,16 +61,12 @@ fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewMo
         startDestination = Destination.HomeScreen.route
     ){
         composable(route = Destination.HomeScreen.route){ HomeScreen(navController,viewModel) }
-        composable(route = Destination.GameScreen.route){ GameScreen(navController,viewModel) }
+        composable(route = Destination.GameScreen.route){ BackHandler(true) {}; GameScreen(navController,viewModel) }
         composable(route = Destination.GameSettingsScreen.route){ GameSettingsScreen(navController,viewModel) }
         composable(route = Destination.MultiplayerSettingsScreen.route){ MultiplayerSettingsScreen(navController, viewModel) }
         composable(route = Destination.UserDetailScreen.route){ UserDetailScreen(navController,viewModel) }
         composable(route = Destination.UserSelectScreen.route){ UserSelectScreen(navController,viewModel) }
         composable(route = Destination.ProfileScreen.route){ ProfileScreen(navController,viewModel) }
-        composable(route = Destination.GameMenuScreen.route){
-            BackHandler(true) {} // Back button turned off
-//            viewModel.onEvent(TicTacEvent.TimerStop)
-            GameMenuScreen(navController,viewModel) // TODO: Check if timer is actually going off twice
-        }
+        composable(route = Destination.GameMenuScreen.route){ BackHandler(true) {}; GameMenuScreen(navController,viewModel) }
     }
 }
