@@ -129,11 +129,8 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
             ) {
                 GameBoard(
                     modifier = Modifier.fillMaxHeight(),
-                    isContainerNarrow = false,
-                    isGameActive = viewModel.gameActive,
-                    boardSize = viewModel.getBoardSize(),
-                    board = viewModel.boardState,
-                    winIndices = viewModel.winIndices // should be empty unless win happens
+                    viewModel = viewModel,
+                    isContainerNarrow = false
                 )
             }
         }
@@ -212,11 +209,8 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
                     // ELEMENT: game board (occupy all right side)
                     GameBoard(
                         modifier = Modifier.fillMaxHeight(),
-                        isContainerNarrow = false,
-                        isGameActive = viewModel.gameActive,
-                        boardSize = viewModel.getBoardSize(),
-                        board = viewModel.boardState,
-                        winIndices = viewModel.winIndices // should be empty unless win happens
+                        viewModel = viewModel,
+                        isContainerNarrow = false
                     )
                 }
             }
@@ -276,10 +270,7 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
             ) {
                 GameBoard(
                     modifier = Modifier.fillMaxWidth(),
-                    isGameActive = viewModel.gameActive,
-                    boardSize = viewModel.getBoardSize(),
-                    board = viewModel.boardState,
-                    winIndices = viewModel.winIndices // should be empty unless win happens
+                    viewModel = viewModel
                 )
             }
 
@@ -375,10 +366,7 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
             ) {
                 GameBoard(
                     modifier = Modifier.fillMaxWidth(),
-                    isGameActive = viewModel.gameActive,
-                    boardSize = viewModel.getBoardSize(),
-                    board = viewModel.boardState,
-                    winIndices = viewModel.winIndices // should be empty unless win happens
+                    viewModel = viewModel
                 )
             }
 

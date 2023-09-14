@@ -11,4 +11,5 @@ sealed class TicTacEvent{
     object SaveUser: TicTacEvent()
     object TimerStop: TicTacEvent()
     object TimerStart: TicTacEvent()
+    data class MarkerPlaced(val position: Int): TicTacEvent()
 }
