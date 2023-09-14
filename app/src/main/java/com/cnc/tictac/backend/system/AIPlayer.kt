@@ -1,12 +1,12 @@
 package com.cnc.tictac.backend.system
 class AIPlayer(
-    playerName      : String                = "AI Player",
+    playerName      : String    = "AI Player",
     // Player-set username.
-    playerID        : Int?                   = null,
+    playerID        : Int?      = null,
     // Unique player ID (system generated).
-    playerIcon      : Pair<String, String>     = Pair("", "Null Player Icon"),
+    playerIcon      : String    = "D",
     // Pair for player icon: Resource, and description.
-    playerAvatar    : Pair<String, String>     = Pair("", "Null Player Icon"),
+    playerAvatar    : Int?      = null,
     // Pair for avatar image: Resource, and description.
 ) : Player (playerName, playerID, playerIcon, playerAvatar) {
 

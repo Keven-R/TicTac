@@ -15,11 +15,9 @@ object PlayerSerializer : KSerializer<HumanPlayer> {
     override fun serialize(encoder: Encoder, value : HumanPlayer){
         val name        : String = value.playerName
         val id          : String = value.playerID.toString()
-        val avatar_s    : String = value.playerAvatar.second
-        val avatar_r    : String = value.playerAvatar.first.toString()
-        val icon_s      : String = value.playerIcon.second
-        val icon_r      : String = value.playerIcon.first.toString()
-        val serial_string = "$name#$id#$avatar_s#$avatar_r#$icon_s#$icon_r"
+        val avatar      : String = value.playerAvatar.toString()
+        val icon        : String = value.playerIcon
+        val serial_string = "$name#$id#$avatar#$icon"
         encoder.encodeString(serial_string)
     }
     override fun deserialize(decoder : Decoder) : HumanPlayer {
@@ -28,8 +26,8 @@ object PlayerSerializer : KSerializer<HumanPlayer> {
         var player = HumanPlayer(
             playerName  = arr[0],
             playerID    = arr[1].toInt(),
-            playerAvatar = Pair(arr[3], arr[2]),
-            playerIcon = Pair(arr[5], arr[4])
+            playerAvatar = arr[2].toInt(),
+            playerIcon = arr[3]
         )
         return player
     }
