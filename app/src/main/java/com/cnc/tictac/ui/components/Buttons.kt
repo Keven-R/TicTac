@@ -164,6 +164,32 @@ fun PrimaryButton(
 fun PrimaryButton(
     label: String,
     navController: NavHostController,
+    viewModel: TicTacViewModel,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        colors = buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+        ),
+        border = BorderStroke(1.dp, SolidColor(MaterialTheme.colorScheme.secondary)),
+        modifier = modifier
+            .heightIn(44.dp)
+            .widthIn(44.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSecondary)
+    }
+}
+
+@Composable
+fun PrimaryButton(
+    label: String,
+    navController: NavHostController,
     destination: Destination,
     modifier: Modifier = Modifier
 ) {

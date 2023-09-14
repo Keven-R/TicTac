@@ -24,6 +24,7 @@ import com.cnc.tictac.Destination
 import com.cnc.tictac.R
 import com.cnc.tictac.ui.components.BackButton
 import com.cnc.tictac.ui.components.CardButton
+import com.cnc.tictac.ui.components.NewUserCardButton
 import com.cnc.tictac.ui.components.PrimaryButton
 import com.cnc.tictac.ui.components.UserCell
 import com.cnc.tictac.ui.system.DeviceInfo
@@ -86,14 +87,6 @@ fun DisplayDefaultUserSelectScreen(navController: NavHostController, viewModel: 
                 )
             }
 
-            // TODO: viewmodel
-            // - number of users, can input this directly into lazy grid
-            // - imageIds for all users
-            // - index of user currently selected
-            val numOfUsers = 8
-            val imageIds = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2,R.drawable.avatar_3,R.drawable.avatar_4,R.drawable.avatar_5,R.drawable.avatar_6,R.drawable.avatar_7,R.drawable.avatar_8,)
-            val selectedIndex = 1
-
             // CONTAINER: Avatar select found here {
             LazyVerticalGrid(
                 modifier = Modifier
@@ -106,25 +99,27 @@ fun DisplayDefaultUserSelectScreen(navController: NavHostController, viewModel: 
                 verticalArrangement = Arrangement.spacedBy(24.dp),
                 userScrollEnabled = true,
                 content = {
-                    items(numOfUsers) { i ->
+                    items(viewModel.users.size) { i ->
                         when (i) {
                             0 -> {
                                 // ELEMENT: NEW USER button
-                                CardButton(
+                                NewUserCardButton(
                                     modifier = Modifier,
+                                    viewModel = viewModel,
+                                    navController = navController,
                                     label = stringResource(id = R.string.button_new_user_label),
                                     icon = stringResource(id = R.string.button_new_user_icon),
                                     boxModifier = Modifier.fillMaxWidth(),
-                                ) {
-                                    /* TODO: Viewmodel, handle onclick of new user card */
-                                }
+                                )
                             } else -> {
                                 // ELEMENT: All users
                                 UserCell(
                                     modifier = Modifier.fillMaxWidth(),
-                                    playerName = "user", // TODO: name of user here
-                                    avatarResourceId = imageIds[i-1],
-                                    isSelected = i-1 == selectedIndex,
+                                    playerName = viewModel.users[i-1].playerName,
+                                    avatarResourceId = viewModel.users[i-1].playerAvatar,
+                                    isSelected = i-1 == viewModel.userSelectIndex,
+                                    viewModel = viewModel,
+                                    position = i-1
                                 )
                             }
                         }
@@ -138,12 +133,17 @@ fun DisplayDefaultUserSelectScreen(navController: NavHostController, viewModel: 
                     .fillMaxWidth()
             ) {
                 // BUTTON: Primary action
-                // TODO: label + onclick should be either "select_player_action" or "switch_user_action"
                 PrimaryButton(
-                    stringResource(id = R.string.select_player_action),
+                    stringResource(id = when(viewModel.playerSwitchUI){
+                        true -> R.string.switch_user_action
+                        false -> R.string.select_player_action
+                    }),
+                    navController = navController,
+                    viewModel = viewModel,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    println("start game")
+                    // TODO: Set User
+                    navController.popBackStack()
                 }
             }
         }
@@ -182,14 +182,6 @@ fun DisplayCompactUserSelectScreen(navController: NavHostController, viewModel: 
                 )
             }
 
-            // TODO: viewmodel
-            // - number of users, can input this directly into lazy grid
-            // - imageIds for all users
-            // - index of user currently selected
-            val numOfUsers = 8
-            val imageIds = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2,R.drawable.avatar_3,R.drawable.avatar_4,R.drawable.avatar_5,R.drawable.avatar_6,R.drawable.avatar_7,R.drawable.avatar_8,)
-            val selectedIndex = 1
-
             // CONTAINER: Avatar select found here {
             LazyHorizontalGrid(
                 modifier = Modifier
@@ -201,26 +193,28 @@ fun DisplayCompactUserSelectScreen(navController: NavHostController, viewModel: 
                 verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
                 userScrollEnabled = true,
                 content = {
-                    items(numOfUsers) { i ->
+                    items(viewModel.users.size) { i ->
                         when (i) {
                             0 -> {
                                 // ELEMENT: NEW USER button
-                                CardButton(
+                                NewUserCardButton(
                                     modifier = Modifier.fillMaxHeight(),
+                                    viewModel = viewModel,
+                                    navController = navController,
                                     label = stringResource(id = R.string.button_new_user_label),
                                     icon = stringResource(id = R.string.button_new_user_icon),
                                     boxModifier = Modifier.fillMaxHeight().weight(1f),
-                                ) {
-                                    /* TODO: Viewmodel, handle onclick of new user card */
-                                }
+                                )
                             } else -> {
                             // ELEMENT: All users
                                 UserCell(
                                     modifier = Modifier.fillMaxHeight(),
                                     avatarModifier = Modifier.fillMaxHeight().weight(1f).aspectRatio(1f),
-                                    playerName = "user", // TODO: name of user here
-                                    avatarResourceId = imageIds[i-1],
-                                    isSelected = i-1 == selectedIndex,
+                                    playerName = viewModel.users[i-1].playerName,
+                                    avatarResourceId = viewModel.users[i-1].playerAvatar,
+                                    isSelected = i-1 == viewModel.userSelectIndex,
+                                    viewModel = viewModel,
+                                    position = i-1
                                 )
                             }
                         }
@@ -231,13 +225,17 @@ fun DisplayCompactUserSelectScreen(navController: NavHostController, viewModel: 
             // CONTAINER: Primary action
             Row(modifier = Modifier.fillMaxWidth()) {
                 // BUTTON: Primary action
-                // TODO: label + onclick should be either "select_player_action" or "switch_user_action"
                 PrimaryButton(
-                    stringResource(id = R.string.select_player_action),
+                    stringResource(id = when(viewModel.playerSwitchUI){
+                        true -> R.string.switch_user_action
+                        false -> R.string.select_player_action
+                    }),
+                    navController = navController,
+                    viewModel = viewModel,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // TODO: action
-                    println("start game")
+                    // TODO: Set User
+                    navController.popBackStack()
                 }
             }
         }
