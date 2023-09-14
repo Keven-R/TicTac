@@ -15,7 +15,7 @@ enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 
 enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
 
-class TicTacViewModel() : ViewModel(){
+class TicTacViewModel : ViewModel(){
 
     val avatarArray = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3,
         R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7,
@@ -49,7 +49,7 @@ class TicTacViewModel() : ViewModel(){
 //    var player2TotalGamesString by mutableStateOf("total games 24")
 
     /* Game States */
-    var boardState by mutableStateOf(arrayOf("o", "x", "x", "", "o", "", "", "o", "","","","","","","",""))
+    var boardState by mutableStateOf(arrayOf<String>())
     var gameActive by mutableStateOf(true) // This and gameEnded could probably be the same
     var gameEnded by mutableStateOf(false)
     var startingSelection by mutableIntStateOf(0) // 0 = "Player 1", 1 = "Player 2"
@@ -75,31 +75,47 @@ class TicTacViewModel() : ViewModel(){
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
     fun onEvent(event: TicTacEvent){
         when(event){
-            TicTacEvent.TempEvent -> {Log.v(TAG, TYPE+"Temp Event For Testing")}
-            TicTacEvent.StartGame -> {gameStart()}
-            TicTacEvent.NewSinglePlayerGame -> {Log.v(TAG, TYPE+"NewSinglePlayerGame")}
-            TicTacEvent.NewMultiPlayerGame  -> {Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")}
-            TicTacEvent.ProfileMenuSelect -> {Log.v(TAG, TYPE+"ProfileMenuSelect")}
-            TicTacEvent.Undo -> {Log.v(TAG, TYPE+"Undo")}
-            TicTacEvent.Restart -> {Log.v(TAG, TYPE+"Restart")}
-            TicTacEvent.Exit -> {Log.v(TAG, TYPE+"Exit")}
-            TicTacEvent.SaveUser -> {Log.v(TAG, TYPE+"SaveUser")}
-            TicTacEvent.TimerStart -> {Log.v(TAG, TYPE+"TimerStart")}
-            TicTacEvent.TimerStop -> {Log.v(TAG, TYPE+"TimerStop")}
-            is TicTacEvent.MarkerPlaced -> {Log.v(TAG, TYPE+"MarkerPlaced: Position = " + event.position)}
+            TicTacEvent.TempEvent -> Log.v(TAG, TYPE+"Temp Event For Testing")
+            TicTacEvent.StartGame -> gameStart()
+            TicTacEvent.NewSinglePlayerGame -> newSinglePlayerGame()
+            TicTacEvent.NewMultiPlayerGame  -> newMultiPlayerGame()
+            TicTacEvent.ProfileMenuSelect -> profileMenuSelect()
+            TicTacEvent.Undo -> undo()
+            TicTacEvent.Restart -> restart()
+            TicTacEvent.Exit -> exit()
+            TicTacEvent.SaveUser -> saveUser()
+            TicTacEvent.TimerStart -> timerStart()
+            TicTacEvent.TimerStop -> timerStop()
+            is TicTacEvent.MarkerPlaced -> markerPlaced(event.position)
         }
     }
 
+    /*
+        ** OnEvent functions **
+    */
     private fun gameStart(){
         Log.v(TAG, TYPE+"StartGame")
         when(boardSelection){
-            0 -> boardState = (arrayOf("","","","","","","","",""))
-            1 -> boardState = (arrayOf("","","","","","","","","","","","","","","",""))
-            2 -> boardState = (arrayOf("","","","","","","","","","","","","","","","","","","","","","","","",""))
+            0 -> boardState = Array(9) {_ -> ""}
+            1 -> boardState = Array(16) {_ -> ""}
+            2 -> boardState = Array(25) {_ -> ""}
         }
     }
 
-    // Helper function to turn player1 Marker state to String
+    private fun newSinglePlayerGame(){Log.v(TAG, TYPE+"NewSinglePlayerGame")}
+    private fun newMultiPlayerGame(){Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")}
+    private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
+    private fun undo(){Log.v(TAG, TYPE+"Undo")}
+    private fun restart(){Log.v(TAG, TYPE+"Restart")}
+    private fun exit(){Log.v(TAG, TYPE+"Exit")}
+    private fun saveUser(){Log.v(TAG, TYPE+"SaveUser")}
+    private fun timerStart(){Log.v(TAG, TYPE+"TimerStart")}
+    private fun timerStop(){Log.v(TAG, TYPE+"TimerStop")}
+    private fun markerPlaced(position: Int){Log.v(TAG, TYPE+"MarkerPlaced: Position = " + position)}
+
+    /*
+        ** Helper functions **
+    */
     fun getMarkerSymbol(stateMarker: Int): String{
         return if(stateMarker == 0){
             "X"
@@ -108,7 +124,6 @@ class TicTacViewModel() : ViewModel(){
         }
     }
 
-    // Helper function to turn board size state to proper value
     fun getBoardSize(): Int{
         return when(boardSelection){
             0 -> 3
@@ -118,8 +133,7 @@ class TicTacViewModel() : ViewModel(){
         }
     }
 
-    // Should select users current avatar
-    fun findAvatar(): Int{
+    private fun findAvatar(): Int{
         if(newUser){
             return 0
         }
@@ -134,7 +148,7 @@ class TicTacViewModel() : ViewModel(){
         return 0
     }
 
-    fun findEditTextValue(): String{
+    private fun findEditTextValue(): String{
         return when(player1Edit){
             true -> {if(newUser){
                 ""
