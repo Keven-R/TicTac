@@ -21,6 +21,12 @@ val Inter = FontFamily(
     Font(
         googleFont = GoogleFont("Inter"),
         fontProvider = provider,
+        weight = FontWeight.Light
+    ),
+
+    Font(
+        googleFont = GoogleFont("Inter"),
+        fontProvider = provider,
         weight = FontWeight.Medium
     ),
 
@@ -34,6 +40,12 @@ val Inter = FontFamily(
         googleFont = GoogleFont("Inter"),
         fontProvider = provider,
         weight = FontWeight.Bold
+    ),
+
+    Font(
+        googleFont = GoogleFont("Inter"),
+        fontProvider = provider,
+        weight = FontWeight.ExtraBold
     ),
 )
 
@@ -49,6 +61,32 @@ val Typography = Typography(
         fontSize = 24.sp
     ),
 
+
+    /* USES
+     *
+     * - Markers for game board
+     */
+    displayMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.Light,
+        fontSize = 80.sp,
+    ),
+    displayLarge = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 80.sp
+    ),
+
+    /* USES
+     *
+     * - Game pause/restart/exit overlays.
+     */
+    headlineMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp
+    ),
+
     /* USES
      *
      * - Buttons on HomeScreen.kt
@@ -61,7 +99,7 @@ val Typography = Typography(
 
     /* USES
      *
-     * - Buttons on HomeScreen.kt
+     * - Buttons.kt
      */
     labelSmall = TextStyle(
         fontFamily = Inter,
@@ -69,14 +107,37 @@ val Typography = Typography(
         fontSize = 16.sp
     ),
 
+    /* USES
+     *
+     * MarkerGraphics
+     * - Win graphic in ProfileScreen
+     * - Timer countdown in GameScreen
+     */
+    labelLarge = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 24.sp
+    ),
 
     /* USES
      *
-     * - Buttons on HomeScreen.kt
+     * - Regular text
      */
     bodyMedium = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp
     ),
+
+    /* USES
+     *
+     * - Multiplayer settings: player name display
+     */
+    bodyLarge = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp
+    ),
+
+
 )

@@ -7,19 +7,66 @@
     <string name="page_title_home">home</string>
     <string name="page_title_profile">profile</string>
     <string name="page_title_settings">game settings</string>
+    <string name="page_title_multiplayer">multiplayer</string>
     <string name="page_title_select_player">select player</string>
     <string name="page_title_switch_user">switch user</string>
+    <string name="page_title_new_user">new user</string>
+    <string name="page_title_edit_profile">edit profile</string>
 
     <!-- Profile screen content -->
     <string name="profile_action_left">edit profile</string>
     <string name="profile_action_right">switch user</string>
 
+    <!-- User detail screen content -->
+    <string name="user_create_action">create</string>
+    <string name="user_save_action">save</string>
+    <string name="user_name_placeholder">player</string>
+    <string name="user_name_field_label">player name</string>
+    <string name="user_avatar_select_label">avatar</string>
+
+    <!-- User select screen content -->
+    <string name="select_player_action">select</string>
+    <string name="switch_user_action">switch</string>
+
     <!-- Game settings screen content -->
     <string name="settings_action_start">start</string>
+    <string name="settings_action_next">next</string>
+    <string name="settings_p1">player 1</string>
+    <string name="settings_p2">player 2</string>
+    <string name="settings_change_player">change</string>
+
+    <!-- Game screen content -->
+    <string name="game_actions_pause">pause</string>
+    <string name="game_actions_undo">undo</string>
+    <string name="game_actions_restart">restart</string>
+    <string name="game_actions_exit">exit</string>
+    <string name="game_status_win">winner</string>
+    <string name="game_status_loss">next time...</string>
+    <string name="game_status_draw">it\'s a draw</string>
+
+    <!-- Game menu content -->
+    <string name="game_menu_pause_title">game paused</string>
+    <string name="game_menu_pause_description"> </string>
+    <string name="game_menu_pause_confirm"> </string>
+    <string name="game_menu_pause_dismiss">resume</string>
+    <string name="game_menu_restart_title">restart game?</string>
+    <string name="game_menu_restart_description">this will not affect player statistics</string>
+    <string name="game_menu_restart_confirm">restart</string>
+    <string name="game_menu_restart_dismiss">resume</string>
+    <string name="game_menu_exit_title">exit game?</string>
+    <string name="game_menu_exit_description">this will end the game and count as a loss for the current player</string>
+    <string name="game_menu_exit_confirm">exit</string>
+    <string name="game_menu_exit_dismiss">resume</string>
+
 
     <!-- NOTE: This is a placeholder grouping. Can change later if more appropriate is found. -->
     <!-- Buttons -->
     <string name="button_play_solo">single player</string>
     <string name="button_play_multi">multiplayer</string>
     <string name="button_profile">profile</string>
+    <string name="button_new_user_icon">+</string>
+    <string name="button_new_user_label">new user</string>
+
+    <!-- Assets description -->
+    <string name="avatar">Avatar</string>
 </resources>

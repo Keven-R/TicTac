@@ -1,17 +1,16 @@
 package com.cnc.tictac.viewmodel
 
 sealed class TicTacEvent{
-    object tempClick: TicTacEvent()
-
-    /**
-     * Ryan is mocking events here to see how complete the backend is.
-     * Some of these events may be combined, removed, etc.. during later production.
-     */
-
-    /*
-    User clicks the "single player" or "multiplayer" buttons on the HOME screen
-     */
-    object newSinglePlayerGame: TicTacEvent()
-    object newMultiPlayerGame: TicTacEvent()
-
+    object TempEvent: TicTacEvent()
+    object StartGame: TicTacEvent()
+    object NewSinglePlayerGame: TicTacEvent()
+    object NewMultiPlayerGame: TicTacEvent()
+    object ProfileMenuSelect: TicTacEvent()
+    object Undo: TicTacEvent()
+    object Restart: TicTacEvent()
+    object Exit: TicTacEvent()
+    object SaveUser: TicTacEvent()
+    object TimerStop: TicTacEvent()
+    object TimerStart: TicTacEvent()
+    data class MarkerPlaced(val position: Int): TicTacEvent()
 }
