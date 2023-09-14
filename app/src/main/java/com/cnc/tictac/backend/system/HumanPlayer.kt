@@ -4,13 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = PlayerSerializer::class)
 class HumanPlayer(
-    playerName      : String               = "Player",
+    playerName      : String    = "Player",
     // Player-set username.
-    playerID        : Int?                 = null,
+    playerID        : Int?      = null,
     // Unique player ID (system generated).
-    playerIcon      : Pair<String, String>    = Pair("", "Null Player Icon"),
+    playerIcon      : String    = "D",
     // Pair for player icon: Resource, and description.
-    playerAvatar    : Pair<String, String>    = Pair("", "Null Player Icon"),
+    playerAvatar    : Int?      = null,
     // Pair for avatar image: Resource, and description.
 ) : Player (playerName, playerID, playerIcon, playerAvatar) {
     init{
