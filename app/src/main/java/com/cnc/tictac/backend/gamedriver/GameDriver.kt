@@ -15,13 +15,51 @@ import com.cnc.tictac.backend.system.WinCondition
 
 private const val TAG = "Game Driver"
 
+/** Organisation of the functions in this file are as follows:
+ *
+ *   (1) Class Variables
+ *
+ *   (2) Game Configuration
+ *          (a) reinit: update game configuration
+ *          (b) setPlayerOrder: change who plays first
+ *          (c) setFirstPlayer: set the first player in the game
+ *          (d) setSecondPlayer
+ *          (e) resetGameDriver: all attributes of game driver are reset to initial configuration
+ *          (f) resetGameBoard: board is cleared
+ *
+ *   (3) Game Accessors
+ *          (a) whoIsPlaying: returns Player object currently making a move
+ *          (b) getBoard: returns 2D array of Player objects
+ *          (c) getBoardAsString: returns 2D array of player icons (Strings)
+ *          (d) getCopyOfPlayerList: returns list of players
+ *          (e) getPlayerArray: returns direct reference to player array
+ *
+ *   (4) Game Mechanics
+ *          (a) playMove: will also check for win condition and return a win condition enum value
+ *          (b) resetGameBoard
+ *          (c) undoPreviousMove
+ *
+ *   (5) Database Mutators
+ *          (a) editPlayerAttributeInDatabase
+ *          (b) removePlayerFromDatabase
+ *          (c) updatePlayerStatsInDatabase
+ *          (d) addPlayerToDatabase
+ *
+ *   (6) Database Accessors
+ *          (a) getPlayerFromDatabase
+ *          (b) getPlayersFromDatabase: returns all players
+ *          (c) getPlayerStatsFromDatabase
+ *          (d) getPlayerDisplayStatsFromDatabase: returns player stats in three neatly formatted strings
+ *          (e) getPlayerStatsRibbonFromDatabase: "//xxxoooo" formatted string
+ */
+
 class GameDriver(
     config : GameConfig = GameConfig(),
     db : PLAYER_ROOM_DATABASE?
 ) {
-/**********************************
- * Class Variables
- **********************************/
+    /**___________________________________
+                Class Variables
+     _____________________________________**/
     // Backend
     private var board           : Board
     private var playerArray     : Array<Player?>    = arrayOf(HumanPlayer(), HumanPlayer())
@@ -52,9 +90,12 @@ class GameDriver(
         this.playerDAO = this.playerDB!!.getDAO()
         Log.d(TAG, "Game driver successfully initialised.")
     }
+    /**___________________________________
+                Game Configuration
+    _____________________________________**/
     /**********************************
      * Update game driver configuration
-     **********************************/
+     **/
     fun reinit(config : GameConfig){
         Log.d(TAG, "Reinitialising the game driver with updated game settings.")
         board = Board(
@@ -63,12 +104,106 @@ class GameDriver(
             config.boardMinimumWin,
         )
     }
-    /********************
- * GAME MECHANICS   *
- ********************/
+    /**********************************
+     * setPlayerOrder(toggle : Int)
+     * sets the player order by changing the starting value of the current player (0 or 1).
+     * players (for this game) are stored in an array of length 2.
+     **/
     fun setPlayerOrder(toggle : Int){
         this.currentPlayer = toggle
     }
+    /**********************************
+     * setFirstPlayer(player : Player? = HumanPlayer())
+     * setSecondPlayer(player : Player? = HumanPlayer())
+     * Sets the first and second player in the game.
+     */
+    fun setFirstPlayer(newPlayer : Player = HumanPlayer()){
+        /** Debugging output **/
+        if(newPlayer is HumanPlayer) { Log.d(TAG, "Adding HumanPlayer to game.") }
+        else if(newPlayer is AIPlayer) { Log.d(TAG, "Adding AIPlayer to game.") }
+        else { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
+        this.playerArray[0] = newPlayer
+    }
+    fun setSecondPlayer(newPlayer : Player = HumanPlayer()){
+        /** Debugging output **/
+        if(newPlayer is HumanPlayer) { Log.d(TAG, "Adding HumanPlayer to game.") }
+        else if(newPlayer is AIPlayer) { Log.d(TAG, "Adding AIPlayer to game.") }
+        else { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
+        this.playerArray[1] = newPlayer
+    }
+    /********************************
+     * resetGameDriver()
+     ********************************
+     * This method resets the game driver by clearing the game board, emptying the player
+     * queue, setting the player count to 0, and setting the current player to NULL.
+     */
+    fun resetGameDriver(){
+        Log.d(TAG, "Game driver is being reset.")
+        this.board.clearGameBoard()
+        this.playerArray = arrayOf(HumanPlayer(), HumanPlayer())
+        this.currentPlayer = 0
+        this.player = null
+    }
+    /*****************************
+     * createNewBoard(config : GameConfig)
+     *****************************
+     * this creates a new board for the game given a specific game config data object
+     */
+    fun createNewBoard(config : GameConfig){
+        Log.d(TAG, "Game config is being updated to ${config.boardWidth} by ${config.boardHeight}.")
+        this.board.clearGameBoard()
+        this.board = Board(config.boardWidth, config.boardHeight, config.boardMinimumWin)
+    }
+    /**---------------------------------
+            Game Accessors
+     -----------------------------------**/
+    /**********************************
+     * whoIsPlaying() : Player ?
+     ***********************************
+     *  returns the current player in the queue
+     */
+    fun whoIsPlaying() : Player ? {
+        Log.d(TAG, "Current player is ${this.playerArray[currentPlayer]?.playerName}")
+        return this.playerArray[currentPlayer]
+    }
+    /**********************************
+     *  getBoard()
+     **********************************
+     *  accessor for the board
+     */
+    fun getBoard() : Board {
+        Log.d(TAG, "Current board is being fetched.")
+        return this.board
+    }
+    fun getBoardAsString() : Array<Array<String>>{
+        var board = this.getBoard()
+        var boardString = Array(board.getConstraints().first, { Array(board.getConstraints().second, { "" }) })
+        for(i in 0 .. board.getConstraints().first){
+            for(j in 0 .. board.getConstraints().second){
+                if(board.getBoardState()[i][j] != null) {
+                    boardString[i][j] = board.getBoardState()[i][j]!!.playerIcon
+                } else {
+                    boardString[i][j] = " "
+                }
+            }
+        }
+        return boardString
+    }
+    /**********************************
+     *  getCopyOfPlayerList()
+     **********************************
+     *  accessor for the player Queue
+     */
+    fun getCopyOfPlayerList() : List<Player?> {
+        Log.d(TAG, "Copy of player queue is being returned.")
+        return this.playerArray.toList()
+    }
+    fun getPlayerArray() : Array<Player?> {
+        return this.playerArray
+    }
+    /**___________________________________
+                Game Mechanics
+    _____________________________________**/
     /**********************************
      * playMove(x, y : Int) : WinCondition
      **********************************
@@ -80,7 +215,7 @@ class GameDriver(
      *  In order to test if the current player is AI without removing it, .peek() is used.
      *  Returns a WinCondition enum attribute.
      */
-    fun playMove(x : Int =  0, y : Int =  0) : WinCondition{
+    fun playMove(x : Int =  0, y : Int =  0) : WinCondition {
         Log.d(TAG, "Placing a puck at $x, $y.")
         /** Toggle current player **/
         Log.d(TAG, "Toggling current player from ${this.currentPlayer}")
@@ -121,15 +256,6 @@ class GameDriver(
         }
     }
     /**********************************
-     * undoPreviousMove()
-     **********************************
-     * Undoes the last move played in the game.
-     */
-    fun undoPreviousMove(){
-        Log.d(TAG, "Game driver is reversing previous move.")
-        this.board.undoPreviousMove()
-    }
-    /**********************************
      * resetGameBoard()
      **********************************
      * This method clears the game board.
@@ -138,47 +264,53 @@ class GameDriver(
         Log.d(TAG, "Game driver is clearing game board.")
         this.board.clearGameBoard()
     }
-    /********************************
-     * resetGameDriver()
-     ********************************
-     * This method resets the game driver by clearing the game board, emptying the player
-     * queue, setting the player count to 0, and setting the current player to NULL.
-     */
-    fun resetGameDriver(){
-        Log.d(TAG, "Game driver is being reset.")
-        this.board.clearGameBoard()
-        this.playerArray = arrayOf(HumanPlayer(), HumanPlayer())
-        this.currentPlayer = 0
-        this.player = null
-    }
-    /*****************************
-     * createNewBoard(config : GameConfig)
-     *****************************
-     * this creates a new board for the game given a specific game config data object
-     */
-    fun createNewBoard(config : GameConfig){
-        Log.d(TAG, "Game config is being updated to ${config.boardWidth} by ${config.boardHeight}.")
-        this.board.clearGameBoard()
-        this.board = Board(config.boardWidth, config.boardHeight, config.boardMinimumWin)
-    }
- /**********************
- * PLAYER OPERATIONS  *
- **********************/
     /**********************************
-     * editPlayerAttribute(player : Player, attribute : String, value : Any)
+     * undoPreviousMove()
+     **********************************
+     * Undoes the last move played in the game.
+     */
+    fun undoPreviousMove(){
+        Log.d(TAG, "Game driver is reversing previous move.")
+        this.board.undoPreviousMove()
+    }
+    /**___________________________________
+                Database Mutators
+    _____________________________________**/
+    /**********************************
+     * editPlayerDatabaseAttribute(player : Player, attribute : String, value : Any) : Boolean
      *********************************
      *  Allows for the editing of a player in the player database.
+     *  If an error occurs (ie: A player ID is altered to a value already in the database),
+     *      false is returned.
      */
-    fun editPlayerAttribute(player : Player, attribute : String, value : Any){
+    fun editPlayerDatabaseAttribute(player : Player, attribute : String, value : Any) : Boolean{
         Log.d(TAG, "Player attribute $attribute changing to $value.")
-        when(attribute){
-            "playerName"    -> player.playerName = value as String
-            "playerID"      -> player.playerID = value as Int
-            "playerAvatar"  -> player.playerAvatar = value as Int
-            "playerIcon"    -> player.playerIcon = value as String
+        // Saving player before attribute editing; revert back if error
+        var playerCopy : Player = player.copy()
+        // removing the player from the database will clear the player stats, so we save them first.
+        var statsTriplet = this.getPlayerStatsFromDatabase(player as HumanPlayer)
+        // removing the player
+        this.removePlayerFromDatabase(player.playerID)
+        when(attribute) {
+            "playerName" -> player.playerName = value as String
+            "playerID" -> player.playerID = value as Int
+            "playerAvatar" -> player.playerAvatar = value as Int
+            "playerIcon" -> player.playerIcon = value as String
         }
-        playerDAO.removePlayer(player.playerID)
-        playerDAO.addNewPlayer(player.playerID, player.playerName, player as HumanPlayer)
+        // Adding modified player
+        if(!this.addPlayerToDatabase(player as HumanPlayer)){
+            // If the player ID is modified to a value already in the database, false is returned and...
+            Log.e(TAG, "Attempted to edit player attibute - PlayerID is already occupied(!!!)")
+            // Changes are abandoned
+            this.addPlayerToDatabase(playerCopy as HumanPlayer)
+            return false
+        }
+        // amend the player stats back onto the new player we created.
+        this.updatePlayerStatsInDatabase(player as HumanPlayer,
+            wins = statsTriplet.second,
+            losses = statsTriplet.first,
+            draws = statsTriplet.third)
+        return true
     }
     /**********************************
      * removePlayerFromDatabase(playerID : Int)
@@ -189,63 +321,10 @@ class GameDriver(
         playerDAO.removePlayer(playerID)
     }
     /**********************************
-     * getPlayersFromDatabase() : List<HumanPlayer?>
-     **********************************
-     *  Returns a list of all HumanPlayers in the player database.
-     */
-    fun getPlayersFromDatabase() : List<HumanPlayer?> {
-        Log.d(TAG, "Player objects being pulled from database.")
-        return this.playerDAO.getAllPlayers()
-    }
-    /**********************************
-     * getPlayerFromDatabase(playerID : Int) : HumanPlayer?
-     **********************************
-     *  Returns a list of all HumanPlayers in the player database.
-     */
-    fun getPlayerFromDatabase(playerID : Int?) : HumanPlayer? {
-        Log.d(TAG, "Player object by ID $playerID being pulled from database.")
-        return this.playerDAO.selectPlayerbyID(playerID)
-    }
-    /**********************************
-     * getPlayerStatsFromDatabase(player : Player) : Tripple<Losses, Wins, Draws>
-     **********************************
-     * Fetch WLD statistics from the database for a specific player, searched by player ID.
-     */
-    fun getPlayerStatsFromDatabase(player : HumanPlayer) : Triple<Int, Int, Int>{
-        Log.d(TAG, "Obtaining player game stats from database.")
-        val losses = this.playerDAO.getLosses(player.playerID)
-        val wins = this.playerDAO.getWins(player.playerID)
-        val draws = this.playerDAO.getDraws(player.playerID)
-        Log.d("<GAME_DRIVER>", "${player.playerName} has stats wins = $wins, looses = $losses, draws = $draws.")
-        return Triple(losses, wins, draws)
-    }
-    fun getPlayerDisplayStats(player : HumanPlayer) : Triple<String, String, String>{
-        Log.d(TAG, "Obtaining player game stats from database as string")
-        val losses = this.playerDAO.getLosses(player.playerID)
-        val wins = this.playerDAO.getWins(player.playerID)
-        val draws = this.playerDAO.getDraws(player.playerID)
-        val losses_percent = losses / (wins + losses + draws) * 100
-        val wins_percent = wins / (wins + losses + draws) * 100
-        val draws_percent = draws / (wins + losses + draws) * 100
-        return Triple("Wins: $wins ($wins_percent%)", "Draws: $draws ($draws_percent%)", "Losses $losses ($losses_percent%)")
-    }
-    fun getPlayerStatsRibbon(player : HumanPlayer) : String {
-        var return_string = ""
-        val losses = this.playerDAO.getLosses(player.playerID)
-        val wins = this.playerDAO.getWins(player.playerID)
-        val draws = this.playerDAO.getDraws(player.playerID)
-        val losses_fraction = losses / (wins + losses + draws)
-        val wins_fraction = wins / (wins + losses + draws)
-        val draws_fraction = draws / (wins + losses + draws)
-        for(i in 0 .. wins_fraction)
-            return_string += "X"
-        for(i in 0 .. draws_fraction)
-            return_string += "/"
-        for(i in 0 .. losses_fraction)
-            return_string += "O"
-        return return_string
-    }
-    fun updatePlayerStats(player : HumanPlayer, wins : Int?, draws : Int?, losses : Int?){
+     * updatePlayerStatsInDatabase(...)
+     * Allows updating player stats in the room ROOM_PLAYER_DATABASE of the game driver.
+     *********************************/
+    fun updatePlayerStatsInDatabase(player : HumanPlayer, wins : Int?, draws : Int?, losses : Int?){
         if(wins != null) {
             this.playerDAO.updateWins(wins, player)
         }
@@ -280,70 +359,74 @@ class GameDriver(
         }
         return false
     }
+    /**___________________________________
+                Database Accessors
+    _____________________________________**/
     /**********************************
-     * addPlayerToGame(player : Player? = HumanPlayer())
+     * getPlayersFromDatabase() : List<HumanPlayer?>
      **********************************
-     *  Player is added to player queue, player count is incremented.
+     *  Returns a list of all HumanPlayers in the player database.
      */
-    fun setFirstPlayer(newPlayer : Player = HumanPlayer()){
-        /** Debugging output **/
-        if(newPlayer is HumanPlayer) { Log.d(TAG, "Adding HumanPlayer to game.") }
-        else if(newPlayer is AIPlayer) { Log.d(TAG, "Adding AIPlayer to game.") }
-        else { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
-        this.playerArray[0] = newPlayer
-    }
-    fun setSecondPlayer(newPlayer : Player = HumanPlayer()){
-        /** Debugging output **/
-        if(newPlayer is HumanPlayer) { Log.d(TAG, "Adding HumanPlayer to game.") }
-        else if(newPlayer is AIPlayer) { Log.d(TAG, "Adding AIPlayer to game.") }
-        else { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
-        this.playerArray[1] = newPlayer
-    }
-/***************
- * ACCESSORS   *
- ***************/
-    /**********************************
-     * whoIsPlaying() : Player ?
-     ***********************************
-     *  returns the current player in the queue
-     */
-    fun whoIsPlaying() : Player ? {
-        Log.d(TAG, "Current player is ${this.playerArray[currentPlayer]?.playerName}")
-        return this.playerArray[currentPlayer]
+    fun getPlayersFromDatabase() : List<HumanPlayer?> {
+        Log.d(TAG, "Player objects being pulled from database.")
+        return this.playerDAO.getAllPlayers()
     }
     /**********************************
-     *  getBoard()
+     * getPlayerFromDatabase(playerID : Int) : HumanPlayer?
      **********************************
-     *  accessor for the board
+     *  Returns a list of all HumanPlayers in the player database.
      */
-    fun getBoard() : Board {
-        Log.d(TAG, "Current board is being fetched.")
-        return this.board
-    }
-    fun getBoardAsString(player1Icon : String, player2Icon : String) : Array<Array<String>>{
-        var board = this.getBoard()
-        var boardString = Array(board.getConstraints().first, { Array(board.getConstraints().second, { "" }) })
-        for(i in 0 .. board.getConstraints().first){
-            for(j in 0 .. board.getConstraints().second){
-                if(board.getBoardState()[i][j] == this.playerArray[0]){
-                    boardString[i][j] = player1Icon
-                } else {
-                    boardString[i][j] = player2Icon
-                }
-            }
-        }
-        return boardString
+    fun getPlayerFromDatabase(playerID : Int?) : HumanPlayer? {
+        Log.d(TAG, "Player object by ID $playerID being pulled from database.")
+        return this.playerDAO.selectPlayerbyID(playerID)
     }
     /**********************************
-     *  getCopyOfPlayerQueue()
+     * getPlayerStatsFromDatabase(player : Player) : Tripple<Losses, Wins, Draws>
      **********************************
-     *  accessor for the player Queue
+     * Fetch WLD statistics from the database for a specific player, searched by player ID.
      */
-    fun getCopyOfPlayerList() : List<Player?> {
-        Log.d(TAG, "Copy of player queue is being returned.")
-        return this.playerArray.toList()
+    fun getPlayerStatsFromDatabase(player : HumanPlayer) : Triple<Int, Int, Int>{
+        Log.d(TAG, "Obtaining player game stats from database.")
+        val losses = this.playerDAO.getLosses(player.playerID)
+        val wins = this.playerDAO.getWins(player.playerID)
+        val draws = this.playerDAO.getDraws(player.playerID)
+        Log.d("<GAME_DRIVER>", "${player.playerName} has stats wins = $wins, looses = $losses, draws = $draws.")
+        return Triple(losses, wins, draws)
     }
-    fun getPlayerArray() : Array<Player?> {
-        return this.playerArray
+    /**
+     * A duplicate of the above method, returning a formatted string in percent. Here to allow easy
+     * display in the frontend.
+     */
+    fun getPlayerDisplayStatsFromDatabase(player : HumanPlayer) : Triple<String, String, String>{
+        Log.d(TAG, "Obtaining player game stats from database as string")
+        val losses = this.playerDAO.getLosses(player.playerID)
+        val wins = this.playerDAO.getWins(player.playerID)
+        val draws = this.playerDAO.getDraws(player.playerID)
+        val losses_percent = losses / (wins + losses + draws) * 100
+        val wins_percent = wins / (wins + losses + draws) * 100
+        val draws_percent = draws / (wins + losses + draws) * 100
+        return Triple("Wins: $wins ($wins_percent%)", "Draws: $draws ($draws_percent%)", "Losses $losses ($losses_percent%)")
+    }
+    /**********************************
+     * getPlayerStatsRibbon()
+     * Returns a sylistic representation of the wins, losses are draws of the player.
+     * /////xxooo = 5 draws, 2 wins, 3 losses.
+     * Length of returned string is 10.
+     *********************************/
+    fun getPlayerStatsRibbonFromDatabase(player : HumanPlayer) : String {
+        var return_string = ""
+        val losses  = this.playerDAO.getLosses(player.playerID)
+        val wins    = this.playerDAO.getWins(player.playerID)
+        val draws   = this.playerDAO.getDraws(player.playerID)
+        val losses_fraction = losses / (wins + losses + draws) * 10
+        val wins_fraction   = wins   / (wins + losses + draws) * 10
+        val draws_fraction  = draws  / (wins + losses + draws) * 10
+        for(i in 0 .. wins_fraction as Int)
+            return_string += "X"
+        for(i in 0 .. draws_fraction as Int)
+            return_string += "/"
+        for(i in 0 .. losses_fraction as Int)
+            return_string += "O"
+        return return_string
     }
 }
