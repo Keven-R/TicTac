@@ -13,6 +13,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
+import com.cnc.tictac.backend.gamedriver.GameConfig
+import com.cnc.tictac.backend.gamedriver.GameDriver
+import com.cnc.tictac.backend.system.HumanPlayer
 import com.cnc.tictac.ui.screens.GameMenuScreen
 import com.cnc.tictac.ui.screens.GameScreen
 import com.cnc.tictac.ui.screens.GameSettingsScreen
@@ -23,6 +26,7 @@ import com.cnc.tictac.ui.screens.UserDetailScreen
 import com.cnc.tictac.ui.screens.UserSelectScreen
 import com.cnc.tictac.ui.theme.TicTacTheme
 import com.cnc.tictac.viewmodel.TicTacViewModel
+import kotlin.random.Random
 
 private const val TAG = "MainActivity"
 
@@ -49,12 +53,35 @@ class MainActivity : ComponentActivity() {
             TicTacTheme {
                 val database = Room.databaseBuilder(
                     applicationContext,
-                    PLAYER_ROOM_DATABASE::class.java, "player-database"
-                ).allowMainThreadQueries().build()
+                    PLAYER_ROOM_DATABASE::class.java, "player-database")
+                    .allowMainThreadQueries()
+                    .build()
                 val viewModel = viewModel<TicTacViewModel>()
                 viewModel.db = database
+                viewModel.gd = GameDriver(GameConfig(),database)
+
                 val navController = rememberNavController()
                 NavigationAppHost(navController, viewModel)
+
+                /* Generates Users on first run */
+                if(viewModel.gd!!.getPlayersFromDatabase().isEmpty()){
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Ryan",null,"O", R.drawable.avatar_8))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Jasmine",null,"O", R.drawable.avatar_1))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Keven",null,"O", R.drawable.avatar_6))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Sajib",null,"O", R.drawable.avatar_3))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Wendy",null,"O", R.drawable.avatar_5))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Debbie",null,"O", R.drawable.avatar_9))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Stuart",null,"O", R.drawable.avatar_2))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Jax",null,"O", R.drawable.avatar_4))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Sally",null,"O", R.drawable.avatar_7))
+                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Kathy",null,"O", R.drawable.avatar_10))
+
+                    for (user: HumanPlayer? in viewModel.gd!!.getPlayersFromDatabase()){
+                        if (user != null) {
+                            viewModel.gd!!.updatePlayerStats(user,Random.nextInt(0, 10),Random.nextInt(0, 10),Random.nextInt(0, 10))
+                        }
+                    }
+                }
             }
         }
     }

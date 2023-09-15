@@ -35,8 +35,8 @@ class TicTacViewModel() : ViewModel(){
         HumanPlayer("Lilly",null,"O", R.drawable.avatar_10)
     ))
 
-    private var gd : GameDriver? = null
-    public var db : PLAYER_ROOM_DATABASE? = null
+    var gd : GameDriver? = null
+    var db : PLAYER_ROOM_DATABASE? = null
 
     /* Player 1 States */
     var player1 by mutableStateOf("Annie")
