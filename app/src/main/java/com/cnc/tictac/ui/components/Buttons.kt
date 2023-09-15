@@ -483,12 +483,12 @@ fun GameMenuButtonGroup(
             verticalAlignment = Alignment.Bottom
         ) {
             GameMenuButton(
-                onClick = confirmEvent,
-                label = stringResource(id = confirmLabelId),
+                onClick = if (menu == MENU.PAUSE) dismissEvent else confirmEvent,
+                label = stringResource(id = if (menu == MENU.PAUSE) dismissLabelId else confirmLabelId),
             )
             GameMenuButton(
-                onClick = dismissEvent,
-                label = stringResource(id = dismissLabelId),
+                onClick = if (menu == MENU.PAUSE) confirmEvent else dismissEvent,
+                label = stringResource(id = if (menu == MENU.PAUSE) confirmLabelId else dismissLabelId),
             )
         }
 
@@ -502,70 +502,46 @@ fun getGameMenuLabelAndEvents (menu: MENU, navController: NavHostController, vie
     when (menu) {
         MENU.PAUSE -> {
             return arrayOf(
-                Pair(
-                    R.string.game_menu_pause_confirm,
-                    {
-                        viewModel.onEvent(TicTacEvent.TimerStart)
-                        navController.popBackStack()
-                    }
-                ),
-                Pair(
-                    R.string.game_menu_pause_dismiss,
-                    {
-                        viewModel.onEvent(TicTacEvent.TimerStart)
-                        navController.popBackStack()
-                    }
-                )
+                Pair(R.string.game_menu_pause_confirm) {
+                    viewModel.onEvent(TicTacEvent.TimerStart)
+                    navController.popBackStack()
+                },
+                Pair(R.string.game_menu_pause_dismiss) {
+                    viewModel.onEvent(TicTacEvent.TimerStart)
+                    navController.popBackStack()
+                }
             )
         }
         MENU.RESTART -> {
             return arrayOf(
-                Pair(
-                    R.string.game_menu_restart_confirm,
-                    {
-                        viewModel.onEvent(TicTacEvent.Restart)
-                        viewModel.onEvent(TicTacEvent.TimerStart)
-                        navController.popBackStack()
-                    }
-                ),
-                Pair(
-                    R.string.game_menu_restart_dismiss,
-                    {
-                        viewModel.onEvent(TicTacEvent.TimerStart)
-                        navController.popBackStack()
-                    }
-                )
+                Pair(R.string.game_menu_restart_confirm) {
+                    viewModel.onEvent(TicTacEvent.Restart)
+                    viewModel.onEvent(TicTacEvent.TimerStart)
+                    navController.popBackStack()
+                },
+                Pair(R.string.game_menu_restart_dismiss) {
+                    viewModel.onEvent(TicTacEvent.TimerStart)
+                    navController.popBackStack()
+                }
             )
         }
         MENU.EXIT -> {
             return arrayOf(
-                Pair(
-                    R.string.game_menu_exit_confirm,
-                    {
-                        viewModel.onEvent(TicTacEvent.Exit)
-                        navController.navigate(Destination.HomeScreen.route)
-                    }
-                ),
-                Pair(
-                    R.string.game_menu_exit_dismiss,
-                    {
-                        viewModel.onEvent(TicTacEvent.TimerStart)
-                        navController.popBackStack()
-                    }
-                )
+                Pair(R.string.game_menu_exit_confirm) {
+                    viewModel.onEvent(TicTacEvent.Exit)
+                    navController.navigate(Destination.HomeScreen.route)
+                },
+                Pair(R.string.game_menu_exit_dismiss) {
+                    viewModel.onEvent(TicTacEvent.TimerStart)
+                    navController.popBackStack()
+                }
             )
         }
         else -> {
             // IGNORE, just needed something here lol
             return arrayOf(
-                Pair(
-                    R.string.user_name_placeholder,
-                    { Log.d("Buttons", "Game Menu Button Error")}
-                ),
-                Pair(
-                    R.string.user_name_placeholder,
-                    { navController.popBackStack()}
-                )
+                Pair(R.string.user_name_placeholder) { Log.d("Buttons", "Game Menu Button Error") },
+                Pair(R.string.user_name_placeholder) { navController.popBackStack() }
             )
         }
     }

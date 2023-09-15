@@ -93,9 +93,9 @@ fun DisplayDefaultUserSelectScreen(navController: NavHostController, viewModel: 
                     .fillMaxHeight()
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(vertical = 32.dp),
+                    .padding(top = 32.dp, bottom = 24.dp),
                 columns = GridCells.Adaptive(minSize = 140.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
                 userScrollEnabled = true,
                 content = {
