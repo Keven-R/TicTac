@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
 
                     for (user: HumanPlayer? in viewModel.gd!!.getPlayersFromDatabase()){
                         if (user != null) {
-                            viewModel.gd!!.updatePlayerStats(user,Random.nextInt(0, 10),Random.nextInt(0, 10),Random.nextInt(0, 10))
+                            viewModel.gd!!.updatePlayerStatsInDatabase(user,Random.nextInt(0, 10),Random.nextInt(0, 10),Random.nextInt(0, 10))
                         }
                     }
                 }
