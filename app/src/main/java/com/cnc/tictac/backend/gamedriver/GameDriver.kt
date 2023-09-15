@@ -176,7 +176,6 @@ class GameDriver(
             "playerID"      -> player.playerID = value as Int
             "playerAvatar"  -> player.playerAvatar = value as Int
             "playerIcon"    -> player.playerIcon = value as String
-
         }
         playerDAO.removePlayer(player.playerID)
         playerDAO.addNewPlayer(player.playerID, player.playerName, player as HumanPlayer)
@@ -245,6 +244,17 @@ class GameDriver(
         for(i in 0 .. losses_fraction)
             return_string += "O"
         return return_string
+    }
+    fun updatePlayerStats(player : HumanPlayer, wins : Int?, draws : Int?, losses : Int?){
+        if(wins != null) {
+            this.playerDAO.updateWins(wins, player)
+        }
+        if(draws != null) {
+            this.playerDAO.updateDraws(draws, player)
+        }
+        if(losses != null) {
+            this.playerDAO.updateLosses(losses, player)
+        }
     }
     /**********************************
      * addPlayerToDatabase(player : Player? = HumanPlayer()) : Boolean
