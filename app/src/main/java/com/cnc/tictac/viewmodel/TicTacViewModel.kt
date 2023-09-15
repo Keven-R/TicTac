@@ -10,6 +10,7 @@ import com.cnc.tictac.R
 import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
 import com.cnc.tictac.backend.gamedriver.GameConfig
 import com.cnc.tictac.backend.gamedriver.GameDriver
+import com.cnc.tictac.backend.system.AIPlayer
 import com.cnc.tictac.backend.system.HumanPlayer
 
 private const val TAG = "TicTacViewModel"
@@ -136,16 +137,20 @@ class TicTacViewModel() : ViewModel(){
         }
         Log.v(TAG, TYPE+"Building configuration.")
         var config = GameConfig(boardSize, boardSize, winSize)
-        Log.v(TAG, TYPE+"Building game driver.")
-        this.gd = GameDriver(config, this.db)
+        Log.v(TAG, TYPE+"Updating game driver with new config.")
+        this.gd!!.reinit(config)
     }
     private fun newSinglePlayerGame(){
         Log.v(TAG, TYPE+"NewSinglePlayerGame")
-
+        this.gd = GameDriver(GameConfig(), this.db)
+        this.gd!!.setFirstPlayer(HumanPlayer()) // DUMMY FOR NOW
+        this.gd!!.setSecondPlayer(AIPlayer())
     }
     private fun newMultiPlayerGame(){
         Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")
-
+        this.gd = GameDriver(GameConfig(), this.db)
+        this.gd!!.setFirstPlayer(HumanPlayer()) // DUMMY FOR NOW
+        this.gd!!.setSecondPlayer(HumanPlayer()) // DUMMY FOR NOW
     }
     private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
     private fun undo(){Log.v(TAG, TYPE+"Undo")}
