@@ -66,6 +66,9 @@ class GameDriver(
     /********************
  * GAME MECHANICS   *
  ********************/
+    fun setPlayerOrder(toggle : Int){
+        this.currentPlayer = toggle
+    }
     /**********************************
      * playMove(x, y : Int) : WinCondition
      **********************************
@@ -329,5 +332,8 @@ class GameDriver(
     fun getCopyOfPlayerList() : List<Player?> {
         Log.d(TAG, "Copy of player queue is being returned.")
         return this.playerArray.toList()
+    }
+    fun getPlayerArray() : Array<Player?> {
+        return this.playerArray
     }
 }

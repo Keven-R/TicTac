@@ -110,34 +110,69 @@ class TicTacViewModel() : ViewModel(){
     /*
         ** OnEvent functions **
     */
+
+    /********************************
+     * gameStart()
+     * Handles setting up single or multiplayer game.
+     *  > Board size.
+     *  > Win length.
+     *  > Player markers.
+     *  > Who goes first.
+     *  Doesnt create game driver, only updates game driver with new configuration
+     *******************************/
     private fun gameStart(){
         Log.v(TAG, TYPE+"StartGame")
         var boardSize   : Int = 3
         var winSize     : Int = 3
         Log.v(TAG, TYPE+"Obtaining board size selection")
-        when(boardSelection){
+        /**
+         * Sets the player icons "x" or "o" inside Player objects for the first and second player.
+         * The first player selects their icon 0:x 1:o, and it sets the alternate icon for the second
+         * player.
+         */
+        when(player1Marker){
             0 -> {
-                boardSize = 3
-                boardState = Array(9) { _ -> "" }
+                this.gd!!.getPlayerArray()[0]!!.playerIcon = "x"
+                this.gd!!.getPlayerArray()[1]!!.playerIcon = "o"
             }
             1 -> {
-                boardSize = 4
-                boardState = Array(16) { _ -> "" }
-            }
-            2 -> {
-                boardSize = 5
-                boardState = Array(25) { _ -> "" }
+                this.gd!!.getPlayerArray()[0]!!.playerIcon = "o"
+                this.gd!!.getPlayerArray()[1]!!.playerIcon = "x"
             }
         }
+        /**
+         * Modifies the board width and height variable on the GameConfig class
+         * backend supports rectangular boards - this is obfuscated in the frontend.
+         * **/
+        when(boardSelection){
+            0 -> { boardSize = 3; boardState = Array(9) { _ -> "" } }
+            1 -> { boardSize = 4; boardState = Array(16) { _ -> "" } }
+            2 -> { boardSize = 5; boardState = Array(25) { _ -> "" } }
+        }
         Log.v(TAG, TYPE+"Obtaining board win condition selection.")
+        /**
+         * Modifies the wincondition variable on the GameConfig class
+         * **/
         when(winConditionSelection){
             0 -> winSize = 3
             1 -> winSize = 4
             2 -> winSize = 5
         }
+        /**
+         * Changes whether "firstPlayer" or "secondPlayer" plays first by toggling setting the
+         * value of currentPlayer in GameDriver to 1 or 0 initially. Players are stored in an array
+         * of length 2 inside GameDriver.
+         * **/
+        when(startingSelection){
+            0 -> this.gd!!.setPlayerOrder(0)
+            1 -> this.gd!!.setPlayerOrder(1)
+        }
         Log.v(TAG, TYPE+"Building configuration.")
         var config = GameConfig(boardSize, boardSize, winSize)
         Log.v(TAG, TYPE+"Updating game driver with new config.")
+        /**
+         * game driver is not created here- only updated with new configuration.
+         * **/
         this.gd!!.reinit(config)
     }
     private fun newSinglePlayerGame(){
