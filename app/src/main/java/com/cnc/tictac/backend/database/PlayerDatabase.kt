@@ -3,7 +3,6 @@ package com.cnc.tictac.backend.database
  *     storing the wins, losses, and draws,
  *     and generating unique IDs for each player.
  */
-import android.content.Context
 import androidx.room.*
 import com.cnc.tictac.backend.system.*
 import kotlinx.serialization.encodeToString
@@ -77,8 +76,9 @@ interface PLAYER_DAO {
 // Annotates class to be a Room Database with a table (entity) of the Word class
 @Database(entities = [PLAYER_ENTRY::class], version = 1, exportSchema = true)
 @TypeConverters(Converters::class)
-public abstract class PLAYER_ROOM_DATABASE : RoomDatabase() {
+abstract class PLAYER_ROOM_DATABASE : RoomDatabase() {
     abstract fun getDAO(): PLAYER_DAO
+    /*
     companion object {
         @Volatile
         private var Instance: PLAYER_ROOM_DATABASE? = null
@@ -91,6 +91,8 @@ public abstract class PLAYER_ROOM_DATABASE : RoomDatabase() {
             }
         }
     }
+    */
+
 }
 
 

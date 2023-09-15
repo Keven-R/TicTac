@@ -7,6 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.cnc.tictac.R
+import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
+import com.cnc.tictac.backend.gamedriver.GameConfig
+import com.cnc.tictac.backend.gamedriver.GameDriver
 import com.cnc.tictac.backend.system.HumanPlayer
 
 private const val TAG = "TicTacViewModel"
@@ -16,8 +19,7 @@ enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 
 enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
 
-class TicTacViewModel : ViewModel(){
-
+class TicTacViewModel() : ViewModel(){
     val avatarArray = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3,
         R.drawable.avatar_4, R.drawable.avatar_5, R.drawable.avatar_6, R.drawable.avatar_7,
         R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
@@ -31,6 +33,9 @@ class TicTacViewModel : ViewModel(){
         HumanPlayer("John",null,"O", R.drawable.avatar_2),
         HumanPlayer("Lilly",null,"O", R.drawable.avatar_10)
     ))
+
+    private var gd : GameDriver? = null
+    public var db : PLAYER_ROOM_DATABASE? = null
 
     /* Player 1 States */
     var player1 by mutableStateOf("Annie")
@@ -106,15 +111,42 @@ class TicTacViewModel : ViewModel(){
     */
     private fun gameStart(){
         Log.v(TAG, TYPE+"StartGame")
+        var boardSize   : Int = 3
+        var winSize     : Int = 3
+        Log.v(TAG, TYPE+"Obtaining board size selection")
         when(boardSelection){
-            0 -> boardState = Array(9) {_ -> ""}
-            1 -> boardState = Array(16) {_ -> ""}
-            2 -> boardState = Array(25) {_ -> ""}
+            0 -> {
+                boardSize = 3
+                boardState = Array(9) { _ -> "" }
+            }
+            1 -> {
+                boardSize = 4
+                boardState = Array(16) { _ -> "" }
+            }
+            2 -> {
+                boardSize = 5
+                boardState = Array(25) { _ -> "" }
+            }
         }
+        Log.v(TAG, TYPE+"Obtaining board win condition selection.")
+        when(winConditionSelection){
+            0 -> winSize = 3
+            1 -> winSize = 4
+            2 -> winSize = 5
+        }
+        Log.v(TAG, TYPE+"Building configuration.")
+        var config = GameConfig(boardSize, boardSize, winSize)
+        Log.v(TAG, TYPE+"Building game driver.")
+        this.gd = GameDriver(config, this.db)
     }
+    private fun newSinglePlayerGame(){
+        Log.v(TAG, TYPE+"NewSinglePlayerGame")
 
-    private fun newSinglePlayerGame(){Log.v(TAG, TYPE+"NewSinglePlayerGame")}
-    private fun newMultiPlayerGame(){Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")}
+    }
+    private fun newMultiPlayerGame(){
+        Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")
+
+    }
     private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
     private fun undo(){Log.v(TAG, TYPE+"Undo")}
     private fun restart(){Log.v(TAG, TYPE+"Restart")}

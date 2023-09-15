@@ -11,16 +11,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
 import com.cnc.tictac.ui.screens.GameMenuScreen
 import com.cnc.tictac.ui.screens.GameScreen
 import com.cnc.tictac.ui.screens.GameSettingsScreen
 import com.cnc.tictac.ui.screens.HomeScreen
+import com.cnc.tictac.ui.screens.MultiplayerSettingsScreen
 import com.cnc.tictac.ui.screens.ProfileScreen
 import com.cnc.tictac.ui.screens.UserDetailScreen
 import com.cnc.tictac.ui.screens.UserSelectScreen
-import com.cnc.tictac.ui.screens.MultiplayerSettingsScreen
 import com.cnc.tictac.ui.theme.TicTacTheme
-import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 private const val TAG = "MainActivity"
@@ -46,7 +47,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TicTacTheme {
+                val database = Room.databaseBuilder(
+                    applicationContext,
+                    PLAYER_ROOM_DATABASE::class.java, "player-database"
+                ).allowMainThreadQueries().build()
                 val viewModel = viewModel<TicTacViewModel>()
+                viewModel.db = database
                 val navController = rememberNavController()
                 NavigationAppHost(navController, viewModel)
             }

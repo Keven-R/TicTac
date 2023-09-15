@@ -3,11 +3,8 @@ package com.cnc.tictac.backend.gamedriver
  * Ryan May: 19477774. 08/23
  * PLEASE SEE THE GAMEDRIVER_README DOCUMENT ON GITHUB FOR MORE INFORMATION.
  **********************************/
-import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import com.cnc.tictac.backend.database.PLAYER_DAO
 import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
 import com.cnc.tictac.backend.system.AIPlayer
@@ -16,8 +13,11 @@ import com.cnc.tictac.backend.system.HumanPlayer
 import com.cnc.tictac.backend.system.Player
 import com.cnc.tictac.backend.system.WinCondition
 
+private const val TAG = "Game Driver"
+
 class GameDriver(
-    config : GameConfig = GameConfig()
+    config : GameConfig = GameConfig(),
+    db : PLAYER_ROOM_DATABASE?
 ) {
 /**********************************
  * Class Variables
@@ -28,8 +28,8 @@ class GameDriver(
     private var currentPlayer   : Int               = 0
     private var player          : Player?           = null
     // Driver
-    private var playerDAO: PLAYER_DAO
-    private var db: PLAYER_ROOM_DATABASE
+    private var playerDAO       : PLAYER_DAO
+    private var playerDB        : PLAYER_ROOM_DATABASE? = null
     /**********************************
      *  init()
      **********************************
@@ -39,27 +39,31 @@ class GameDriver(
      *  > Fetches DAO for room database.
      */
     init{
-        Log.d("<GAME_DRIVER>", "Initialising the game driver.")
+        Log.d(TAG, "Initialising the game driver.")
+        Log.d(TAG, "Creating Board object.")
         board = Board(
             config.boardWidth,
             config.boardHeight,
             config.boardMinimumWin,
             )
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        this.db = Room.databaseBuilder(
-            context,
-            PLAYER_ROOM_DATABASE::class.java, "database-name"
-        )
-            .allowMainThreadQueries()
-            .build()
-            .also {
-                Log.d("<GAME_DRIVER>", "Building room database.")
-                it.openHelper.writableDatabase.path?.let { it1 -> Log.d("<GAME_DRIVER>", it1) }
-            }
-        this.playerDAO = this.db.getDAO()
-        Log.d("<GAME_DRIVER>", "Game driver successfully initialised.")
+        Log.d(TAG, "setting player DB from parameter.")
+        this.playerDB = db
+        Log.d(TAG, "Obtaining room database DAO.")
+        this.playerDAO = this.playerDB!!.getDAO()
+        Log.d(TAG, "Game driver successfully initialised.")
     }
-/********************
+    /**********************************
+     * Update game driver configuration
+     **********************************/
+    fun reinit(config : GameConfig){
+        Log.d(TAG, "Reinitialising the game driver with updated game settings.")
+        board = Board(
+            config.boardWidth,
+            config.boardHeight,
+            config.boardMinimumWin,
+        )
+    }
+    /********************
  * GAME MECHANICS   *
  ********************/
     /**********************************
@@ -73,13 +77,10 @@ class GameDriver(
      *  In order to test if the current player is AI without removing it, .peek() is used.
      *  Returns a WinCondition enum attribute.
      */
-    fun playMove(x : Int =  0,
-                 y : Int =  0,
-                 ) : WinCondition{
-        Log.d("<GAME_DRIVER>", "Placing a puck at $x, $y.")
-        // The logic above handles AI players and generated their own moves.
-
+    fun playMove(x : Int =  0, y : Int =  0) : WinCondition{
+        Log.d(TAG, "Placing a puck at $x, $y.")
         /** Toggle current player **/
+        Log.d(TAG, "Toggling current player from ${this.currentPlayer}")
         if(this.currentPlayer == 0){
             this.currentPlayer = 1
         } else {
@@ -88,23 +89,33 @@ class GameDriver(
         /** Get current player **/
         this.player = this.playerArray[currentPlayer]
 
+        /** Debugging output **/
+        if(this.player is HumanPlayer) {Log.d(TAG, "HumanPlayer is placing a puck.")}
+        else if(this.player is AIPlayer) { Log.d(TAG, "AIPlayer is placing a puck.") }
+        else { Log.e(TAG, "Player child object is of unknown class(!!!).") }
+
         /** Check if player is AI and get new coordinates if AI **/
         if(this.player is AIPlayer){
-            var x = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).first
-            var y = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).second
+            do {
+                var x =
+                    (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).first
+                var y =
+                    (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).second
+                Log.d(TAG, "AIPlayer is placing a puck at $x, $y")
+            }while(!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!))
+            // Random plays will continue being made until a square without a puck is found.
+            Log.d(TAG, "Searching win condition for AIPlayer")
+            return this.board.searchWinCondition(this.player!!)
+        } else {
+            /** placing a puck **/
+            Log.d(TAG, "HumanPlayer is placing a puck at $x, $y")
+            if (!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!)) {
+                Log.e(TAG, "Exception thrown: Puck is placed on occupied square.")
+                throw Exception("Puck placed on occupied square")
+            }
+            Log.d(TAG, "Searching win condition for HumanPlayer")
+            return this.board.searchWinCondition(this.player!!)
         }
-
-        /** Debugging output **/
-        if(this.player is HumanPlayer) {Log.d("<GAME_DRIVER>", "HumanPlayer is placing a puck.")}
-        else if(this.player is AIPlayer) { Log.d("<GAME_DRIVER>", "AIPlayer is placing a puck.") }
-        else { Log.d("<GAME_DRIVER>", "Player child object is of unknown class(!!!).") }
-
-        /** placing a puck **/
-        if(!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!)) {
-            Log.d("<GAME_DRIVER>", "Exception thrown: Puck is placed on unknown square.")
-            throw Exception("Puck placed on occupied square")
-        }
-        return this.board.searchWinCondition(this.player!!)
     }
     /**********************************
      * undoPreviousMove()
@@ -112,7 +123,7 @@ class GameDriver(
      * Undoes the last move played in the game.
      */
     fun undoPreviousMove(){
-        Log.d("<GAME_DRIVER>", "Game driver is reversing previous move.")
+        Log.d(TAG, "Game driver is reversing previous move.")
         this.board.undoPreviousMove()
     }
     /**********************************
@@ -121,7 +132,7 @@ class GameDriver(
      * This method clears the game board.
      */
     fun resetGameBoard(){
-        Log.d("<GAME_DRIVER>", "Game driver is clearing game board.")
+        Log.d(TAG, "Game driver is clearing game board.")
         this.board.clearGameBoard()
     }
     /********************************
@@ -131,7 +142,7 @@ class GameDriver(
      * queue, setting the player count to 0, and setting the current player to NULL.
      */
     fun resetGameDriver(){
-        Log.d("<GAME_DRIVER>", "Game driver is being reset.")
+        Log.d(TAG, "Game driver is being reset.")
         this.board.clearGameBoard()
         this.playerArray = arrayOf(HumanPlayer(), HumanPlayer())
         this.currentPlayer = 0
@@ -143,7 +154,7 @@ class GameDriver(
      * this creates a new board for the game given a specific game config data object
      */
     fun createNewBoard(config : GameConfig){
-        Log.d("<GAME_DRIVER>", "Game config is being updated to ${config.boardWidth} by ${config.boardHeight}.")
+        Log.d(TAG, "Game config is being updated to ${config.boardWidth} by ${config.boardHeight}.")
         this.board.clearGameBoard()
         this.board = Board(config.boardWidth, config.boardHeight, config.boardMinimumWin)
     }
@@ -156,7 +167,7 @@ class GameDriver(
      *  Allows for the editing of a player in the player database.
      */
     fun editPlayerAttribute(player : Player, attribute : String, value : Any){
-        Log.d("<GAME_DRIVER>", "Player attribute $attribute changing to $value.")
+        Log.d(TAG, "Player attribute $attribute changing to $value.")
         when(attribute){
             "playerName"    -> player.playerName = value as String
             "playerID"      -> player.playerID = value as Int
@@ -181,7 +192,7 @@ class GameDriver(
      *  Returns a list of all HumanPlayers in the player database.
      */
     fun getPlayersFromDatabase() : List<HumanPlayer?> {
-        Log.d("<GAME_DRIVER>", "Player objects being pulled from database.")
+        Log.d(TAG, "Player objects being pulled from database.")
         return this.playerDAO.getAllPlayers()
     }
     /**********************************
@@ -190,7 +201,7 @@ class GameDriver(
      *  Returns a list of all HumanPlayers in the player database.
      */
     fun getPlayerFromDatabase(playerID : Int?) : HumanPlayer? {
-        Log.d("<GAME_DRIVER>", "Player object by ID $playerID being pulled from database.")
+        Log.d(TAG, "Player object by ID $playerID being pulled from database.")
         return this.playerDAO.selectPlayerbyID(playerID)
     }
     /**********************************
@@ -199,7 +210,7 @@ class GameDriver(
      * Fetch WLD statistics from the database for a specific player, searched by player ID.
      */
     fun getPlayerStatsFromDatabase(player : HumanPlayer) : Triple<Int, Int, Int>{
-        Log.d("<GAME_DRIVER>", "Obtaining player game stats from database.")
+        Log.d(TAG, "Obtaining player game stats from database.")
         val losses = this.playerDAO.getLosses(player.playerID)
         val wins = this.playerDAO.getWins(player.playerID)
         val draws = this.playerDAO.getDraws(player.playerID)
@@ -207,7 +218,7 @@ class GameDriver(
         return Triple(losses, wins, draws)
     }
     fun getPlayerDisplayStats(player : HumanPlayer) : Triple<String, String, String>{
-        Log.d("<GAME_DRIVER>", "Obtaining player game stats from database as string")
+        Log.d(TAG, "Obtaining player game stats from database as string")
         val losses = this.playerDAO.getLosses(player.playerID)
         val wins = this.playerDAO.getWins(player.playerID)
         val draws = this.playerDAO.getDraws(player.playerID)
@@ -240,7 +251,7 @@ class GameDriver(
      *  Otherwise, false is returned.
      */
     fun addPlayerToDatabase(newPlayer : Player? = HumanPlayer()) : Boolean{
-        Log.d("<GAME_DRIVER>", "Adding player to database.")
+        Log.d(TAG, "Adding player to database.")
         if(newPlayer is HumanPlayer) {
             try {
                 this.playerDAO.addNewPlayer(
@@ -250,7 +261,7 @@ class GameDriver(
                 )
                 return true
             }catch(exception : SQLiteConstraintException){
-                Log.d("<GAME_DRIVER>", "Player ID already exists in database (!!).")
+                Log.e(TAG, "Player ID already exists in database (!!).")
                 return false
             }
         }
@@ -263,16 +274,16 @@ class GameDriver(
      */
     fun setFirstPlayer(newPlayer : Player = HumanPlayer()){
         /** Debugging output **/
-        if(newPlayer is HumanPlayer) { Log.d("<GAME_DRIVER>", "Adding HumanPlayer to game.") }
-        else if(newPlayer is AIPlayer) { Log.d("<GAME_DRIVER>", "Adding AIPlayer to game.") }
-        else { Log.d("<GAME_DRIVER>", "Player added to game is of unknown child class (!!).") }
+        if(newPlayer is HumanPlayer) { Log.d(TAG, "Adding HumanPlayer to game.") }
+        else if(newPlayer is AIPlayer) { Log.d(TAG, "Adding AIPlayer to game.") }
+        else { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
         this.playerArray[0] = newPlayer
     }
     fun setSecondPlayer(newPlayer : Player = HumanPlayer()){
         /** Debugging output **/
-        if(newPlayer is HumanPlayer) { Log.d("<GAME_DRIVER>", "Adding HumanPlayer to game.") }
-        else if(newPlayer is AIPlayer) { Log.d("<GAME_DRIVER>", "Adding AIPlayer to game.") }
-        else { Log.d("<GAME_DRIVER>", "Player added to game is of unknown child class (!!).") }
+        if(newPlayer is HumanPlayer) { Log.d(TAG, "Adding HumanPlayer to game.") }
+        else if(newPlayer is AIPlayer) { Log.d(TAG, "Adding AIPlayer to game.") }
+        else { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
         this.playerArray[1] = newPlayer
     }
 /***************
@@ -284,7 +295,7 @@ class GameDriver(
      *  returns the current player in the queue
      */
     fun whoIsPlaying() : Player ? {
-        Log.d("<GAME_DRIVER>", "Current player is ${this.playerArray[currentPlayer]?.playerName}")
+        Log.d(TAG, "Current player is ${this.playerArray[currentPlayer]?.playerName}")
         return this.playerArray[currentPlayer]
     }
     /**********************************
@@ -293,7 +304,7 @@ class GameDriver(
      *  accessor for the board
      */
     fun getBoard() : Board {
-        Log.d("<GAME_DRIVER>", "Current board is being fetched.")
+        Log.d(TAG, "Current board is being fetched.")
         return this.board
     }
     fun getBoardAsString(player1Icon : String, player2Icon : String) : Array<Array<String>>{
@@ -316,7 +327,7 @@ class GameDriver(
      *  accessor for the player Queue
      */
     fun getCopyOfPlayerList() : List<Player?> {
-        Log.d("<GAME_DRIVER>", "Copy of player queue is being returned.")
+        Log.d(TAG, "Copy of player queue is being returned.")
         return this.playerArray.toList()
     }
 }
