@@ -1,5 +1,6 @@
 package com.cnc.tictac.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -30,15 +32,22 @@ import com.cnc.tictac.R.string as copy
 fun MultiplayerSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // Determine device UI layout.
     val deviceInfo = getDeviceInfo()
+//
+//    // Use same UI layout for COMPACT and EXPANDED
+//    when (deviceInfo.screenWidthType) {
+//        is DeviceInfo.DeviceType.Compact -> {
+//            DisplayCompactMultiplayerSettingsScreen(navController,viewModel)
+//        }
+//        else -> {
+//            DisplayDefaultMultiplayerSettingsScreen(navController,viewModel)
+//        }
+//    }
+    val configuration = LocalConfiguration.current
 
-    // Use same UI layout for COMPACT and EXPANDED
-    when (deviceInfo.screenWidthType) {
-        is DeviceInfo.DeviceType.Compact -> {
-            DisplayCompactMultiplayerSettingsScreen(navController,viewModel)
-        }
-        else -> {
-            DisplayDefaultMultiplayerSettingsScreen(navController,viewModel)
-        }
+    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        DisplayDefaultMultiplayerSettingsScreen(navController, viewModel)
+    } else {
+        DisplayCompactMultiplayerSettingsScreen(navController, viewModel)
     }
 }
 
@@ -72,7 +81,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
+                    .padding(top = 32.dp)
                     .weight(1f).fillMaxHeight(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ){

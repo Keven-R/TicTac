@@ -3,6 +3,7 @@ package com.cnc.tictac.ui.screens
 // COMPONENT imports
 
 // RESOURCES import
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -31,16 +33,12 @@ import com.cnc.tictac.R.string as copy
 @Composable
 fun HomeScreen(navController: NavHostController,viewModel: TicTacViewModel) {
     // Determine UI layout.
-    val deviceInfo = getDeviceInfo()
+    val configuration = LocalConfiguration.current
 
-    // Use different layout for mobile landscape only
-    when (deviceInfo.screenHeightType) {
-        is DeviceInfo.DeviceType.Compact -> {
-            DisplayWideHomeScreen(navController, viewModel)
-        }
-        else -> {
-            DisplayNarrowHomeScreen(navController, viewModel)
-        }
+    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        DisplayWideHomeScreen(navController, viewModel)
+    } else {
+        DisplayNarrowHomeScreen(navController, viewModel)
     }
 }
 

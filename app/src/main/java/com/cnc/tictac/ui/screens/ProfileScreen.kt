@@ -1,5 +1,6 @@
 package com.cnc.tictac.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -35,15 +37,16 @@ import com.cnc.tictac.R.string as copy
 fun ProfileScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // Determine device UI layout.
     val deviceInfo = getDeviceInfo()
+    val configuration = LocalConfiguration.current
 
-    // Use same UI layout for COMPACT and EXPANDED
-    when (deviceInfo.screenHeightType) {
-        is DeviceInfo.DeviceType.Compact -> {
-            DisplayShortProfileScreen(navController,viewModel)
+    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (deviceInfo.screenHeight < 600.dp) {
+            DisplayShortProfileScreen(navController, viewModel)
+        } else {
+            DisplayDefaultProfileScreen(navController, viewModel)
         }
-        else -> {
-            DisplayDefaultProfileScreen(navController,viewModel)
-        }
+    } else {
+        DisplayDefaultProfileScreen(navController, viewModel)
     }
 }
 
@@ -69,7 +72,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
             modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 32.dp, horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // CONTAINER: Top nav
             Row(
@@ -82,14 +85,9 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
 
             // CONTAINER: User info and stats
             Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(
-                    space = 32.dp,
-                    alignment = Alignment.CenterVertically
-                ),
+                modifier = Modifier.fillMaxHeight().weight(1f).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(space = 32.dp, alignment = Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // ELEMENT: User name + avatar
                 Column(
@@ -186,7 +184,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                 BackButton(stringResource(id = copy.page_title_profile),navController)
             }
 
-            // CONTAINER: All game settings found here
+            // CONTAINER: All profile scores
             Row(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -194,11 +192,12 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                     .padding(bottom = 16.dp)
                     .weight(1f).fillMaxHeight(),
                 horizontalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 // ELEMENT: User name + avatar
                 Column(
                     modifier = Modifier.padding(end = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Avatar(
