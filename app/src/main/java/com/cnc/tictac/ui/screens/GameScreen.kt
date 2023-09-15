@@ -44,13 +44,12 @@ fun GameScreen(navController: NavHostController, viewModel: TicTacViewModel) {
             }
         }
     } else {
-        when (deviceInfo.screenWidthType) {
-            // Mobile portrait layout
-            is DeviceInfo.DeviceType.Compact -> {
-                DisplayGameScreenPortraitMobile(navController, viewModel)
-            } else -> {
-                DisplayGameScreenPortrait(navController, viewModel)
-            }
+        if (deviceInfo.screenWidth / deviceInfo.screenHeight < 0.5) {
+            DisplayGameScreenPortraitMobile(navController, viewModel)
+        } else if (deviceInfo.screenWidth / deviceInfo.screenHeight < 0.7) {
+            DisplayGameScreenPortraitMedium(navController, viewModel)
+        } else {
+            DisplayGameScreenPortrait(navController, viewModel)
         }
     }
 }
@@ -73,17 +72,23 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
     ) {
         // CONTAINER: All content on screen
         Row(
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 24.dp, end = 24.dp).fillMaxSize(),
+            modifier = Modifier
+                .padding(top = 16.dp, bottom = 8.dp, start = 24.dp, end = 24.dp)
+                .fillMaxSize(),
             horizontalArrangement = Arrangement.spacedBy(80.dp)
         ) {
             // CONTAINER: Left side
             Column (
-                modifier = Modifier.fillMaxHeight().width(IntrinsicSize.Max),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(IntrinsicSize.Max),
                 verticalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 // CONTAINER: Game player cards
                 Column (
-                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceBetween) {
                     // ELEMENT: player 1
                     GamePlayerCard(
@@ -124,7 +129,10 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
 
             // CONTAINER: right side (has game board)
             Column(
-                modifier = Modifier.fillMaxHeight().weight(1f).fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -156,12 +164,17 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
     ) {
         // CONTAINER: All content on screen
         Column (
-            modifier = Modifier.padding(24.dp).fillMaxSize(),
+            modifier = Modifier
+                .padding(24.dp)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
             // CONTAINER: Left + right side of main content
             Row(
-                modifier = Modifier.weight(1f).fillMaxHeight().fillMaxWidth(),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(80.dp)
             ) {
                 // CONTAINER: Left side (game player cards)
@@ -204,7 +217,9 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
 
                 // CONTAINER: right side (game board)
                 Column(
-                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.End,
                 ) {
                     // ELEMENT: game board (occupy all right side)
@@ -290,6 +305,90 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
                 isPlayerTurn = viewModel.player2Turn,
                 secondsLeft = viewModel.player2Timer,
             )
+
+            // CONTAINER: all menu controls
+            GameMenuButtonGroup(viewModel = viewModel, navController = navController, modifier = Modifier.fillMaxWidth())
+        }
+    }
+}
+
+
+
+/* COMPOSABLE
+ * DisplayGameScreenPortraitMedium
+ *
+ * UI for game screen for the following devices and orientation:
+ *      Portrait MEDIUM+ width
+ *
+ * Info: https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes
+ */
+@Composable
+fun DisplayGameScreenPortraitMedium(navController: NavHostController, viewModel: TicTacViewModel) {
+    // CONTAINER: Set bg colour
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primary)
+    ) {
+        // CONTAINER: All content on screen
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 24.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+
+            // CONTAINER: Player Cards
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // ELEMENT: player 1
+                GamePlayerCard(
+                    isRowLayout = true,
+                    showTimer = false,
+
+                    playerName = viewModel.player1,
+                    playerAvatarResourceId = viewModel.player1Avatar,
+                    playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
+                    isGameEnded = viewModel.gameEnded,
+
+                    playerWinStatus = viewModel.player1WinStatus,
+
+                    isPlayerTurn = viewModel.player1Turn,
+                    secondsLeft = viewModel.player1Timer,
+                )
+
+                // ELEMENT: player 2
+                GamePlayerCard(
+                    isRowLayout = true,
+                    inverse = true,
+                    showTimer = false,
+
+                    playerName = viewModel.player2,
+                    playerAvatarResourceId = viewModel.player2Avatar,
+                    playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
+                    isGameEnded = viewModel.gameEnded,
+
+                    playerWinStatus = viewModel.player2WinStatus,
+
+                    isPlayerTurn = viewModel.player2Turn,
+                    secondsLeft = viewModel.player2Timer,
+                )
+            }
+
+            // CONTAINER: game board
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                GameBoard(
+                    modifier = Modifier.fillMaxWidth(),
+                    viewModel = viewModel
+                )
+            }
 
             // CONTAINER: all menu controls
             GameMenuButtonGroup(viewModel = viewModel, navController = navController, modifier = Modifier.fillMaxWidth())

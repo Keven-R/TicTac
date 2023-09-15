@@ -65,6 +65,7 @@ fun GamePlayerCard (
     playerAvatarResourceId: Int,
     playerMarker: String = "x", // "x" or "o"
     isGameEnded: Boolean,
+    showTimer: Boolean = true,
 
     // if Game is ongoing, require:
     isPlayerTurn: Boolean = false,
@@ -83,6 +84,7 @@ fun GamePlayerCard (
     var padding = 16
     val alignment = if (inverse) Alignment.End else Alignment.Start
     var avatarSize = 104
+    var timerOpacity = if (isGameEnded) 1f else if (isPlayerTurn) 1f else if (!showTimer) 0f else 1f
 
     if (isGameEnded) {
         // Design and content if game has ended
@@ -146,7 +148,7 @@ fun GamePlayerCard (
                     content = playerStatusLabel,
                     transparentIndex = transparentIndex,
                     alignCenter = false,
-                    rowModifier = Modifier,
+                    rowModifier = Modifier.alpha(timerOpacity),
                     textModifier = Modifier
                 )
             }
@@ -180,8 +182,8 @@ fun GamePlayerCard (
                     content = playerStatusLabel,
                     transparentIndex = transparentIndex,
                     alignCenter = false,
-                    rowModifier = Modifier,
-                    textModifier = Modifier
+                    rowModifier = Modifier.alpha(timerOpacity),
+                    textModifier = Modifier,
                 )
             }
         }
