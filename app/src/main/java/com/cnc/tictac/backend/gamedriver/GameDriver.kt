@@ -231,17 +231,17 @@ class GameDriver(
     }
     fun getPlayerStatsRibbon(player : HumanPlayer) : String {
         var return_string = ""
-        val losses = this.playerDAO.getLosses(player.playerID)
-        val wins = this.playerDAO.getWins(player.playerID)
-        val draws = this.playerDAO.getDraws(player.playerID)
-        val losses_fraction = losses / (wins + losses + draws)
-        val wins_fraction = wins / (wins + losses + draws)
-        val draws_fraction = draws / (wins + losses + draws)
-        for(i in 0 .. wins_fraction)
+        val losses  = this.playerDAO.getLosses(player.playerID)
+        val wins    = this.playerDAO.getWins(player.playerID)
+        val draws   = this.playerDAO.getDraws(player.playerID)
+        val losses_fraction = losses / (wins + losses + draws) * 10
+        val wins_fraction   = wins   / (wins + losses + draws) * 10
+        val draws_fraction  = draws  / (wins + losses + draws) * 10
+        for(i in 0 .. wins_fraction as Int)
             return_string += "X"
-        for(i in 0 .. draws_fraction)
+        for(i in 0 .. draws_fraction as Int)
             return_string += "/"
-        for(i in 0 .. losses_fraction)
+        for(i in 0 .. losses_fraction as Int)
             return_string += "O"
         return return_string
     }
