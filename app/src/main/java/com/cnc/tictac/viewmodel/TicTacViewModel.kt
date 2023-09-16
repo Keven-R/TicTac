@@ -1,11 +1,13 @@
 package com.cnc.tictac.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.room.Room
 import com.cnc.tictac.R
 import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
 import com.cnc.tictac.backend.gamedriver.GameConfig
@@ -21,7 +23,7 @@ enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 
 enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
 
-class TicTacViewModel() : ViewModel(){
+class TicTacViewModel(context: Context) : ViewModel(){
 
     /* For establishing some initial UI states */
     val avatarArray = arrayOf(R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3,
@@ -30,8 +32,8 @@ class TicTacViewModel() : ViewModel(){
 
     /* Backend Variables */
     var placeHolderHumanPlayer: HumanPlayer = HumanPlayer()
-    lateinit var gd : GameDriver
-    lateinit var db : PLAYER_ROOM_DATABASE
+    var gd : GameDriver
+    var db : PLAYER_ROOM_DATABASE
 
     var users by mutableStateOf(emptyList<HumanPlayer>())
 
@@ -80,12 +82,24 @@ class TicTacViewModel() : ViewModel(){
     var selectedAvatar by mutableIntStateOf(findAvatar())
     var playerTextFieldValue by mutableStateOf(findEditTextValue())
     var playerSwitchUI by mutableStateOf(true)
-    var userSelectIndex by mutableIntStateOf(1)
+    var userSelectIndex by mutableIntStateOf(0)
 //    var users by mutableStateOf(gd?.getPlayersFromDatabase() ?: emptyList())
 
     init {
         Log.v(TAG,"TicTacViewModel Created")
         Log.v("Test", "Test Log Working")
+
+        // Makes Database
+        db = Room.databaseBuilder(
+            context,
+            PLAYER_ROOM_DATABASE::class.java, "player-database")
+            .allowMainThreadQueries()
+            .build()
+
+        gd = GameDriver(GameConfig(),db) // Makes Game driver
+        generateInitialUsers() // Makes Game driver populates database if empty
+        users = gd.getPlayersFromDatabase() as List<HumanPlayer> // Sets users, also makes them un-nullable
+        setupDefaultProfiles()
     }
 
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
@@ -168,8 +182,6 @@ class TicTacViewModel() : ViewModel(){
     private fun newSinglePlayerGame(){
         Log.v(TAG, TYPE+"NewSinglePlayerGame")
 
-        gd = GameDriver(GameConfig(), db)
-
         player2Name = "AI"
 
         gd.setFirstPlayer(player1)
@@ -178,7 +190,8 @@ class TicTacViewModel() : ViewModel(){
 
     private fun newMultiPlayerGame(){
         Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")
-        gd = GameDriver(GameConfig(), db)
+
+        if(player2 == users[0]) { player2Name = player2.playerName}
 
         gd.setFirstPlayer(player1)
         gd.setSecondPlayer(player2)
@@ -242,5 +255,40 @@ class TicTacViewModel() : ViewModel(){
                 player2Name
             }}
         }
+    }
+
+    private fun generateInitialUsers(){
+        if(gd.getPlayersFromDatabase().isEmpty()){
+            gd.addPlayerToDatabase(HumanPlayer("Ryan",null,"O", R.drawable.avatar_8))
+            gd.addPlayerToDatabase(HumanPlayer("Jasmine",null,"O", R.drawable.avatar_1))
+            gd.addPlayerToDatabase(HumanPlayer("Keven",null,"O", R.drawable.avatar_6))
+            gd.addPlayerToDatabase(HumanPlayer("Sajib",null,"O", R.drawable.avatar_3))
+            gd.addPlayerToDatabase(HumanPlayer("Wendy",null,"O", R.drawable.avatar_5))
+            gd.addPlayerToDatabase(HumanPlayer("Debbie",null,"O", R.drawable.avatar_9))
+            gd.addPlayerToDatabase(HumanPlayer("Stuart",null,"O", R.drawable.avatar_2))
+            gd.addPlayerToDatabase(HumanPlayer("Jax",null,"O", R.drawable.avatar_4))
+            gd.addPlayerToDatabase(HumanPlayer("Sally",null,"O", R.drawable.avatar_7))
+            gd.addPlayerToDatabase(HumanPlayer("Kathy",null,"O", R.drawable.avatar_10))
+
+            for (user: HumanPlayer? in gd.getPlayersFromDatabase()){
+                if (user != null) {
+                    gd.updatePlayerStatsInDatabase(user,Random.nextInt(0, 10),Random.nextInt(0, 10),Random.nextInt(0, 10))
+                }
+            }
+            // Sets up a default player with ID 0 and 0 stats and random avatar
+            gd.addPlayerToDatabase(HumanPlayer("Default Player",0,"O", avatarArray[Random.nextInt(0, 10)]))
+            gd.getPlayerFromDatabase(0)
+                ?.let { gd.updatePlayerStatsInDatabase(it,0,0,0) }
+        }
+    }
+
+    private fun setupDefaultProfiles(){
+        player1 = users[0]
+        player1Name = users[0].playerName
+        player1Avatar = users[0].playerAvatar!!
+
+        player2 = users[0]
+        player2Name = users[0].playerName
+        player2Avatar = users[0].playerAvatar!!
     }
 }
