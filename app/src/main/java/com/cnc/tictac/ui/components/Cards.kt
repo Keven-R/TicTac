@@ -34,6 +34,7 @@ import com.cnc.tictac.Destination
 import com.cnc.tictac.viewmodel.PLAYERWINSTATUS
 import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
+import com.cnc.tictac.viewmodel.UIPLAYERSELECT
 import com.cnc.tictac.R.string as copy
 
 /* GamePlayerCard
@@ -279,6 +280,7 @@ fun MarkerGraphics (
 @Composable
 fun PlayerSelectCard (
     isHorizontal: Boolean = true,
+    viewModel: TicTacViewModel,
     navController: NavHostController,
     destination: Destination,
     playerName: String = "Guest",
@@ -335,6 +337,13 @@ fun PlayerSelectCard (
                     label = stringResource(id = copy.settings_change_player),
                     modifier = Modifier.fillMaxWidth()
                 ){
+                    if(isPlayerOne) {
+                        viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
+                        viewModel.findAvatar()
+                    } else{
+                        viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER2
+                        viewModel.findAvatar()
+                    }
                     navController.navigate(destination.route)
                 }
             }
@@ -374,6 +383,13 @@ fun PlayerSelectCard (
                     .fillMaxWidth()
                     .padding(top = 32.dp)
             ){
+                if(isPlayerOne) {
+                    viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
+                    viewModel.userSelectIndex = viewModel.findAvatar()
+                } else{
+                    viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER2
+                    viewModel.userSelectIndex = viewModel.findAvatar()
+                }
                 navController.navigate(destination.route)
             }
         }

@@ -86,6 +86,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
             ){
                 // ELEMENT: display current selected player 1
                 PlayerSelectCard(
+                    viewModel = viewModel,
                     navController = navController,
                     destination = Destination.UserSelectScreen,
                     playerName = viewModel.player1Name,
@@ -96,6 +97,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
 
                 // ELEMENT: display current selected player 2
                 PlayerSelectCard(
+                    viewModel = viewModel,
                     navController = navController,
                     destination = Destination.UserSelectScreen,
                     playerName = viewModel.player2Name,
@@ -157,6 +159,7 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController, vi
             ){
                 // ELEMENT: display current selected player 1
                 PlayerSelectCard(
+                    viewModel = viewModel,
                     navController = navController,
                     destination = Destination.UserSelectScreen,
                     playerName = viewModel.player1Name,
@@ -166,6 +169,7 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController, vi
 
                 // ELEMENT: display current selected player 2
                 PlayerSelectCard(
+                    viewModel = viewModel,
                     navController = navController,
                     destination = Destination.UserSelectScreen,
                     playerName = viewModel.player2Name,

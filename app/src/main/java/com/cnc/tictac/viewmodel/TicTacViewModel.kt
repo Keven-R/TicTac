@@ -250,7 +250,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
     }
 
-
     private fun timerStart(){Log.v(TAG, TYPE+"TimerStart")}
     private fun timerStop(){Log.v(TAG, TYPE+"TimerStop")}
     private fun markerPlaced(position: Int){Log.v(TAG, TYPE+"MarkerPlaced: Position = " + position)}
@@ -279,8 +278,15 @@ class TicTacViewModel(context: Context) : ViewModel(){
         if(newUser){
             return 0
         }
+
         var currentAvatar = 0
-        if(uiSelectedPlayer == UIPLAYERSELECT.PLAYER1){ currentAvatar = player1Avatar }else{ player2Avatar }
+
+        currentAvatar = if(uiSelectedPlayer == UIPLAYERSELECT.PLAYER1) {
+
+            player1Avatar
+        }else{
+            player2Avatar
+        }
 
         for((index, avatar) in avatarArray.withIndex()){
             if(avatar == currentAvatar){
