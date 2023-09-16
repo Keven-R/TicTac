@@ -80,7 +80,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var uiSelectedPlayer by mutableStateOf(UIPLAYERSELECT.PLAYER1)
     var newUser by mutableStateOf(false)
     var selectedAvatar by mutableIntStateOf(findAvatar())
-    var playerTextFieldValue by mutableStateOf(findEditTextValue())
+    var playerTextFieldValue by mutableStateOf("")
     var playerSwitchUI by mutableStateOf(true)
     var userSelectIndex by mutableIntStateOf(0)
 
@@ -231,7 +231,26 @@ class TicTacViewModel(context: Context) : ViewModel(){
     private fun undo(){Log.v(TAG, TYPE+"Undo")}
     private fun restart(){Log.v(TAG, TYPE+"Restart")}
     private fun exit(){Log.v(TAG, TYPE+"Exit")}
-    private fun saveUser(){Log.v(TAG, TYPE+"SaveUser")}
+
+    private fun saveUser(){
+        Log.v(TAG, TYPE+"SaveUser")
+        when(uiSelectedPlayer){
+            UIPLAYERSELECT.PLAYER1 -> {
+                player1Name = playerTextFieldValue
+                player1Avatar = avatarArray[selectedAvatar]
+                gd.editPlayerDatabaseAttribute(player1,"playerName",player1Name)
+                gd.editPlayerDatabaseAttribute(player1,"playerAvatar",player1Avatar)
+            }
+            UIPLAYERSELECT.PLAYER2 -> {
+                player2Name = playerTextFieldValue
+                player2Avatar = avatarArray[selectedAvatar]
+                gd.editPlayerDatabaseAttribute(player2,"playerName",player2Name)
+                gd.editPlayerDatabaseAttribute(player2,"playerAvatar",player2Avatar)
+            }
+        }
+    }
+
+
     private fun timerStart(){Log.v(TAG, TYPE+"TimerStart")}
     private fun timerStop(){Log.v(TAG, TYPE+"TimerStop")}
     private fun markerPlaced(position: Int){Log.v(TAG, TYPE+"MarkerPlaced: Position = " + position)}
@@ -256,7 +275,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
     }
 
-    private fun findAvatar(): Int{
+    fun findAvatar(): Int{
         if(newUser){
             return 0
         }
@@ -271,8 +290,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
         return 0
     }
 
-    fun findEditTextValue(): String{
-        return when(uiSelectedPlayer == UIPLAYERSELECT.PLAYER1){
+    fun findEditTextValue(){
+        playerTextFieldValue = when(uiSelectedPlayer == UIPLAYERSELECT.PLAYER1){
             true -> {if(newUser){
                 ""
             }else{

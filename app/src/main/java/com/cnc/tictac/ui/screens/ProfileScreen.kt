@@ -1,6 +1,7 @@
 package com.cnc.tictac.ui.screens
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -140,6 +141,8 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                             .weight(1f)
                     ) {
                         viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
+                        viewModel.findEditTextValue()
+                        viewModel.selectedAvatar = viewModel.findAvatar()
                         navController.navigate(Destination.UserDetailScreen.route)
                     }
                 }
@@ -147,6 +150,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                 // ELEMENT: Button to navigate to "switch user" screen
                 SecondaryButton(
                     stringResource(id = copy.profile_action_right),
+                    viewModel = viewModel,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -243,6 +247,8 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                             .weight(1f)
                     ) {
                         viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
+                        viewModel.findEditTextValue()
+                        viewModel.selectedAvatar = viewModel.findAvatar()
                         navController.navigate(Destination.UserDetailScreen.route)
                     }
                 }

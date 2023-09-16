@@ -140,7 +140,6 @@ fun DisplayDefaultUserSelectScreen(navController: NavHostController, viewModel: 
                     viewModel = viewModel,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // TODO: Set User
                     navController.popBackStack()
                 }
             }
@@ -232,7 +231,6 @@ fun DisplayCompactUserSelectScreen(navController: NavHostController, viewModel: 
                     viewModel = viewModel,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // TODO: Set User
                     navController.popBackStack()
                 }
             }
