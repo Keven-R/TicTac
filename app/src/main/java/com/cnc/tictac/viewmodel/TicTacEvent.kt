@@ -1,5 +1,7 @@
 package com.cnc.tictac.viewmodel
 
+import com.cnc.tictac.backend.system.HumanPlayer
+
 sealed class TicTacEvent{
     object TempEvent: TicTacEvent()
     object StartGame: TicTacEvent()
@@ -12,5 +14,6 @@ sealed class TicTacEvent{
     object SaveUser: TicTacEvent()
     object TimerStop: TicTacEvent()
     object TimerStart: TicTacEvent()
+    data class ChangePlayer(val player: HumanPlayer): TicTacEvent()
     data class MarkerPlaced(val position: Int): TicTacEvent()
 }

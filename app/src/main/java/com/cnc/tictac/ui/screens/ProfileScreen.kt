@@ -30,6 +30,7 @@ import com.cnc.tictac.ui.components.SecondaryButton
 import com.cnc.tictac.ui.components.TitleMedium
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacViewModel
+import com.cnc.tictac.viewmodel.UIPLAYERSELECT
 import com.cnc.tictac.R.string as copy
 
 @Composable
@@ -131,13 +132,16 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                 )
             ) {
                 // ELEMENT: Button to navigate to "edit profile" screen
-                SecondaryButton(
-                    stringResource(id = copy.profile_action_left),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    navController.navigate(Destination.UserDetailScreen.route)
+                if(viewModel.player1.playerID != 0){
+                    SecondaryButton(
+                        stringResource(id = copy.profile_action_left),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
+                        navController.navigate(Destination.UserDetailScreen.route)
+                    }
                 }
 
                 // ELEMENT: Button to navigate to "switch user" screen
@@ -147,6 +151,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
+                    viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
                     navController.navigate(Destination.UserSelectScreen.route)
                 }
             }
@@ -230,13 +235,16 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                 )
             ) {
                 // ELEMENT: Button to navigate to "edit profile" screen
-                SecondaryButton(
-                    stringResource(id = copy.profile_action_left),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    navController.navigate(Destination.UserDetailScreen.route)
+                if(viewModel.player1.playerID != 0){
+                    SecondaryButton(
+                        stringResource(id = copy.profile_action_left),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
+                        navController.navigate(Destination.UserDetailScreen.route)
+                    }
                 }
 
                 // ELEMENT: Button to navigate to "switch user" screen
@@ -246,6 +254,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
+                    viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
                     navController.navigate(Destination.UserSelectScreen.route)
                 }
             }

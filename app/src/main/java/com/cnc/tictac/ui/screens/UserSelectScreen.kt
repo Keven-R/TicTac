@@ -20,10 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.cnc.tictac.Destination
 import com.cnc.tictac.R
 import com.cnc.tictac.ui.components.BackButton
-import com.cnc.tictac.ui.components.CardButton
 import com.cnc.tictac.ui.components.NewUserCardButton
 import com.cnc.tictac.ui.components.PrimaryButton
 import com.cnc.tictac.ui.components.UserCell
