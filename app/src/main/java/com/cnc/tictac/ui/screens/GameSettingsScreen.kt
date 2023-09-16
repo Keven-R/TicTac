@@ -1,6 +1,5 @@
 package com.cnc.tictac.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,7 +56,7 @@ fun GameSettingsScreen(navController: NavHostController, viewModel: TicTacViewMo
 fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // Radio variables
     val markerOptions = arrayOf("x", "o")
-    val startOptions = arrayOf(viewModel.player1, viewModel.player2)
+    val startOptions = arrayOf(viewModel.player1Name, viewModel.player2Name)
     val boardOptions = arrayOf("3x3", "4x4", "5x5")
     val winOptions = arrayOf("3", "4", "5")
 
@@ -151,7 +150,7 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: Ti
             ) {
                 // ELEMENTS: All setting items needed to start game
                 Radio(
-                    title = viewModel.player1,
+                    title = viewModel.player1Name,
                     viewModel = viewModel,
                     onClick = markerUnit,
                     labels = markerOptions,
@@ -215,7 +214,7 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: Ti
 fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
     // Radio variables
     val markerOptions = arrayOf("x", "o")
-    val startOptions = arrayOf(viewModel.player1, viewModel.player2)
+    val startOptions = arrayOf(viewModel.player1Name, viewModel.player2Name)
     val boardOptions = arrayOf("3x3", "4x4", "5x5")
     val winOptions = arrayOf("3", "4", "5")
 
@@ -303,7 +302,7 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
                     horizontalArrangement = Arrangement.spacedBy(32.dp)
                 ) {
                     Radio(
-                        title = viewModel.player1,
+                        title = viewModel.player1Name,
                         viewModel = viewModel,
                         onClick = markerUnit,
                         labels = markerOptions,

@@ -28,7 +28,6 @@ import com.cnc.tictac.ui.components.BodyMedium
 import com.cnc.tictac.ui.components.MarkerGraphics
 import com.cnc.tictac.ui.components.SecondaryButton
 import com.cnc.tictac.ui.components.TitleMedium
-import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
@@ -104,7 +103,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                         )
                     }
 
-                    TitleMedium(viewModel.player1, modifier = Modifier.fillMaxWidth())
+                    TitleMedium(viewModel.player1Name, modifier = Modifier.fillMaxWidth())
                 }
 
                 // CONTAINER: User's stats
@@ -205,7 +204,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                         imageModifier = Modifier.size(160.dp)
                     )
 
-                    TitleMedium(viewModel.player1)
+                    TitleMedium(viewModel.player1Name)
                 }
 
                 // CONTAINER: User's stats

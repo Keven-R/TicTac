@@ -63,25 +63,35 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavigationAppHost(navController, viewModel)
 
+                // Player data setup
                 /* Generates Users on first run */
-                if(viewModel.gd!!.getPlayersFromDatabase().isEmpty()){
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Ryan",null,"O", R.drawable.avatar_8))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Jasmine",null,"O", R.drawable.avatar_1))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Keven",null,"O", R.drawable.avatar_6))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Sajib",null,"O", R.drawable.avatar_3))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Wendy",null,"O", R.drawable.avatar_5))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Debbie",null,"O", R.drawable.avatar_9))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Stuart",null,"O", R.drawable.avatar_2))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Jax",null,"O", R.drawable.avatar_4))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Sally",null,"O", R.drawable.avatar_7))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Kathy",null,"O", R.drawable.avatar_10))
+                if(viewModel.gd.getPlayersFromDatabase().isEmpty()){
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Ryan",null,"O", R.drawable.avatar_8))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Jasmine",null,"O", R.drawable.avatar_1))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Keven",null,"O", R.drawable.avatar_6))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Sajib",null,"O", R.drawable.avatar_3))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Wendy",null,"O", R.drawable.avatar_5))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Debbie",null,"O", R.drawable.avatar_9))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Stuart",null,"O", R.drawable.avatar_2))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Jax",null,"O", R.drawable.avatar_4))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Sally",null,"O", R.drawable.avatar_7))
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Kathy",null,"O", R.drawable.avatar_10))
 
-                    for (user: HumanPlayer? in viewModel.gd!!.getPlayersFromDatabase()){
+                    for (user: HumanPlayer? in viewModel.gd.getPlayersFromDatabase()){
                         if (user != null) {
-                            viewModel.gd!!.updatePlayerStatsInDatabase(user,Random.nextInt(0, 10),Random.nextInt(0, 10),Random.nextInt(0, 10))
+                            viewModel.gd.updatePlayerStatsInDatabase(user,Random.nextInt(0, 10),Random.nextInt(0, 10),Random.nextInt(0, 10))
                         }
                     }
+                    // Sets up a default player with ID 0 and 0 stats and random avatar
+                    viewModel.gd.addPlayerToDatabase(HumanPlayer("Default Player",0,"O", viewModel.avatarArray[Random.nextInt(0, 10)]))
+                    viewModel.gd.getPlayerFromDatabase(0)
+                        ?.let { viewModel.gd.updatePlayerStatsInDatabase(it,0,0,0) }
+
                 }
+                viewModel.users = viewModel.gd.getPlayersFromDatabase() as List<HumanPlayer>
+
+                if(viewModel.player1 == viewModel.placeHolderHumanPlayer) {viewModel.player1 = viewModel.users[0]}
+                if(viewModel.player2 == viewModel.placeHolderHumanPlayer) {viewModel.player2 = viewModel.users[0]}
             }
         }
     }

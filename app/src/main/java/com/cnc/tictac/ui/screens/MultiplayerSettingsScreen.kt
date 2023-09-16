@@ -23,7 +23,6 @@ import com.cnc.tictac.Destination
 import com.cnc.tictac.ui.components.BackButton
 import com.cnc.tictac.ui.components.PlayerSelectCard
 import com.cnc.tictac.ui.components.PrimaryButton
-import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
@@ -89,7 +88,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
                 PlayerSelectCard(
                     navController = navController,
                     destination = Destination.UserSelectScreen,
-                    playerName = viewModel.player1,
+                    playerName = viewModel.player1Name,
                     avatarResourceId = viewModel.player1Avatar,
                     isHorizontal = false,
                     layoutModifier = Modifier.fillMaxWidth().weight(1f),
@@ -99,7 +98,7 @@ fun DisplayCompactMultiplayerSettingsScreen(navController: NavHostController, vi
                 PlayerSelectCard(
                     navController = navController,
                     destination = Destination.UserSelectScreen,
-                    playerName = viewModel.player2,
+                    playerName = viewModel.player2Name,
                     isPlayerOne = false,
                     avatarResourceId = viewModel.player2Avatar,
                     isHorizontal = false,
@@ -160,7 +159,7 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController, vi
                 PlayerSelectCard(
                     navController = navController,
                     destination = Destination.UserSelectScreen,
-                    playerName = viewModel.player1,
+                    playerName = viewModel.player1Name,
                     avatarResourceId = viewModel.player1Avatar,
                     layoutModifier = Modifier.weight(1f).fillMaxWidth(),
                 )
@@ -169,7 +168,7 @@ fun DisplayDefaultMultiplayerSettingsScreen(navController: NavHostController, vi
                 PlayerSelectCard(
                     navController = navController,
                     destination = Destination.UserSelectScreen,
-                    playerName = viewModel.player2,
+                    playerName = viewModel.player2Name,
                     isPlayerOne = false,
                     avatarResourceId = viewModel.player2Avatar,
                     layoutModifier = Modifier.weight(1f).fillMaxWidth(),
