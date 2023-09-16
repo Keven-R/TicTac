@@ -20,7 +20,7 @@ private const val TAG = "TicTacViewModel"
 private const val TYPE = "EVENT: "
 
 enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
-
+enum class UIPLAYERSELECT { PLAYER1, PLAYER2 }
 enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
 
 class TicTacViewModel(context: Context) : ViewModel(){
@@ -77,13 +77,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     /* UI States*/
     var gameUIState by mutableStateOf(MENU.RUNNING)
+    var uiSelectedPlayer by mutableStateOf(UIPLAYERSELECT.PLAYER1)
     var newUser by mutableStateOf(false)
-    var player1Edit by mutableStateOf(true)
     var selectedAvatar by mutableIntStateOf(findAvatar())
     var playerTextFieldValue by mutableStateOf(findEditTextValue())
     var playerSwitchUI by mutableStateOf(true)
     var userSelectIndex by mutableIntStateOf(0)
-//    var users by mutableStateOf(gd?.getPlayersFromDatabase() ?: emptyList())
 
     init {
         Log.v(TAG,"TicTacViewModel Created")
@@ -116,6 +115,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             TicTacEvent.SaveUser -> saveUser()
             TicTacEvent.TimerStart -> timerStart()
             TicTacEvent.TimerStop -> timerStop()
+            is TicTacEvent.ChangePlayer -> changePlayer(event.player)
             is TicTacEvent.MarkerPlaced -> markerPlaced(event.position)
         }
     }
@@ -125,8 +125,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
      *******************************/
     private fun gameStart(){
         Log.v(TAG, TYPE+"StartGame")
-        var boardSize   : Int = 3
-        var winSize     : Int = 3
+        var boardSize = 3
+        var winSize = 3
         Log.v(TAG, TYPE+"Obtaining board size selection")
         /**
          * Sets the player icons "x" or "o" inside Player objects for the first and second player.
@@ -135,12 +135,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
          */
         when(player1Marker){
             0 -> {
-                gd!!.getPlayerArray()[0]!!.playerIcon = "x"
-                gd!!.getPlayerArray()[1]!!.playerIcon = "o"
+                gd.getPlayerArray()[0]!!.playerIcon = "x"
+                gd.getPlayerArray()[1]!!.playerIcon = "o"
             }
             1 -> {
-                gd!!.getPlayerArray()[0]!!.playerIcon = "o"
-                gd!!.getPlayerArray()[1]!!.playerIcon = "x"
+                gd.getPlayerArray()[0]!!.playerIcon = "o"
+                gd.getPlayerArray()[1]!!.playerIcon = "x"
             }
         }
         /**
@@ -167,8 +167,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
          * of length 2 inside GameDriver.
          * **/
         when(startingSelection){
-            0 -> gd!!.setPlayerOrder(0)
-            1 -> gd!!.setPlayerOrder(1)
+            0 -> gd.setPlayerOrder(0)
+            1 -> gd.setPlayerOrder(1)
         }
         Log.v(TAG, TYPE+"Building configuration.")
         var config = GameConfig(boardSize, boardSize, winSize)
@@ -176,7 +176,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         /**
          * game driver is not created here- only updated with new configuration.
          * **/
-        gd!!.reinit(config)
+        gd.reinit(config)
     }
 
     private fun newSinglePlayerGame(){
@@ -198,6 +198,36 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
 
     private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
+
+    private fun changePlayer(player: HumanPlayer){
+        when(uiSelectedPlayer){
+            UIPLAYERSELECT.PLAYER1 -> {
+                player1 = player
+                player1Name = player.playerName
+                player1Avatar = player.playerAvatar!!
+                player1StatMarker = gd.getPlayerStatsRibbonFromDatabase(player)
+
+                val stats = gd.getPlayerDisplayStatsFromDatabase(player)
+                player1WinString = stats.first
+                player1DrawString = stats.second
+                player1LossesString = stats.third
+                player1TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player)
+            }
+            UIPLAYERSELECT.PLAYER2 -> {
+                player2 = player
+                player2Name = player.playerName
+                player2Avatar = player.playerAvatar!!
+                player2StatMarker = gd.getPlayerStatsRibbonFromDatabase(player)
+
+                val stats = gd.getPlayerDisplayStatsFromDatabase(player)
+                player2WinString = stats.first
+                player2DrawString = stats.second
+                player2LossesString = stats.third
+                player2TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player)
+            }
+        }
+    }
+
     private fun undo(){Log.v(TAG, TYPE+"Undo")}
     private fun restart(){Log.v(TAG, TYPE+"Restart")}
     private fun exit(){Log.v(TAG, TYPE+"Exit")}
@@ -231,7 +261,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             return 0
         }
         var currentAvatar = 0
-        if(player1Edit){ currentAvatar = player1Avatar }else{ player2Avatar }
+        if(uiSelectedPlayer == UIPLAYERSELECT.PLAYER1){ currentAvatar = player1Avatar }else{ player2Avatar }
 
         for((index, avatar) in avatarArray.withIndex()){
             if(avatar == currentAvatar){
@@ -242,7 +272,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
 
     fun findEditTextValue(): String{
-        return when(player1Edit){
+        return when(uiSelectedPlayer == UIPLAYERSELECT.PLAYER1){
             true -> {if(newUser){
                 ""
             }else{

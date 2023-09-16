@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.viewmodel.PLAYERWINSTATUS
+import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
 
@@ -393,6 +394,7 @@ fun UserCell(
     Column (
         modifier = modifier.clickable {
             viewModel.userSelectIndex = position
+            viewModel.onEvent(TicTacEvent.ChangePlayer(viewModel.users[position]))
         },
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
