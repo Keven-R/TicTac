@@ -385,10 +385,10 @@ fun PlayerSelectCard (
             ){
                 if(isPlayerOne) {
                     viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
-                    viewModel.userSelectIndex = viewModel.findAvatar()
+                    viewModel.userSelectIndex = viewModel.findUser()
                 } else{
                     viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER2
-                    viewModel.userSelectIndex = viewModel.findAvatar()
+                    viewModel.userSelectIndex = viewModel.findUser()
                 }
                 navController.navigate(destination.route)
             }
