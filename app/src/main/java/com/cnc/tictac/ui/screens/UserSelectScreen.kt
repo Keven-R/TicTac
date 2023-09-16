@@ -207,8 +207,8 @@ fun DisplayCompactUserSelectScreen(navController: NavHostController, viewModel: 
                                 UserCell(
                                     modifier = Modifier.fillMaxHeight(),
                                     avatarModifier = Modifier.fillMaxHeight().weight(1f).aspectRatio(1f),
-                                    playerName = viewModel.users[i-1]!!.playerName,
-                                    avatarResourceId = viewModel.users[i-1]!!.playerAvatar,
+                                    playerName = viewModel.users[i-1].playerName,
+                                    avatarResourceId = viewModel.users[i-1].playerAvatar,
                                     isSelected = i-1 == viewModel.userSelectIndex,
                                     viewModel = viewModel,
                                     position = i-1
