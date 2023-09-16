@@ -116,8 +116,6 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: Ti
         }
     }
 
-//    Log.v("TESTING", "State: " + viewModel.player1Marker)
-
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier

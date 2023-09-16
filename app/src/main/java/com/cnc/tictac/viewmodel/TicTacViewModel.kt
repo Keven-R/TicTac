@@ -125,14 +125,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
      *******************************/
     private fun gameStart(){
         Log.v(TAG, TYPE+"StartGame")
+
+        // Default values
         var boardSize = 3
         var winSize = 3
-        Log.v(TAG, TYPE+"Obtaining board size selection")
-        /**
-         * Sets the player icons "x" or "o" inside Player objects for the first and second player.
-         * The first player selects their icon 0:x 1:o, and it sets the alternate icon for the second
-         * player.
-         */
+
+        // Get players marker
         when(player1Marker){
             0 -> {
                 gd.getPlayerArray()[0]!!.playerIcon = "x"
@@ -143,40 +141,28 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 gd.getPlayerArray()[1]!!.playerIcon = "x"
             }
         }
-        /**
-         * Modifies the board width and height variable on the GameConfig class
-         * backend supports rectangular boards - this is obfuscated in the frontend.
-         * **/
+
+        // sets board size and initial board state
         when(boardSelection){
             0 -> { boardSize = 3; boardState = Array(9) { _ -> "" } }
             1 -> { boardSize = 4; boardState = Array(16) { _ -> "" } }
             2 -> { boardSize = 5; boardState = Array(25) { _ -> "" } }
         }
-        Log.v(TAG, TYPE+"Obtaining board win condition selection.")
-        /**
-         * Modifies the wincondition variable on the GameConfig class
-         * **/
+
+        // Sets win condition
         when(winConditionSelection){
             0 -> winSize = 3
             1 -> winSize = 4
             2 -> winSize = 5
         }
-        /**
-         * Changes whether "firstPlayer" or "secondPlayer" plays first by toggling setting the
-         * value of currentPlayer in GameDriver to 1 or 0 initially. Players are stored in an array
-         * of length 2 inside GameDriver.
-         * **/
+
+        // Sets play order
         when(startingSelection){
             0 -> gd.setPlayerOrder(0)
             1 -> gd.setPlayerOrder(1)
         }
-        Log.v(TAG, TYPE+"Building configuration.")
-        var config = GameConfig(boardSize, boardSize, winSize)
-        Log.v(TAG, TYPE+"Updating game driver with new config.")
-        /**
-         * game driver is not created here- only updated with new configuration.
-         * **/
-        gd.reinit(config)
+
+        gd.reinit(GameConfig(boardSize, boardSize, winSize))
     }
 
     private fun newSinglePlayerGame(){
