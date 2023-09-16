@@ -156,6 +156,7 @@ fun DisplayDefaultProfileScreen(navController: NavHostController, viewModel: Tic
                         .weight(1f)
                 ) {
                     viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
+                    viewModel.userSelectIndex = viewModel.findUser()
                     navController.navigate(Destination.UserSelectScreen.route)
                 }
             }
@@ -261,6 +262,7 @@ fun DisplayShortProfileScreen(navController: NavHostController, viewModel: TicTa
                         .weight(1f)
                 ) {
                     viewModel.uiSelectedPlayer = UIPLAYERSELECT.PLAYER1
+                    viewModel.userSelectIndex = viewModel.findUser()
                     navController.navigate(Destination.UserSelectScreen.route)
                 }
             }

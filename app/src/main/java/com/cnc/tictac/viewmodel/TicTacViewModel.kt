@@ -296,6 +296,25 @@ class TicTacViewModel(context: Context) : ViewModel(){
         return 0
     }
 
+    fun findUser(): Int{
+        if(newUser){
+            return 0
+        }
+
+        val currentUser = if(uiSelectedPlayer == UIPLAYERSELECT.PLAYER1) {
+            player1
+        }else{
+            player2
+        }
+
+        for((index, user) in users.withIndex()){
+            if(user == currentUser){
+                return index
+            }
+        }
+        return 0
+    }
+
     fun findEditTextValue(){
         playerTextFieldValue = when(uiSelectedPlayer == UIPLAYERSELECT.PLAYER1){
             true -> {if(newUser){
