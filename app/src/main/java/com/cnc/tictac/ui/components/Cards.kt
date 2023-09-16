@@ -474,7 +474,8 @@ fun NewUserCardButton(
     Column (
         modifier = modifier.clickable {
             viewModel.newUser = true
-            viewModel.playerTextFieldValue = viewModel.findEditTextValue()
+//            viewModel.playerTextFieldValue = viewModel.findEditTextValue()
+            viewModel.playerTextFieldValue
             viewModel.selectedAvatar = 0
             navController.navigate(Destination.UserDetailScreen.route)
         },

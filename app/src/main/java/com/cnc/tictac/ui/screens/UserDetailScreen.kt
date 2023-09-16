@@ -106,9 +106,6 @@ fun DisplayCompactUserDetailScreen (navController: NavHostController, viewModel:
                         false -> R.string.user_save_action
                     }),
                     navController = navController,
-                    destination = when(viewModel.newUser){
-                        true -> Destination.UserSelectScreen
-                        false -> Destination.ProfileScreen },
                     viewModel = viewModel,
                     event = TicTacEvent.SaveUser,
                     modifier = Modifier.fillMaxWidth(),
@@ -165,7 +162,6 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
                 }
 
                 // ELEMENT: Avatar select
-                // TODO: Make avatar selectable
                 ImageGridSingleSelect(
                     modifier = Modifier.fillMaxWidth(),
                     viewModel = viewModel,
@@ -189,9 +185,6 @@ fun DisplayDefaultUserDetailScreen (navController: NavHostController, viewModel:
                         false -> R.string.user_save_action
                     }),
                     navController = navController,
-                    destination = when(viewModel.newUser){
-                        true -> Destination.UserSelectScreen
-                        false -> Destination.ProfileScreen },
                     viewModel = viewModel,
                     event = TicTacEvent.SaveUser,
                     modifier = Modifier.fillMaxWidth()
