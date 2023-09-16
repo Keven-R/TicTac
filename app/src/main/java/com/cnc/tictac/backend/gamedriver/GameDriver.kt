@@ -407,6 +407,18 @@ class GameDriver(
         val draws_percent = draws / (wins + losses + draws) * 100
         return Triple("Wins: $wins ($wins_percent%)", "Draws: $draws ($draws_percent%)", "Losses $losses ($losses_percent%)")
     }
+
+    // Quick add by Keven to make a display string easier to get
+    fun getPlayerTotalGamesDisplayFromDatabase(player : HumanPlayer) : String{
+        Log.d(TAG, "Obtaining player total game stats from database.")
+        val losses = this.playerDAO.getLosses(player.playerID)
+        val wins = this.playerDAO.getWins(player.playerID)
+        val draws = this.playerDAO.getDraws(player.playerID)
+
+        val total = losses + wins + draws
+        Log.d("<GAME_DRIVER>", "${player.playerName} has a total of $total games.")
+        return "total games $total"
+    }
     /**********************************
      * getPlayerStatsRibbon()
      * Returns a sylistic representation of the wins, losses are draws of the player.

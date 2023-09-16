@@ -24,7 +24,6 @@ import com.cnc.tictac.ui.components.GameMenuButtonGroup
 import com.cnc.tictac.ui.components.GamePlayerCard
 import com.cnc.tictac.ui.system.DeviceInfo
 import com.cnc.tictac.ui.system.getDeviceInfo
-import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 @Composable
@@ -95,10 +94,10 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
                         modifier = Modifier,
                         isRowLayout = true,
 
-                        playerName = viewModel.player1,
+                        playerName = viewModel.player1Name,
                         playerAvatarResourceId = viewModel.player1Avatar,
                         playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
-                        isGameEnded = viewModel.gameEnded,
+                        isGameEnded = !viewModel.gameActive,
 
                         playerWinStatus = viewModel.player1WinStatus,
 
@@ -111,10 +110,10 @@ fun DisplayGameScreenLandscapeMobile(navController: NavHostController, viewModel
                         modifier = Modifier,
                         isRowLayout = true,
 
-                        playerName = viewModel.player2,
+                        playerName = viewModel.player2Name,
                         playerAvatarResourceId = viewModel.player2Avatar,
                         playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
-                        isGameEnded = viewModel.gameEnded,
+                        isGameEnded = !viewModel.gameActive,
 
                         playerWinStatus = viewModel.player2WinStatus,
 
@@ -187,10 +186,10 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
                         modifier = Modifier,
                         isRowLayout = true,
 
-                        playerName = viewModel.player1,
+                        playerName = viewModel.player1Name,
                         playerAvatarResourceId = viewModel.player1Avatar,
                         playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
-                        isGameEnded = viewModel.gameEnded,
+                        isGameEnded = !viewModel.gameActive,
 
                         playerWinStatus = viewModel.player1WinStatus,
 
@@ -203,10 +202,10 @@ fun DisplayGameScreenLandscape(navController: NavHostController, viewModel: TicT
                         modifier = Modifier,
                         isRowLayout = true,
 
-                        playerName = viewModel.player2,
+                        playerName = viewModel.player2Name,
                         playerAvatarResourceId = viewModel.player2Avatar,
                         playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
-                        isGameEnded = viewModel.gameEnded,
+                        isGameEnded = !viewModel.gameActive,
 
                         playerWinStatus = viewModel.player2WinStatus,
 
@@ -266,10 +265,10 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
                 modifier = Modifier.fillMaxWidth(),
                 isRowLayout = true,
 
-                playerName = viewModel.player1,
+                playerName = viewModel.player1Name,
                 playerAvatarResourceId = viewModel.player1Avatar,
                 playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
-                isGameEnded = viewModel.gameEnded,
+                isGameEnded = !viewModel.gameActive,
 
                 playerWinStatus = viewModel.player1WinStatus,
 
@@ -295,10 +294,10 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
                 modifier = Modifier.fillMaxWidth(),
                 isRowLayout = true,
 
-                playerName = viewModel.player2,
+                playerName = viewModel.player2Name,
                 playerAvatarResourceId = viewModel.player2Avatar,
                 playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
-                isGameEnded = viewModel.gameEnded,
+                isGameEnded = !viewModel.gameActive,
 
                 playerWinStatus = viewModel.player2WinStatus,
 
@@ -348,10 +347,10 @@ fun DisplayGameScreenPortraitMedium(navController: NavHostController, viewModel:
                     isRowLayout = true,
                     showTimer = false,
 
-                    playerName = viewModel.player1,
+                    playerName = viewModel.player1Name,
                     playerAvatarResourceId = viewModel.player1Avatar,
                     playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
-                    isGameEnded = viewModel.gameEnded,
+                    isGameEnded = !viewModel.gameActive,
 
                     playerWinStatus = viewModel.player1WinStatus,
 
@@ -365,10 +364,10 @@ fun DisplayGameScreenPortraitMedium(navController: NavHostController, viewModel:
                     inverse = true,
                     showTimer = false,
 
-                    playerName = viewModel.player2,
+                    playerName = viewModel.player2Name,
                     playerAvatarResourceId = viewModel.player2Avatar,
                     playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
-                    isGameEnded = viewModel.gameEnded,
+                    isGameEnded = !viewModel.gameActive,
 
                     playerWinStatus = viewModel.player2WinStatus,
 
@@ -429,10 +428,10 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
                 GamePlayerCard(
                     isRowLayout = true,
 
-                    playerName = viewModel.player1,
+                    playerName = viewModel.player1Name,
                     playerAvatarResourceId = viewModel.player1Avatar,
                     playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
-                    isGameEnded = viewModel.gameEnded,
+                    isGameEnded = !viewModel.gameActive,
 
                     playerWinStatus = viewModel.player1WinStatus,
 
@@ -445,10 +444,10 @@ fun DisplayGameScreenPortrait(navController: NavHostController, viewModel: TicTa
                     isRowLayout = true,
                     inverse = true,
 
-                    playerName = viewModel.player2,
+                    playerName = viewModel.player2Name,
                     playerAvatarResourceId = viewModel.player2Avatar,
                     playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
-                    isGameEnded = viewModel.gameEnded,
+                    isGameEnded = !viewModel.gameActive,
 
                     playerWinStatus = viewModel.player2WinStatus,
 

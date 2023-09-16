@@ -5,7 +5,11 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -46,42 +50,27 @@ sealed class Destination(val route: String){
  * Main activity for TicTac app
  */
 class MainActivity : ComponentActivity() {
+
+    private val viewModel by viewModels<TicTacViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras
+                ): T {
+                    return TicTacViewModel(applicationContext) as T
+                }
+            }
+        }
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.v(TAG, "MainActivity Created")
         super.onCreate(savedInstanceState)
         setContent {
             TicTacTheme {
-                val database = Room.databaseBuilder(
-                    applicationContext,
-                    PLAYER_ROOM_DATABASE::class.java, "player-database")
-                    .allowMainThreadQueries()
-                    .build()
-                val viewModel = viewModel<TicTacViewModel>()
-                viewModel.db = database
-                viewModel.gd = GameDriver(GameConfig(),database)
-
                 val navController = rememberNavController()
                 NavigationAppHost(navController, viewModel)
-
-                /* Generates Users on first run */
-                if(viewModel.gd!!.getPlayersFromDatabase().isEmpty()){
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Ryan",null,"O", R.drawable.avatar_8))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Jasmine",null,"O", R.drawable.avatar_1))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Keven",null,"O", R.drawable.avatar_6))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Sajib",null,"O", R.drawable.avatar_3))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Wendy",null,"O", R.drawable.avatar_5))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Debbie",null,"O", R.drawable.avatar_9))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Stuart",null,"O", R.drawable.avatar_2))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Jax",null,"O", R.drawable.avatar_4))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Sally",null,"O", R.drawable.avatar_7))
-                    viewModel.gd!!.addPlayerToDatabase(HumanPlayer("Kathy",null,"O", R.drawable.avatar_10))
-
-                    for (user: HumanPlayer? in viewModel.gd!!.getPlayersFromDatabase()){
-                        if (user != null) {
-                            viewModel.gd!!.updatePlayerStatsInDatabase(user,Random.nextInt(0, 10),Random.nextInt(0, 10),Random.nextInt(0, 10))
-                        }
-                    }
-                }
             }
         }
     }
