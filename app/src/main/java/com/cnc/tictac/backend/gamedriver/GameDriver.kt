@@ -183,9 +183,12 @@ class GameDriver(
     fun getBoardAsString() : Array<Array<String>>{
         Log.d(TAG, "Getting board as array string.")
         val board = this.getBoard()
-        val boardString = Array(board.getConstraints().first, { Array(board.getConstraints().second, { "" }) })
-        for(i in 0 .. board.getConstraints().first){
-            for(j in 0 .. board.getConstraints().second){
+        val constraint1 = board.getConstraints().second
+        val constraint2 = board.getConstraints().first
+        Log.d(TAG, "Board constraints are $constraint1, $constraint2")
+        val boardString = Array(constraint1, { Array(constraint2, { "" }) })
+        for(i in 0 until constraint1){
+            for(j in 0 until constraint2){
                 if(board.getBoardState()[i][j] != null) {
                     boardString[i][j] = board.getBoardState()[i][j]!!.playerIcon
                 } else {
