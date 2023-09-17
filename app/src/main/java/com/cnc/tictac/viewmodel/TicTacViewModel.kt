@@ -199,6 +199,10 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 player1DrawString = stats.second
                 player1LossesString = stats.third
                 player1TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player)
+
+                // RYAN:
+                gd.setFirstPlayer(player1)
+
             }
             UIPLAYERSELECT.PLAYER2 -> {
                 player2 = player
@@ -211,6 +215,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 player2DrawString = stats.second
                 player2LossesString = stats.third
                 player2TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player)
+
+                // RYAN:
+                gd.setFirstPlayer(player2)
             }
         }
     }
