@@ -15,6 +15,8 @@ import com.cnc.tictac.backend.gamedriver.GameConfig
 import com.cnc.tictac.backend.gamedriver.GameDriver
 import com.cnc.tictac.backend.system.AIPlayer
 import com.cnc.tictac.backend.system.HumanPlayer
+import com.cnc.tictac.backend.system.Player
+import com.cnc.tictac.backend.system.WinCondition
 import kotlin.random.Random
 
 private const val TAG = "TicTacViewModel"
@@ -32,7 +34,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
         R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
 
     /* Backend Variables */
-    var placeHolderHumanPlayer: HumanPlayer = HumanPlayer()
+    private var placeHolderHumanPlayer: Player = HumanPlayer()
+    private var placeHolderAIPlayer: Player = AIPlayer()
     var gd : GameDriver
     var db : PLAYER_ROOM_DATABASE
 
@@ -74,6 +77,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var winConditionSelection by mutableIntStateOf(0) // 0 = 3, 1 = 4, 2 = 5
     var winSelectable by mutableStateOf(arrayOf(false, true, true)) // Controls button selection
     var undoAvailable by mutableStateOf(false)
+    var singlePlayerGame by mutableStateOf(true)
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
 
     /* UI States*/
@@ -127,6 +131,14 @@ class TicTacViewModel(context: Context) : ViewModel(){
     private fun gameStart(){
         Log.v(TAG, TYPE+"StartGame")
 
+        if(player1Turn){
+            gd.setFirstPlayer(player1)
+            gd.setSecondPlayer(player2)
+        }else{
+            gd.setFirstPlayer(player2)
+            gd.setSecondPlayer(player1)
+        }
+
         // Default values
         var boardSize = 3
         var winSize = 3
@@ -169,16 +181,18 @@ class TicTacViewModel(context: Context) : ViewModel(){
     private fun newSinglePlayerGame(){
         Log.v(TAG, TYPE+"NewSinglePlayerGame")
 
+        player2 = placeHolderAIPlayer
         player2Name = "AI"
 
-        gd.setFirstPlayer(player1)
-        gd.setSecondPlayer(AIPlayer())
+        singlePlayerGame = true
     }
 
     private fun newMultiPlayerGame(){
         Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")
 
         if(player2 == users[0]) { player2Name = player2.playerName}
+
+        singlePlayerGame = false
 
         gd.setFirstPlayer(player1)
         gd.setSecondPlayer(player2)
@@ -199,10 +213,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 player1DrawString = stats.second
                 player1LossesString = stats.third
                 player1TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player)
-
-                // RYAN:
-                gd.setFirstPlayer(player1)
-
             }
             UIPLAYERSELECT.PLAYER2 -> {
                 player2 = player
@@ -215,9 +225,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 player2DrawString = stats.second
                 player2LossesString = stats.third
                 player2TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player)
-
-                // RYAN:
-                gd.setFirstPlayer(player2)
             }
         }
     }
@@ -249,16 +256,46 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun markerPlaced(position: Int){
         val position2D = positionConverter(position)
-
         Log.v(TAG, TYPE+"MarkerPlaced: UIPosition = $position, GameDriverPosition = ${position2D.x},${position2D.y}")
 
         var wincondition = gd.playMove(position2D.x,position2D.y)
 
+        if (wincondition == WinCondition.WIN){
+            // Do stuff maybe use when
+            val board2D = gd.getBoardAsString()
+            boardConvertAndSet(board2D)
+            print2D(board2D)
+            Log.v("Test", wincondition.toString())
+            return
+        }else{
+            swapPlayer()
+        }
+
+        if(player2 == placeHolderAIPlayer){
+            wincondition = gd.playMove()
+        }
+
+        if (wincondition == WinCondition.WIN){
+            // Do stuff maybe use when
+            val board2D = gd.getBoardAsString()
+            boardConvertAndSet(board2D)
+            print2D(board2D)
+            Log.v("Test", wincondition.toString())
+            return
+        }else{
+            swapPlayer()
+        }
+
         val board2D = gd.getBoardAsString()
-
         print2D(board2D)
-
+        boardConvertAndSet(board2D)
         Log.v("Test", wincondition.toString())
+
+        val moveUndoAvailable = boardState.find { move -> "x".equals(move) || "o".equals(move) }
+
+        if (moveUndoAvailable != null && !singlePlayerGame){
+            undoAvailable = true
+        }
 
 //        Log.v("Test", "BoardString: ${board2D.joinToString()}")
 
@@ -272,10 +309,19 @@ class TicTacViewModel(context: Context) : ViewModel(){
      ** Helper functions **
      *******************************/
 
+    private fun swapPlayer(){
+        if(player1Turn){
+            player1Turn = false
+            player2Turn = true
+        }else{
+            player1Turn = true
+            player2Turn = false
+        }
+    }
+
     private fun print2D(arr:Array<Array<String>>){
         for (i in arr.indices) {
             Log.v("Test", "BoardString: ${arr[i].contentToString()}")
-//            println(arr[i].contentToString())
         }
         Log.v("Test", "")
     }
