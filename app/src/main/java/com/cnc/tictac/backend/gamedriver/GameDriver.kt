@@ -399,13 +399,16 @@ class GameDriver(
      */
     fun getPlayerDisplayStatsFromDatabase(player : HumanPlayer) : Triple<String, String, String>{
         Log.d(TAG, "Obtaining player game stats from database as string")
-        val losses = this.playerDAO.getLosses(player.playerID)
-        val wins = this.playerDAO.getWins(player.playerID)
-        val draws = this.playerDAO.getDraws(player.playerID)
-        val losses_percent = losses / (wins + losses + draws) * 100
-        val wins_percent = wins / (wins + losses + draws) * 100
-        val draws_percent = draws / (wins + losses + draws) * 100
-        return Triple("Wins: $wins ($wins_percent%)", "Draws: $draws ($draws_percent%)", "Losses $losses ($losses_percent%)")
+        val losses  = this.playerDAO.getLosses(player.playerID) as Float
+        val wins    = this.playerDAO.getWins(player.playerID) as Float
+        val draws   = this.playerDAO.getDraws(player.playerID) as Float
+        val games   = wins + draws + losses
+        val losses_percent  : Float = (losses) / (games) * 100
+        val wins_percent    : Float = (wins) / (games) * 100
+        val draws_percent   : Float = (draws) / (games) * 100
+        return Triple("Wins: $wins ($wins_percent %)",
+            "Draws: $draws ($draws_percent %)",
+            "Losses $losses ($losses_percent %)")
     }
     /**********************************
      * getPlayerStatsRibbon()
@@ -415,12 +418,14 @@ class GameDriver(
      *********************************/
     fun getPlayerStatsRibbonFromDatabase(player : HumanPlayer) : String {
         var return_string = ""
-        val losses  = this.playerDAO.getLosses(player.playerID)
-        val wins    = this.playerDAO.getWins(player.playerID)
-        val draws   = this.playerDAO.getDraws(player.playerID)
-        val losses_fraction = losses / (wins + losses + draws) * 10
-        val wins_fraction   = wins   / (wins + losses + draws) * 10
-        val draws_fraction  = draws  / (wins + losses + draws) * 10
+        val losses  = this.playerDAO.getLosses(player.playerID) as Float
+        val wins    = this.playerDAO.getWins(player.playerID) as Float
+        val draws   = this.playerDAO.getDraws(player.playerID) as Float
+        val games   = wins + draws + losses
+        val losses_fraction : Float = losses / games * 10
+        val wins_fraction   : Float = wins   / games * 10
+        val draws_fraction  : Float = draws  / games * 10
+        Log.d(TAG, "Displaying $losses_fraction Os, $draws_fraction /s, $wins_fraction Xs")
         for(i in 0 .. wins_fraction as Int)
             return_string += "X"
         for(i in 0 .. draws_fraction as Int)
