@@ -249,7 +249,7 @@ class GameDriver(
                 val aiX = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).first
                 val aiY = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).second
                 Log.d(TAG, "AIPlayer is placing a puck at $aiX, $aiY")
-            }while(!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!))
+            }while(!this.board.placePuck(x = aiX, y = aiY, currentPlayer = this.player!!))
             // Random plays will continue being made until a square without a puck is found.
             Log.d(TAG, "Searching win condition for AIPlayer")
             return this.board.searchWinCondition(this.player!!)
