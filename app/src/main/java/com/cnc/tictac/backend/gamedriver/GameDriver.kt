@@ -225,7 +225,7 @@ class GameDriver(
      *  In order to test if the current player is AI without removing it, .peek() is used.
      *  Returns a WinCondition enum attribute.
      */
-    fun playMove(x : Int =  0, y : Int =  0) : WinCondition? {
+    fun playMove(x : Int? =  null, y : Int? =  null) : WinCondition? {
         Log.d(TAG, "Placing a puck at $x, $y.")
         /** Get current player **/
         this.player = this.playerArray[currentPlayer]
@@ -239,10 +239,14 @@ class GameDriver(
         /** Check if player is AI and get new coordinates if AI **/
         if(this.player is AIPlayer){
             do {
-                val aiX = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).first
-                val aiY = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).second
+                var aiX : Int? = x
+                var aiY : Int? = y
+                if(x == null || y == null) {
+                    aiX = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).first
+                    aiY = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).second
+                }
                 Log.d(TAG, "AIPlayer is placing a puck at $aiX, $aiY")
-            }while(!this.board.placePuck(x = aiX, y = aiY, currentPlayer = this.player!!))
+            }while(!this.board.placePuck(x = aiX!!, y = aiY!!, currentPlayer = this.player!!))
             // Random plays will continue being made until a square without a puck is found.
             Log.d(TAG, "Searching win condition for AIPlayer")
             /** Toggle current player **/
@@ -253,10 +257,10 @@ class GameDriver(
                 this.currentPlayer = 0
             }
             return this.board.searchWinCondition(this.player!!)
-        } else { /** Placing puck if HumanPlayer **/
+        } else if(this.player is HumanPlayer && x != null && y != null) { /** Placing puck if HumanPlayer **/
             /** placing a puck **/
             Log.d(TAG, "HumanPlayer is placing a puck at $x, $y")
-            if (!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!)) {
+            if (!this.board.placePuck(x = x!!, y = y!!, currentPlayer = this.player!!)) {
                 Log.e(TAG, "Puck is placed on occupied square.")
                 return null
             }
@@ -267,6 +271,8 @@ class GameDriver(
             }
             Log.d(TAG, "Searching win condition for HumanPlayer")
             return this.board.searchWinCondition(this.player!!)
+        } else {
+            return null
         }
     }
     /**********************************
