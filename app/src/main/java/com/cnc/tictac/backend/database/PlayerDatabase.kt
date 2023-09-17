@@ -45,7 +45,7 @@ interface PLAYER_DAO {
     fun selectPlayerbyID(searchID : Int?): HumanPlayer?
     // get wins, losses, draws
     @Query("SELECT obj FROM $TABLE_NAME ORDER BY wins DESC")
-    fun getLeaderboard(newDraws : Int, player : HumanPlayer) : List<HumanPlayer?>
+    fun getLeaderboard() : List<HumanPlayer?>
     @Query("SELECT wins FROM $TABLE_NAME WHERE id = :playerID")
     fun getWins(playerID : Int?) : Int
     @Query("SELECT losses FROM $TABLE_NAME WHERE id = :playerID")

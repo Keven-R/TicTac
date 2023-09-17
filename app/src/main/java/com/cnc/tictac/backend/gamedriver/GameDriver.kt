@@ -51,6 +51,7 @@ private const val TAG = "Game Driver"
  *          (c) getPlayerStatsFromDatabase
  *          (d) getPlayerDisplayStatsFromDatabase: returns player stats in three neatly formatted strings
  *          (e) getPlayerStatsRibbonFromDatabase: "//xxxoooo" formatted string
+ *          (f) getLeaderboard : returns list of players in descending order of wins.
  */
 
 class GameDriver(
@@ -406,9 +407,9 @@ class GameDriver(
         val losses_percent  : Float = (losses) / (games) * 100
         val wins_percent    : Float = (wins) / (games) * 100
         val draws_percent   : Float = (draws) / (games) * 100
-        return Triple("Wins: $wins ($wins_percent %)",
-            "Draws: $draws ($draws_percent %)",
-            "Losses $losses ($losses_percent %)")
+        return Triple("wins: $wins ($wins_percent %)",
+            "draws: $draws ($draws_percent %)",
+            "losses $losses ($losses_percent %)")
     }
     /**********************************
      * getPlayerStatsRibbon()
@@ -433,5 +434,8 @@ class GameDriver(
         for(i in 0 .. losses_fraction as Int)
             return_string += "O"
         return return_string
+    }
+    fun getLeaderboard() : List<HumanPlayer?> {
+        return this.playerDAO.getLeaderboard()
     }
 }
