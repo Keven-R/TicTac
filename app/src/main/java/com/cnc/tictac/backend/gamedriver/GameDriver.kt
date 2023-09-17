@@ -292,6 +292,11 @@ class GameDriver(
      */
     fun undoPreviousMove(){
         Log.d(TAG, "Game driver is reversing previous move.")
+        if(this.currentPlayer == 0){
+            this.currentPlayer = 1
+        } else {
+            this.currentPlayer = 0
+        }
         this.board.undoPreviousMove()
     }
     /**___________________________________
