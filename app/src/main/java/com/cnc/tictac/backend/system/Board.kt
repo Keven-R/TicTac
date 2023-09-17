@@ -61,7 +61,7 @@ class Board(
             } else {
                 false
             }
-        } catch (e : ArrayIndexOutOfBoundsException){
+        } catch (e : Exception){
             false
         }
     }

@@ -181,6 +181,7 @@ class GameDriver(
         return this.board
     }
     fun getBoardAsString() : Array<Array<String>>{
+        Log.d(TAG, "Getting board as array string.")
         val board = this.getBoard()
         val boardString = Array(board.getConstraints().first, { Array(board.getConstraints().second, { "" }) })
         for(i in 0 .. board.getConstraints().first){
@@ -220,7 +221,7 @@ class GameDriver(
      *  In order to test if the current player is AI without removing it, .peek() is used.
      *  Returns a WinCondition enum attribute.
      */
-    fun playMove(x : Int =  0, y : Int =  0) : WinCondition {
+    fun playMove(x : Int =  0, y : Int =  0) : WinCondition? {
         Log.d(TAG, "Placing a puck at $x, $y.")
         /** Toggle current player **/
         Log.d(TAG, "Toggling current player from ${this.currentPlayer}")
@@ -253,8 +254,8 @@ class GameDriver(
             /** placing a puck **/
             Log.d(TAG, "HumanPlayer is placing a puck at $x, $y")
             if (!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!)) {
-                Log.e(TAG, "Exception thrown: Puck is placed on occupied square.")
-                throw Exception("Puck placed on occupied square")
+                Log.e(TAG, "Puck is placed on occupied square.")
+                return null
             }
             Log.d(TAG, "Searching win condition for HumanPlayer")
             return this.board.searchWinCondition(this.player!!)
