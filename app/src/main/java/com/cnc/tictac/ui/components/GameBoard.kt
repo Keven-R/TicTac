@@ -94,7 +94,7 @@ fun GameBoard (
                         viewModel = viewModel,
                         win = if (winIndices.isNotEmpty()) winIndices[i] else false,
                         content = boardContent[i],
-                        // Negative to denote transposed 1D position (since it's horizontal grid)
+                        // Negative to denote transposed 1D position
                         position = -i
                     )
                 }
