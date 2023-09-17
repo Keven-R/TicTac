@@ -425,9 +425,9 @@ class GameDriver(
         val lossesPercent  : Float = (losses) / (games) * 100
         val winsPercent    : Float = (wins) / (games) * 100
         val drawsPercent   : Float = (draws) / (games) * 100
-        return Triple("wins: ${wins.toInt()} (${winsPercent.toString().substring(0,4)} %)",
-            "draws: ${draws.toInt()} (${drawsPercent.toString().substring(0,4)} %)",
-            "losses ${losses.toInt()} (${lossesPercent.toString().substring(0,4)} %)")
+        return Triple("wins: ${wins.toInt()} (${String.format("%.2f", winsPercent)} %)",
+            "draws: ${draws.toInt()} (${String.format("%.2f", drawsPercent)} %)",
+            "losses ${losses.toInt()} (${String.format("%.2f", lossesPercent)} %)")
     }
 
     // Quick add by Keven to make a display string easier to get
