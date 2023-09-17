@@ -89,15 +89,13 @@ fun GameBoard (
             rows = GridCells.Fixed(count = boardSize),
             content = {
                 items(boardSize * boardSize) { i ->
-                    val row = 1
-                    val col = 1
-
                     BoardCell(
                         modifier = cellModifier.fillMaxSize(),
                         viewModel = viewModel,
                         win = if (winIndices.isNotEmpty()) winIndices[i] else false,
                         content = boardContent[i],
-                        position = i
+                        // Negative to denote transposed 1D position
+                        position = -i
                     )
                 }
             }
