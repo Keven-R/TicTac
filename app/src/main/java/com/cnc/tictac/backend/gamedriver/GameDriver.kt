@@ -452,16 +452,16 @@ class GameDriver(
         val wins    = this.playerDAO.getWins(player.playerID).toFloat()
         val draws   = this.playerDAO.getDraws(player.playerID).toFloat()
         val games   = wins + draws + losses
-        val lossesFraction : Float = losses / games * 10
-        val winsFraction   : Float = wins   / games * 10
-        val drawsFraction  : Float = draws  / games * 10
+        val lossesFraction : Int = round(losses / games * 10)
+        val winsFraction   : Int = round(wins   / games * 10)
+        val drawsFraction  : Int = round(draws  / games * 10)
         Log.d(TAG, "Displaying $lossesFraction Os, $drawsFraction /s, $winsFraction Xs")
-        for(i in 0 ..winsFraction.toInt())
-            returnString += "X"
-        for(i in 0 .. drawsFraction.toInt())
+        for(i in 0 ..winsFraction-1)
+            returnString += "o"
+        for(i in 0 .. drawsFraction-1)
             returnString += "/"
-        for(i in 0 .. lossesFraction.toInt())
-            returnString += "O"
+        for(i in 0 .. lossesFraction-1)
+            returnString += "x"
         return returnString
     }
     fun getLeaderboard() : List<HumanPlayer?> {
