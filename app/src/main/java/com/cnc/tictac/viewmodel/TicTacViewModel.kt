@@ -1,6 +1,7 @@
 package com.cnc.tictac.viewmodel
 
 import android.content.Context
+import android.graphics.Point
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -238,11 +239,50 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun timerStart(){Log.v(TAG, TYPE+"TimerStart")}
     private fun timerStop(){Log.v(TAG, TYPE+"TimerStop")}
-    private fun markerPlaced(position: Int){Log.v(TAG, TYPE+"MarkerPlaced: Position = " + position)}
+
+    private fun markerPlaced(position: Int){
+        val position2D = positionConverter(position)
+
+        Log.v(TAG, TYPE+"MarkerPlaced: UIPosition = $position, GameDriverPosition = ${position2D.x},${position2D.y}")
+
+        gd.playMove(position2D.x,position2D.y) ?: return
+
+        val board2D = gd.getBoardAsString()
+
+        print2D(board2D)
+
+//        Log.v("Test", "BoardString: ${board2D.joinToString()}")
+
+//        boardConvertAndSet(board2D)
+
+        // Get current player
+        //switch
+    }
 
     /********************************
      ** Helper functions **
      *******************************/
+
+    private fun print2D(arr:Array<Array<String>>){
+        for (i in arr.indices) {
+            Log.v("Test", "BoardString: ${arr[i].contentToString()}")
+//            println(arr[i].contentToString())
+        }
+        Log.v("Test", "")
+    }
+    private fun positionConverter(position1D: Int): Point {
+        val position2D = Point(0,0)
+        position2D.x = position1D % getBoardSize()
+        position2D.y = position1D / getBoardSize()
+        return position2D
+    }
+
+    private fun boardConvertAndSet(board2D: Array<Array<String>>){
+        val board1D = board2D.reduce { acc, ints -> acc + ints  }
+
+        Log.v("Test", "BoardString: ${board1D.joinToString()}")
+        boardState = board1D
+    }
     fun getMarkerSymbol(stateMarker: Int): String{
         return if(stateMarker == 0){
             "X"
