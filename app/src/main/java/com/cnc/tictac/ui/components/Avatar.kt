@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
+import androidx.compose.ui.layout.ContentScale.Companion.FillHeight
 import androidx.compose.ui.layout.ContentScale.Companion.FillWidth
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +49,8 @@ fun Avatar(
         contentDescription = stringResource(id = contentDescriptionId),
         modifier = imageModifier,
         colorFilter = ColorFilter.tint(recolor),
-        contentScale = FillWidth
+        contentScale = FillWidth,
+
     )
 }
 /* AvatarBlock

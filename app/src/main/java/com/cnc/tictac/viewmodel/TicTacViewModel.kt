@@ -332,7 +332,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         val position2D = Point(0,0)
         position2D.x = position1D % getBoardSize()
         position2D.y = position1D / getBoardSize()
-
+//
 //        if (absolutePosition1D >= 0) {
 //            position2D.x = absolutePosition1D % getBoardSize()
 //            position2D.y = absolutePosition1D / getBoardSize()

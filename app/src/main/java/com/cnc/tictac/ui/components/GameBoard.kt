@@ -6,7 +6,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.cnc.tictac.viewmodel.TicTacEvent
@@ -95,7 +98,7 @@ fun GameBoard (
                         win = if (winIndices.isNotEmpty()) winIndices[i] else false,
                         content = boardContent[i],
                         // Negative to denote transposed 1D position
-                        position = -i
+                        position = i
                     )
                 }
             }
@@ -131,6 +134,7 @@ fun BoardCell (
             .border(1.dp, borderColor, CircleShape)
             .background(bgColor)
             .aspectRatio(1f)
+            .padding(8.dp)
             .clickable { viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) },
         contentAlignment = Alignment.Center
     ) {
@@ -140,11 +144,13 @@ fun BoardCell (
                     avatarResourceId = if (win) images.marker_o_win else images.marker_o_default,
                     onPrimaryColour = !win,
                     color = contentColor,
+                    imageModifier = Modifier.fillMaxSize().padding(8.dp),
                 )
             } else {
                 Avatar(
                     avatarResourceId = if (win) images.marker_x_win else images.marker_x_default,
                     onPrimaryColour = !win,
+                    imageModifier = Modifier.fillMaxSize().padding(8.dp),
                     color = contentColor,
                 )
             }

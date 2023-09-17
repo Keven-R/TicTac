@@ -55,7 +55,7 @@ private const val TAG = "Game Driver"
  *          (f) getLeaderboard : returns list of players in descending order of wins.
  */
 
-sealed class GameDriver(
+ class GameDriver(
     config : GameConfig = GameConfig(),
     db : PLAYER_ROOM_DATABASE?
 ) {
