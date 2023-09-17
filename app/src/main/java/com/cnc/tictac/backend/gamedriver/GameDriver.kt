@@ -55,7 +55,7 @@ private const val TAG = "Game Driver"
  *          (f) getLeaderboard : returns list of players in descending order of wins.
  */
 
-sealed class GameDriver(
+class GameDriver(
     config : GameConfig = GameConfig(),
     db : PLAYER_ROOM_DATABASE?
 ) {
@@ -226,7 +226,7 @@ sealed class GameDriver(
      *  In order to test if the current player is AI without removing it, .peek() is used.
      *  Returns a WinCondition enum attribute.
      */
-    fun playMove(x : Int? =  null, y : Int? =  null) : WinCondition? {
+    fun playMove(x : Int? =  null, y : Int? =  null) : Triple<WinCondition, Pair<Int, Int>?, Pair<Int, Int>?>? {
         Log.d(TAG, "Placing a puck at $x, $y.")
         /** Get current player **/
         this.player = this.playerArray[currentPlayer]
