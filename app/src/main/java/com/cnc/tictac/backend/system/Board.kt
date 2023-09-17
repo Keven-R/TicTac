@@ -91,7 +91,7 @@ class Board(
      *  Modified: 23/08... Allows searching for DRAWS now. Modified output to be an enum, reduces
      *  errors associated with using strings.
      */
-    fun searchWinCondition(currentPlayer : Player) : WinCondition{
+    fun searchWinCondition(currentPlayer : Player) : Triple<WinCondition, Pair<Int, Int>?, Pair<Int, Int>?>{
         // Convolutional templates for calculation
         val convVertical = Array(this.minimumWin, { Array(1, {1}) })
         val convHorisontal = Array(1, { Array(this.minimumWin, {1}) })
@@ -109,15 +109,46 @@ class Board(
         val convolutionDiagonal1    = positionMap.convolution2D(convDiagonal1)
         val convolutionDiagonal2    = positionMap.convolution2D(convDiagonal2)
 
-        return if(Arrays.stream(convolutionVertical).anyMatch   { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
-            || Arrays.stream(convolutionHorisontal).anyMatch    { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
-            || Arrays.stream(convolutionDiagonal1).anyMatch     { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
-            || Arrays.stream(convolutionDiagonal2).anyMatch     { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} })
-            WinCondition.WIN
-        else if(this.movesMade == this.width * this.height)
-            WinCondition.DRAW
-        else
-            WinCondition.NO_WIN
+        val vertMatch = Arrays.stream(convolutionVertical).anyMatch      { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
+        val horiMatch = Arrays.stream(convolutionHorisontal).anyMatch    { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
+        val dia1Match = Arrays.stream(convolutionDiagonal1).anyMatch     { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
+        val dia2Match = Arrays.stream(convolutionDiagonal2).anyMatch     { a -> Arrays.stream(a).anyMatch { n -> n == this.minimumWin} }
+
+        if(vertMatch){
+            val locale = findIndex(positionMap, this.minimumWin)!!
+            val localeMinor = Pair(locale.first - this.minimumWin/2, locale.second)
+            val localeMajor = Pair(locale.first + this.minimumWin/2, locale.second)
+            return Triple(WinCondition.WIN, localeMinor, localeMajor)
+        } else if(horiMatch){
+            val locale = findIndex(positionMap, this.minimumWin)!!
+            val localeMinor = Pair(locale.first, locale.second - this.minimumWin/2)
+            val localeMajor = Pair(locale.first, locale.second + this.minimumWin/2)
+            return Triple(WinCondition.WIN, localeMinor, localeMajor)
+        } else if(dia1Match){
+            val locale = findIndex(positionMap, this.minimumWin)!!
+            val localeMinor = Pair(locale.first - this.minimumWin/2, locale.second - this.minimumWin/2)
+            val localeMajor = Pair(locale.first + this.minimumWin/2, locale.second + this.minimumWin/2)
+            return Triple(WinCondition.WIN, localeMinor, localeMajor)
+        } else if(dia2Match){
+            val locale = findIndex(positionMap, this.minimumWin)!!
+            val localeMinor = Pair(locale.first - this.minimumWin/2, locale.second + this.minimumWin/2)
+            val localeMajor = Pair(locale.first + this.minimumWin/2, locale.second - this.minimumWin/2)
+            return Triple(WinCondition.WIN, localeMinor, localeMajor)
+        } else if(this.movesMade == this.width * this.height){
+            return Triple(WinCondition.DRAW, null, null)
+        } else {
+            return Triple(WinCondition.NO_WIN, null, null)
+        }
+    }
+    private fun findIndex(arr : Array<Array<Int>>, item : Int) : Pair<Int, Int>? {
+        for (i in arr.indices) {
+            for(j in arr[0].indices) {
+                if (arr[i][j] == item) {
+                    return Pair(i, j)
+                }
+            }
+        }
+        return null
     }
     /** Convolution2D
      * ---------------

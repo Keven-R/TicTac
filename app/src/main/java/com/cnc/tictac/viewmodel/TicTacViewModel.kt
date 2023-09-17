@@ -261,7 +261,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
         var wincondition = gd.playMove(position2D.x,position2D.y)
 
-        if (wincondition == WinCondition.WIN){
+        if (wincondition?.first == WinCondition.WIN){
             // Do stuff maybe use when
             val board2D = gd.getBoardAsString()
             boardConvertAndSet(board2D)
@@ -276,7 +276,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             wincondition = gd.playMove()
         }
 
-        if (wincondition == WinCondition.WIN){
+        if (wincondition?.first == WinCondition.WIN){
             // Do stuff maybe use when
             val board2D = gd.getBoardAsString()
             boardConvertAndSet(board2D)
