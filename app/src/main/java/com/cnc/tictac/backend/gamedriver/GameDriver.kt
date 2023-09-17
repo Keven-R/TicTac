@@ -55,7 +55,7 @@ private const val TAG = "Game Driver"
  *          (f) getLeaderboard : returns list of players in descending order of wins.
  */
 
-class GameDriver(
+sealed class GameDriver(
     config : GameConfig = GameConfig(),
     db : PLAYER_ROOM_DATABASE?
 ) {
@@ -292,6 +292,11 @@ class GameDriver(
      */
     fun undoPreviousMove(){
         Log.d(TAG, "Game driver is reversing previous move.")
+        if(this.currentPlayer == 0){
+            this.currentPlayer = 1
+        } else {
+            this.currentPlayer = 0
+        }
         this.board.undoPreviousMove()
     }
     /**___________________________________
@@ -426,11 +431,10 @@ class GameDriver(
         val lossesPercent  : Int = round((losses) / (games) * 100)
         val winsPercent    : Int = round((wins) / (games) * 100)
         val drawsPercent   : Int = round((draws) / (games) * 100)
-        return Triple("wins: ${wins.toInt()} (${winsPercent.toString()}%)",
-            "draws: ${draws.toInt()} (${drawsPercent.toString()}%)",
-            "losses: ${losses.toInt()} (${lossesPercent.toString()}%)")
+        return Triple("wins: ${wins.toInt()} (${winsPercent}%)",
+            "draws: ${draws.toInt()} (${drawsPercent}%)",
+            "losses: ${losses.toInt()} (${lossesPercent}%)")
     }
-
     // Quick add by Keven to make a display string easier to get
     fun getPlayerTotalGamesDisplayFromDatabase(player : HumanPlayer) : String{
         Log.d(TAG, "Obtaining player total game stats from database.")
@@ -439,7 +443,7 @@ class GameDriver(
         val draws = this.playerDAO.getDraws(player.playerID)
         val total = losses + wins + draws
         Log.d(TAG, "${player.playerName} has a total of $total games.")
-        return "total games: $total"
+        return "total games $total"
     }
     /**********************************
      * getPlayerStatsRibbon()

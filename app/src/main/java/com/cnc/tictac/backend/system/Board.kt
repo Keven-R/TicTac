@@ -96,7 +96,7 @@ class Board(
         val convVertical = Array(this.minimumWin, { Array(1, {1}) })
         val convHorisontal = Array(1, { Array(this.minimumWin, {1}) })
         val convDiagonal1 = Array(this.minimumWin, {index1 -> Array(this.minimumWin, {index2 -> if(index1 == index2){ 1 } else{ 0 } })})
-        val convDiagonal2 = Array(this.minimumWin, {index1 -> Array(this.minimumWin, {index2 -> if((this.width-1 - index1) == index2){ 1 } else{ 0 } })})
+        val convDiagonal2 = Array(this.minimumWin, {index1 -> Array(this.minimumWin, {index2 -> if((this.minimumWin-1 - index1) == index2){ 1 } else{ 0 } })})
 
 
         val positionMap = Array(this.boardState.size, { Array<Int>(this.boardState[0].size, { 0 }) })
