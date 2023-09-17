@@ -208,6 +208,7 @@ class GameDriver(
         return this.playerArray.toList()
     }
     fun getPlayerArray() : Array<Player?> {
+        Log.d(TAG, "Player array is being returned.")
         return this.playerArray
     }
     /**___________________________________
@@ -235,14 +236,13 @@ class GameDriver(
         }
         /** Get current player **/
         this.player = this.playerArray[currentPlayer]
-
+        Log.d(TAG, "Current player is ${this.player?.playerName} : ${this.player?.playerIcon}")
         /** Debugging output **/
         when (this.player) {
             is HumanPlayer -> { Log.d(TAG, "Adding HumanPlayer to game.") }
             is AIPlayer -> { Log.d(TAG, "Adding AIPlayer to game.") }
             else -> { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
         }
-
         /** Check if player is AI and get new coordinates if AI **/
         if(this.player is AIPlayer){
             do {
@@ -253,7 +253,7 @@ class GameDriver(
             // Random plays will continue being made until a square without a puck is found.
             Log.d(TAG, "Searching win condition for AIPlayer")
             return this.board.searchWinCondition(this.player!!)
-        } else {
+        } else { /** Placing puck if HumanPlayer **/
             /** placing a puck **/
             Log.d(TAG, "HumanPlayer is placing a puck at $x, $y")
             if (!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!)) {
