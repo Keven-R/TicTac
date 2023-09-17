@@ -423,12 +423,12 @@ class GameDriver(
         val wins    = this.playerDAO.getWins(player.playerID).toFloat()
         val draws   = this.playerDAO.getDraws(player.playerID).toFloat()
         val games   = wins + draws + losses
-        val lossesPercent  : Float = (losses) / (games) * 100
-        val winsPercent    : Float = (wins) / (games) * 100
-        val drawsPercent   : Float = (draws) / (games) * 100
-        return Triple("wins: ${wins.toInt()} (${String.format("%.2f", winsPercent)} %)",
-            "draws: ${draws.toInt()} (${String.format("%.2f", drawsPercent)} %)",
-            "losses: ${losses.toInt()} (${String.format("%.2f", lossesPercent)} %)")
+        val lossesPercent  : Int = round((losses) / (games) * 100)
+        val winsPercent    : Int = round((wins) / (games) * 100)
+        val drawsPercent   : Int = round((draws) / (games) * 100)
+        return Triple("wins: ${wins.toInt()} (${winsPercent.toString()}%)",
+            "draws: ${draws.toInt()} (${drawsPercent.toString()}%)",
+            "losses: ${losses.toInt()} (${lossesPercent.toString()}%)")
     }
 
     // Quick add by Keven to make a display string easier to get
