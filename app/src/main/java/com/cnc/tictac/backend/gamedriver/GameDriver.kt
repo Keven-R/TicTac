@@ -258,6 +258,11 @@ class GameDriver(
             Log.d(TAG, "HumanPlayer is placing a puck at $x, $y")
             if (!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!)) {
                 Log.e(TAG, "Puck is placed on occupied square.")
+                if(this.currentPlayer == 0){
+                    this.currentPlayer = 1
+                } else {
+                    this.currentPlayer = 0
+                }
                 return null
             }
             Log.d(TAG, "Searching win condition for HumanPlayer")
