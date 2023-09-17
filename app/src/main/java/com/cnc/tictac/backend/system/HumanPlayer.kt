@@ -26,18 +26,13 @@ class HumanPlayer(
         val random = (0..1000).random()
         this.playerID = random + intRep
     }
-
     override fun toString(): String {
         return "${this.playerName}: ${this.playerID}"
     }
     override fun copy() : Player {
         return HumanPlayer(playerName, playerID, playerIcon, playerAvatar)
     }
-
-    override fun equals(player : Player?) : Boolean {
-        if (player?.playerName == this.playerName && player?.playerID == this.playerID) {
-            return true
-        }
-        return false
+    override fun equals(player : Any?) : Boolean {
+        return (player is Player) && (player.playerName == this.playerName && player.playerID == this.playerID)
     }
 }

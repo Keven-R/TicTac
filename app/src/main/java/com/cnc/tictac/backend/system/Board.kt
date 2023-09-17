@@ -52,17 +52,17 @@ class Board(
      *  returned.
      */
     fun placePuck(currentPlayer : Player, x : Int, y : Int) : Boolean{
-        try {
+        return try {
             if(this.boardState[x][y] == null){
                 this.boardState[x][y] = currentPlayer
                 boardHistory.push(this.boardState.deepCopy())
                 this.movesMade ++
-                return true
+                true
             } else {
-                return false
+                false
             }
         } catch (e : ArrayIndexOutOfBoundsException){
-            return false
+            false
         }
     }
     /** undoPreviousMove (void)

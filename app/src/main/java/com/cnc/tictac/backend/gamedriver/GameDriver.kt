@@ -394,7 +394,7 @@ class GameDriver(
         val losses = this.playerDAO.getLosses(player.playerID)
         val wins = this.playerDAO.getWins(player.playerID)
         val draws = this.playerDAO.getDraws(player.playerID)
-        Log.d("<GAME_DRIVER>", "${player.playerName} has stats wins = $wins, looses = $losses, draws = $draws.")
+        Log.d(TAG, "${player.playerName} has stats wins = $wins, looses = $losses, draws = $draws.")
         return Triple(losses, wins, draws)
     }
     /**
@@ -410,9 +410,9 @@ class GameDriver(
         val lossesPercent  : Float = (losses) / (games) * 100
         val winsPercent    : Float = (wins) / (games) * 100
         val drawsPercent   : Float = (draws) / (games) * 100
-        return Triple("wins: $wins ($winsPercent %)",
-            "draws: $draws ($drawsPercent %)",
-            "losses $losses ($lossesPercent %)")
+        return Triple("wins: ${wins.toInt()} (${winsPercent.toString().substring(0,4)} %)",
+            "draws: ${draws.toInt()} (${drawsPercent.toString().substring(0,4)} %)",
+            "losses ${losses.toInt()} (${lossesPercent.toString().substring(0,4)} %)")
     }
 
     // Quick add by Keven to make a display string easier to get
@@ -422,7 +422,7 @@ class GameDriver(
         val wins = this.playerDAO.getWins(player.playerID)
         val draws = this.playerDAO.getDraws(player.playerID)
         val total = losses + wins + draws
-        Log.d("<GAME_DRIVER>", "${player.playerName} has a total of $total games.")
+        Log.d(TAG, "${player.playerName} has a total of $total games.")
         return "total games $total"
     }
     /**********************************

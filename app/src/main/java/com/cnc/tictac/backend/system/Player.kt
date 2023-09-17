@@ -12,6 +12,5 @@ abstract class Player(
 ) {
     abstract override fun toString() : String
     abstract fun copy() : Player
-
-    abstract fun equals(player : Player?) : Boolean
+    abstract override fun equals(player : Any?) : Boolean
 }
