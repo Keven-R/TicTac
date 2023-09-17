@@ -12,7 +12,6 @@ import com.cnc.tictac.backend.system.Board
 import com.cnc.tictac.backend.system.HumanPlayer
 import com.cnc.tictac.backend.system.Player
 import com.cnc.tictac.backend.system.WinCondition
-import java.lang.Math.round
 
 private const val TAG = "Game Driver"
 
@@ -426,9 +425,9 @@ class GameDriver(
         val lossesPercent  : Float = (losses) / (games) * 100
         val winsPercent    : Float = (wins) / (games) * 100
         val drawsPercent   : Float = (draws) / (games) * 100
-        return Triple("wins: ${wins.toInt()} (${String.format("%.2f", winsPercent)} %)",
-            "draws: ${draws.toInt()} (${String.format("%.2f", drawsPercent)} %)",
-            "losses: ${losses.toInt()} (${String.format("%.2f", lossesPercent)} %)")
+        return Triple("wins: ${wins.toInt()} (${winsPercent.toInt()} %)",
+            "draws: ${draws.toInt()} ${drawsPercent.toInt()} %)",
+            "losses ${losses.toInt()} (${lossesPercent.toInt()} %)")
     }
 
     // Quick add by Keven to make a display string easier to get
@@ -439,7 +438,7 @@ class GameDriver(
         val draws = this.playerDAO.getDraws(player.playerID)
         val total = losses + wins + draws
         Log.d(TAG, "${player.playerName} has a total of $total games.")
-        return "total games: $total"
+        return "total games $total"
     }
     /**********************************
      * getPlayerStatsRibbon()
