@@ -227,13 +227,6 @@ class GameDriver(
      */
     fun playMove(x : Int =  0, y : Int =  0) : WinCondition? {
         Log.d(TAG, "Placing a puck at $x, $y.")
-        /** Toggle current player **/
-        Log.d(TAG, "Toggling current player from ${this.currentPlayer}")
-        if(this.currentPlayer == 0){
-            this.currentPlayer = 1
-        } else {
-            this.currentPlayer = 0
-        }
         /** Get current player **/
         this.player = this.playerArray[currentPlayer]
         Log.d(TAG, "Current player is ${this.player?.playerName} : ${this.player?.playerIcon}")
@@ -252,17 +245,19 @@ class GameDriver(
             }while(!this.board.placePuck(x = aiX, y = aiY, currentPlayer = this.player!!))
             // Random plays will continue being made until a square without a puck is found.
             Log.d(TAG, "Searching win condition for AIPlayer")
+            /** Toggle current player **/
+            Log.d(TAG, "Toggling current player from ${this.currentPlayer}")
+            if(this.currentPlayer == 0){
+                this.currentPlayer = 1
+            } else {
+                this.currentPlayer = 0
+            }
             return this.board.searchWinCondition(this.player!!)
         } else { /** Placing puck if HumanPlayer **/
             /** placing a puck **/
             Log.d(TAG, "HumanPlayer is placing a puck at $x, $y")
             if (!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!)) {
                 Log.e(TAG, "Puck is placed on occupied square.")
-                if(this.currentPlayer == 0){
-                    this.currentPlayer = 1
-                } else {
-                    this.currentPlayer = 0
-                }
                 return null
             }
             Log.d(TAG, "Searching win condition for HumanPlayer")
