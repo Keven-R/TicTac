@@ -53,8 +53,8 @@ class Board(
      */
     fun placePuck(currentPlayer : Player, x : Int, y : Int) : Boolean{
         return try {
-            if(this.boardState[x][y] == null){
-                this.boardState[x][y] = currentPlayer
+            if(this.boardState[y][x] == null){
+                this.boardState[y][x] = currentPlayer
                 boardHistory.push(this.boardState.deepCopy())
                 this.movesMade ++
                 true
