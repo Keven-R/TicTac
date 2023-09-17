@@ -55,7 +55,7 @@ fun GameBoard (
     isContainerNarrow: Boolean = true, // Narrow means height > width
 ) {
     var boardSize: Int = viewModel.getBoardSize()
-    var board: Array<String> = viewModel.boardState
+//    var board: Array<String> = viewModel.boardState
     var winIndices: Array<Boolean> = viewModel.winIndices
 
     if (isContainerNarrow) {
@@ -68,7 +68,7 @@ fun GameBoard (
                         modifier = cellModifier.fillMaxSize(),
                         viewModel = viewModel,
                         win = if (winIndices.isNotEmpty()) winIndices[i] else false,
-                        content = board[i],
+                        content = viewModel.boardState[i],
                         position = i
                     )
                 }
@@ -80,7 +80,7 @@ fun GameBoard (
 
         for (row in 0..boardSize-1) {
             for (col in 0..boardSize-1) {
-                boardContent[col*boardSize+row] = "${board[row*boardSize + col]}"
+                boardContent[col*boardSize+row] = "${viewModel.boardState[row*boardSize + col]}"
             }
         }
 
@@ -133,37 +133,17 @@ fun BoardCell (
             .border(1.dp, borderColor, CircleShape)
             .background(bgColor)
             .aspectRatio(1f)
-            .clickable { viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) }, // TODO: Double Check
+            .clickable { viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) },
         contentAlignment = Alignment.Center
     ) {
-        if (content != "") {
+        if (content != " ") {
             if (content == "o") {
-//                AvatarBlock(
-//                    avatarResourceId = if (win) images.marker_x_win else images.marker_x_default,
-//                    isCircle = true,
-//                    isFilled = win,
-//                    boxModifier = modifier
-//                        .clip(CircleShape)
-//                        .border(1.dp, borderColor, CircleShape)
-//                        .background(bgColor)
-//                        .aspectRatio(1f),
-//                )
                 Avatar(
                     avatarResourceId = if (win) images.marker_o_win else images.marker_o_default,
                     onPrimaryColour = !win,
                     color = contentColor,
                 )
             } else {
-//                AvatarBlock(
-//                    avatarResourceId = if (win) images.marker_x_win else images.marker_x_default,
-//                    isCircle = true,
-//                    isFilled = win,
-//                    boxModifier = modifier
-//                        .clip(CircleShape)
-//                        .border(1.dp, borderColor, CircleShape)
-//                        .background(bgColor)
-//                        .aspectRatio(1f),
-//                )
                 Avatar(
                     avatarResourceId = if (win) images.marker_x_win else images.marker_x_default,
                     onPrimaryColour = !win,
