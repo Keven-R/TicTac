@@ -12,6 +12,7 @@ import com.cnc.tictac.backend.system.Board
 import com.cnc.tictac.backend.system.HumanPlayer
 import com.cnc.tictac.backend.system.Player
 import com.cnc.tictac.backend.system.WinCondition
+import java.lang.Math.round
 
 private const val TAG = "Game Driver"
 
@@ -429,7 +430,6 @@ class GameDriver(
             "draws: ${draws.toInt()} ${drawsPercent.toInt()} %)",
             "losses ${losses.toInt()} (${lossesPercent.toInt()} %)")
     }
-
     // Quick add by Keven to make a display string easier to get
     fun getPlayerTotalGamesDisplayFromDatabase(player : HumanPlayer) : String{
         Log.d(TAG, "Obtaining player total game stats from database.")
