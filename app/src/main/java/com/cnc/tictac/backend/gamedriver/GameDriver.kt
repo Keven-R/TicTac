@@ -120,16 +120,20 @@ class GameDriver(
      */
     fun setFirstPlayer(newPlayer : Player = HumanPlayer()){
         /** Debugging output **/
-        if(newPlayer is HumanPlayer) { Log.d(TAG, "Adding HumanPlayer to game.") }
-        else if(newPlayer is AIPlayer) { Log.d(TAG, "Adding AIPlayer to game.") }
-        else { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
+        when (newPlayer) {
+            is HumanPlayer -> { Log.d(TAG, "Adding HumanPlayer to game.") }
+            is AIPlayer -> { Log.d(TAG, "Adding AIPlayer to game.") }
+            else -> { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
+        }
         this.playerArray[0] = newPlayer
     }
     fun setSecondPlayer(newPlayer : Player = HumanPlayer()){
         /** Debugging output **/
-        if(newPlayer is HumanPlayer) { Log.d(TAG, "Adding HumanPlayer to game.") }
-        else if(newPlayer is AIPlayer) { Log.d(TAG, "Adding AIPlayer to game.") }
-        else { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
+        when (newPlayer) {
+            is HumanPlayer -> { Log.d(TAG, "Adding HumanPlayer to game.") }
+            is AIPlayer -> { Log.d(TAG, "Adding AIPlayer to game.") }
+            else -> { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
+        }
         this.playerArray[1] = newPlayer
     }
     /********************************
@@ -177,8 +181,8 @@ class GameDriver(
         return this.board
     }
     fun getBoardAsString() : Array<Array<String>>{
-        var board = this.getBoard()
-        var boardString = Array(board.getConstraints().first, { Array(board.getConstraints().second, { "" }) })
+        val board = this.getBoard()
+        val boardString = Array(board.getConstraints().first, { Array(board.getConstraints().second, { "" }) })
         for(i in 0 .. board.getConstraints().first){
             for(j in 0 .. board.getConstraints().second){
                 if(board.getBoardState()[i][j] != null) {
@@ -229,18 +233,18 @@ class GameDriver(
         this.player = this.playerArray[currentPlayer]
 
         /** Debugging output **/
-        if(this.player is HumanPlayer) {Log.d(TAG, "HumanPlayer is placing a puck.")}
-        else if(this.player is AIPlayer) { Log.d(TAG, "AIPlayer is placing a puck.") }
-        else { Log.e(TAG, "Player child object is of unknown class(!!!).") }
+        when (this.player) {
+            is HumanPlayer -> { Log.d(TAG, "Adding HumanPlayer to game.") }
+            is AIPlayer -> { Log.d(TAG, "Adding AIPlayer to game.") }
+            else -> { Log.e(TAG, "Player added to game is of unknown child class (!!).") }
+        }
 
         /** Check if player is AI and get new coordinates if AI **/
         if(this.player is AIPlayer){
             do {
-                var x =
-                    (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).first
-                var y =
-                    (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).second
-                Log.d(TAG, "AIPlayer is placing a puck at $x, $y")
+                val aiX = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).first
+                val aiY = (this.player as AIPlayer).generateRandomPlay(this.board.getConstraints()).second
+                Log.d(TAG, "AIPlayer is placing a puck at $aiX, $aiY")
             }while(!this.board.placePuck(x = x, y = y, currentPlayer = this.player!!))
             // Random plays will continue being made until a square without a puck is found.
             Log.d(TAG, "Searching win condition for AIPlayer")
@@ -287,9 +291,9 @@ class GameDriver(
     fun editPlayerDatabaseAttribute(player : Player, attribute : String, value : Any) : Boolean{
         Log.d(TAG, "Player attribute $attribute changing to $value.")
         // Saving player before attribute editing; revert back if error
-        var playerCopy : Player = player.copy()
+        val playerCopy : Player = player.copy()
         // removing the player from the database will clear the player stats, so we save them first.
-        var statsTriplet = this.getPlayerStatsFromDatabase(player as HumanPlayer)
+        val statsTriplet = this.getPlayerStatsFromDatabase(player as HumanPlayer)
         // removing the player
         this.removePlayerFromDatabase(player.playerID)
         when(attribute) {
@@ -299,7 +303,7 @@ class GameDriver(
             "playerIcon" -> player.playerIcon = value as String
         }
         // Adding modified player
-        if(!this.addPlayerToDatabase(player as HumanPlayer)){
+        if(!this.addPlayerToDatabase(player)){
             // If the player ID is modified to a value already in the database, false is returned and...
             Log.e(TAG, "Attempted to edit player attibute - PlayerID is already occupied(!!!)")
             // Changes are abandoned
@@ -307,7 +311,7 @@ class GameDriver(
             return false
         }
         // amend the player stats back onto the new player we created.
-        this.updatePlayerStatsInDatabase(player as HumanPlayer,
+        this.updatePlayerStatsInDatabase(player,
             wins = statsTriplet.second,
             losses = statsTriplet.first,
             draws = statsTriplet.third)
@@ -352,7 +356,6 @@ class GameDriver(
                     newPlayer.playerName,
                     newPlayer
                 )
-                return true
             }catch(exception : SQLiteConstraintException){
                 Log.e(TAG, "Player ID already exists in database (!!).")
                 return false
@@ -400,16 +403,16 @@ class GameDriver(
      */
     fun getPlayerDisplayStatsFromDatabase(player : HumanPlayer) : Triple<String, String, String>{
         Log.d(TAG, "Obtaining player game stats from database as string")
-        val losses  = this.playerDAO.getLosses(player.playerID) as Float
-        val wins    = this.playerDAO.getWins(player.playerID) as Float
-        val draws   = this.playerDAO.getDraws(player.playerID) as Float
+        val losses  = this.playerDAO.getLosses(player.playerID).toFloat()
+        val wins    = this.playerDAO.getWins(player.playerID).toFloat()
+        val draws   = this.playerDAO.getDraws(player.playerID).toFloat()
         val games   = wins + draws + losses
-        val losses_percent  : Float = (losses) / (games) * 100
-        val wins_percent    : Float = (wins) / (games) * 100
-        val draws_percent   : Float = (draws) / (games) * 100
-        return Triple("wins: $wins ($wins_percent %)",
-            "draws: $draws ($draws_percent %)",
-            "losses $losses ($losses_percent %)")
+        val lossesPercent  : Float = (losses) / (games) * 100
+        val winsPercent    : Float = (wins) / (games) * 100
+        val drawsPercent   : Float = (draws) / (games) * 100
+        return Triple("wins: $wins ($winsPercent %)",
+            "draws: $draws ($drawsPercent %)",
+            "losses $losses ($lossesPercent %)")
     }
 
     // Quick add by Keven to make a display string easier to get
@@ -418,7 +421,6 @@ class GameDriver(
         val losses = this.playerDAO.getLosses(player.playerID)
         val wins = this.playerDAO.getWins(player.playerID)
         val draws = this.playerDAO.getDraws(player.playerID)
-
         val total = losses + wins + draws
         Log.d("<GAME_DRIVER>", "${player.playerName} has a total of $total games.")
         return "total games $total"
@@ -430,22 +432,22 @@ class GameDriver(
      * Length of returned string is 10.
      *********************************/
     fun getPlayerStatsRibbonFromDatabase(player : HumanPlayer) : String {
-        var return_string = ""
-        val losses  = this.playerDAO.getLosses(player.playerID) as Float
-        val wins    = this.playerDAO.getWins(player.playerID) as Float
-        val draws   = this.playerDAO.getDraws(player.playerID) as Float
+        var returnString = ""
+        val losses  = this.playerDAO.getLosses(player.playerID).toFloat()
+        val wins    = this.playerDAO.getWins(player.playerID).toFloat()
+        val draws   = this.playerDAO.getDraws(player.playerID).toFloat()
         val games   = wins + draws + losses
-        val losses_fraction : Float = losses / games * 10
-        val wins_fraction   : Float = wins   / games * 10
-        val draws_fraction  : Float = draws  / games * 10
-        Log.d(TAG, "Displaying $losses_fraction Os, $draws_fraction /s, $wins_fraction Xs")
-        for(i in 0 .. wins_fraction as Int)
-            return_string += "X"
-        for(i in 0 .. draws_fraction as Int)
-            return_string += "/"
-        for(i in 0 .. losses_fraction as Int)
-            return_string += "O"
-        return return_string
+        val lossesFraction : Float = losses / games * 10
+        val winsFraction   : Float = wins   / games * 10
+        val drawsFraction  : Float = draws  / games * 10
+        Log.d(TAG, "Displaying $lossesFraction Os, $drawsFraction /s, $winsFraction Xs")
+        for(i in 0 ..winsFraction.toInt())
+            returnString += "X"
+        for(i in 0 .. drawsFraction.toInt())
+            returnString += "/"
+        for(i in 0 .. lossesFraction.toInt())
+            returnString += "O"
+        return returnString
     }
     fun getLeaderboard() : List<HumanPlayer?> {
         return this.playerDAO.getLeaderboard()
