@@ -252,11 +252,13 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
         Log.v(TAG, TYPE+"MarkerPlaced: UIPosition = $position, GameDriverPosition = ${position2D.x},${position2D.y}")
 
-        gd.playMove(position2D.x,position2D.y) ?: return
+        var wincondition = gd.playMove(position2D.x,position2D.y)
 
         val board2D = gd.getBoardAsString()
 
         print2D(board2D)
+
+        Log.v("Test", wincondition.toString())
 
 //        Log.v("Test", "BoardString: ${board2D.joinToString()}")
 
