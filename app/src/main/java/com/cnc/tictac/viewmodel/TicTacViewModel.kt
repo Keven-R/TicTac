@@ -17,6 +17,7 @@ import com.cnc.tictac.backend.system.AIPlayer
 import com.cnc.tictac.backend.system.HumanPlayer
 import com.cnc.tictac.backend.system.Player
 import com.cnc.tictac.backend.system.WinCondition
+import kotlin.math.abs
 import kotlin.random.Random
 
 private const val TAG = "TicTacViewModel"
@@ -326,9 +327,19 @@ class TicTacViewModel(context: Context) : ViewModel(){
         Log.v("Test", "")
     }
     private fun positionConverter(position1D: Int): Point {
+        val isPositive = position1D>=0
+        val absolutePosition1D = abs(position1D)
         val position2D = Point(0,0)
-        position2D.x = position1D % getBoardSize()
-        position2D.y = position1D / getBoardSize()
+
+        if (absolutePosition1D >= 0) {
+            position2D.x = absolutePosition1D % getBoardSize()
+            position2D.y = absolutePosition1D / getBoardSize()
+        } else {
+            // Swap if value came from horizontal grid layout (transposed)
+            position2D.y = absolutePosition1D % getBoardSize()
+            position2D.x = absolutePosition1D / getBoardSize()
+        }
+
         return position2D
     }
 
