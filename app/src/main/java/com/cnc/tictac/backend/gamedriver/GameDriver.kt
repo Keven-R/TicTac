@@ -260,6 +260,11 @@ class GameDriver(
                 Log.e(TAG, "Puck is placed on occupied square.")
                 return null
             }
+            if(this.currentPlayer == 0){
+                this.currentPlayer = 1
+            } else {
+                this.currentPlayer = 0
+            }
             Log.d(TAG, "Searching win condition for HumanPlayer")
             return this.board.searchWinCondition(this.player!!)
         }
