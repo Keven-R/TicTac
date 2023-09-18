@@ -45,7 +45,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     /* Player 1 States */
     var player1 by mutableStateOf(placeHolderHumanPlayer)
     var player1Name by mutableStateOf("Default Player")
-    var player1Timer by mutableIntStateOf(0)
+    var player1Timer by mutableIntStateOf(5)
     var player1Turn by mutableStateOf(true)
     var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
     var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
@@ -59,7 +59,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     /* Player 2 States */
     var player2 by mutableStateOf(placeHolderHumanPlayer)
     var player2Name by mutableStateOf("Default Player")
-    var player2Timer by mutableIntStateOf(0)
+    var player2Timer by mutableIntStateOf(5)
     var player2Turn by mutableStateOf(false)
     var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
     var player2Avatar by mutableIntStateOf(R.drawable.avatar_1)
@@ -281,6 +281,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
         if(player2 == placeHolderAIPlayer){
             wincondition = gd.playMove()
+            swapPlayer()
         }
 
         if (wincondition?.first == WinCondition.WIN){
@@ -290,8 +291,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
             print2D(board2D)
             Log.v("Test", wincondition.toString())
             return
-        }else{
-            swapPlayer()
         }
 
         val board2D = gd.getBoardAsString()
@@ -321,9 +320,11 @@ class TicTacViewModel(context: Context) : ViewModel(){
         if(player1Turn){
             player1Turn = false
             player2Turn = true
+            Log.v("Test", "Player 2 Turn")
         }else{
             player1Turn = true
             player2Turn = false
+            Log.v("Test", "Player 1 Turn")
         }
     }
 
