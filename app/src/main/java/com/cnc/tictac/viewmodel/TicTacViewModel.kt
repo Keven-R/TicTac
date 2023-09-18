@@ -2,9 +2,7 @@ package com.cnc.tictac.viewmodel
 
 import android.content.Context
 import android.graphics.Point
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,18 +14,13 @@ import com.cnc.tictac.R
 import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
 import com.cnc.tictac.backend.gamedriver.GameConfig
 import com.cnc.tictac.backend.gamedriver.GameDriver
-import com.cnc.tictac.backend.system.AIPlayer
 import com.cnc.tictac.backend.system.HumanPlayer
-import com.cnc.tictac.backend.system.Player
 import com.cnc.tictac.backend.system.WinCondition
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import java.time.LocalDateTime
-import kotlin.math.abs
 import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -53,6 +46,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var db : PLAYER_ROOM_DATABASE
 
     var users by mutableStateOf(emptyList<HumanPlayer>())
+    var leaderBoard by mutableStateOf(emptyList<HumanPlayer>())
 
     /* Player 1 States */
     var player1 by mutableStateOf(placeHolderHumanPlayer)
@@ -117,6 +111,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         gd = GameDriver(GameConfig(),db) // Makes Game driver
         generateInitialUsers() // Makes Game driver populates database if empty
         users = gd.getPlayersFromDatabase() as List<HumanPlayer> // Sets users, also makes them un-nullable
+        leaderBoard = gd.getLeaderboard() as List<HumanPlayer>
         setupDefaultProfiles()
         ticker()
     }
