@@ -35,8 +35,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
         R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
 
     /* Backend Variables */
-    private var placeHolderHumanPlayer: Player = HumanPlayer()
-    private var placeHolderAIPlayer: Player = AIPlayer()
+    private var placeHolderHumanPlayer: HumanPlayer = HumanPlayer()
+//    private var placeHolderAIPlayer: Player = AIPlayer()
     var gd : GameDriver
     var db : PLAYER_ROOM_DATABASE
 
@@ -182,7 +182,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     private fun newSinglePlayerGame(){
         Log.v(TAG, TYPE+"NewSinglePlayerGame")
 
-        player2 = placeHolderAIPlayer
+        player2 = users[0]
         player2Name = "AI"
 
         singlePlayerGame = true
@@ -246,7 +246,26 @@ class TicTacViewModel(context: Context) : ViewModel(){
         boardConvertAndSet(gd.getBoardAsString()) // redraws board
     }
 
-    private fun exit(){Log.v(TAG, TYPE+"Exit")}
+    private fun exit(){
+        Log.v(TAG, TYPE+"Exit")
+        gd.resetGameBoard()
+
+        Log.v("Test", "Stats Before: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
+
+        gd.updatePlayerStatsInDatabase(player1,99,0,0) // TODO: Play stats don't seem to update
+        player1StatMarker = gd.getPlayerStatsRibbonFromDatabase(player1)
+
+        val stats = gd.getPlayerDisplayStatsFromDatabase(player1)
+        player1WinString = stats.first
+        player1DrawString = stats.second
+        player1LossesString = stats.third
+        player1TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player1)
+
+        Log.v("Test", "Stats After: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
+
+        users = gd.getPlayersFromDatabase() as List<HumanPlayer> // reloads the user list for updated info
+
+    }
 
     private fun saveUser(){
         Log.v(TAG, TYPE+"SaveUser")
@@ -286,7 +305,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             swapPlayer()
         }
 
-        if(player2 == placeHolderAIPlayer){
+        if(player2Name.equals("AI") && player2 == users[0]){
             wincondition = gd.playMove()
             swapPlayer()
         }

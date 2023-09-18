@@ -351,6 +351,7 @@ class GameDriver(
      * Allows updating player stats in the room ROOM_PLAYER_DATABASE of the game driver.
      *********************************/
     fun updatePlayerStatsInDatabase(player : HumanPlayer, wins : Int?, draws : Int?, losses : Int?){
+        Log.d(TAG, "Updating player ${player.playerName} to database.")
         if(wins != null) {
             this.playerDAO.updateWins(wins, player)
         }
