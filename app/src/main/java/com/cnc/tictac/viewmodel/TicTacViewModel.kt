@@ -238,7 +238,14 @@ class TicTacViewModel(context: Context) : ViewModel(){
         val board2D = gd.getBoardAsString()
         boardConvertAndSet(board2D)
     }
-    private fun restart(){Log.v(TAG, TYPE+"Restart")}
+    private fun restart(){
+        Log.v(TAG, TYPE+"Restart")
+
+        gd.resetGameBoard()
+        swapPlayer() //swaps player so the person who resets is always second
+        boardConvertAndSet(gd.getBoardAsString()) // redraws board
+    }
+
     private fun exit(){Log.v(TAG, TYPE+"Exit")}
 
     private fun saveUser(){
