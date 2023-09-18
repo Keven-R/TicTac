@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.cnc.tictac"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33 //sdk 33 is the highest gradle currently supports
         versionCode = 1
         versionName = "1.0"
@@ -95,6 +95,10 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // coroutine
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
     // Compose ViewModels
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
