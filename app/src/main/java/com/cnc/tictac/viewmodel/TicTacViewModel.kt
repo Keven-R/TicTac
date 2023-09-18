@@ -2,12 +2,15 @@ package com.cnc.tictac.viewmodel
 
 import android.content.Context
 import android.graphics.Point
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.cnc.tictac.R
 import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
@@ -17,8 +20,17 @@ import com.cnc.tictac.backend.system.AIPlayer
 import com.cnc.tictac.backend.system.HumanPlayer
 import com.cnc.tictac.backend.system.Player
 import com.cnc.tictac.backend.system.WinCondition
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import java.time.LocalDateTime
 import kotlin.math.abs
 import kotlin.random.Random
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 private const val TAG = "TicTacViewModel"
 private const val TYPE = "EVENT: "
@@ -45,7 +57,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     /* Player 1 States */
     var player1 by mutableStateOf(placeHolderHumanPlayer)
     var player1Name by mutableStateOf("Default Player")
-    var player1Timer by mutableIntStateOf(5)
+    var player1Timer by mutableIntStateOf(10)
     var player1Turn by mutableStateOf(true)
     var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
     var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
@@ -59,7 +71,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     /* Player 2 States */
     var player2 by mutableStateOf(placeHolderHumanPlayer)
     var player2Name by mutableStateOf("Default Player")
-    var player2Timer by mutableIntStateOf(5)
+    var player2Timer by mutableIntStateOf(10)
     var player2Turn by mutableStateOf(false)
     var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
     var player2Avatar by mutableIntStateOf(R.drawable.avatar_1)
@@ -73,6 +85,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     /* Game States */
     var boardState by mutableStateOf(arrayOf<String>())
     var gameActive by mutableStateOf(true) // This and gameEnded could probably be the same
+    var timerActive by mutableStateOf(false) // This and gameEnded could probably be the same
     var startingSelection by mutableIntStateOf(0) // 0 = "Player 1", 1 = "Player 2"
     var boardSelection by mutableIntStateOf(0) // 0 = 3x3, 1 = 4x4, 2 = 5x5
     var winConditionSelection by mutableIntStateOf(0) // 0 = 3, 1 = 4, 2 = 5
@@ -105,6 +118,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         generateInitialUsers() // Makes Game driver populates database if empty
         users = gd.getPlayersFromDatabase() as List<HumanPlayer> // Sets users, also makes them un-nullable
         setupDefaultProfiles()
+        ticker()
     }
 
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
@@ -177,6 +191,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
 
         gd.reinit(GameConfig(boardSize, boardSize, winSize))
+        timerStart()
     }
 
     private fun newSinglePlayerGame(){
@@ -285,8 +300,17 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
     }
 
-    private fun timerStart(){Log.v(TAG, TYPE+"TimerStart")}
-    private fun timerStop(){Log.v(TAG, TYPE+"TimerStop")}
+    private fun timerStart(){
+        // Probably doesn't need to be an event but the log helps
+        Log.v(TAG, TYPE+"TimerStart")
+        timerActive = true
+    }
+
+    private fun timerStop(){
+        // Probably doesn't need to be an event but the log helps
+        Log.v(TAG, TYPE+"TimerStop")
+        timerActive = false
+    }
 
     private fun markerPlaced(position: Int){
         val position2D = positionConverter(position)
@@ -336,6 +360,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
         // Get current player
         //switch
+        player1Timer = 10
+        player2Timer = 10
     }
 
     /********************************
@@ -361,20 +387,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
         Log.v("Test", "")
     }
     private fun positionConverter(position1D: Int): Point {
-//        val isPositive = position1D>=0
-//        val absolutePosition1D = abs(position1D)
         val position2D = Point(0,0)
         position2D.x = position1D % getBoardSize()
         position2D.y = position1D / getBoardSize()
-//
-//        if (absolutePosition1D >= 0) {
-//            position2D.x = absolutePosition1D % getBoardSize()
-//            position2D.y = absolutePosition1D / getBoardSize()
-//        } else {
-//            // Swap if value came from horizontal grid layout (transposed)
-//            position2D.y = absolutePosition1D % getBoardSize()
-//            position2D.x = absolutePosition1D / getBoardSize()
-//        }
 
         return position2D
     }
@@ -492,5 +507,29 @@ class TicTacViewModel(context: Context) : ViewModel(){
         player2 = users[0]
         player2Name = users[0].playerName
         player2Avatar = users[0].playerAvatar!!
+    }
+
+    private fun tickerFlow(period: Duration, initialDelay: Duration = Duration.ZERO) = flow {
+        delay(initialDelay)
+        while (true) {
+            emit(Unit)
+            delay(period)
+        }
+    }
+
+    private fun ticker(){
+        // This will tick the players counter down by 1 second
+        tickerFlow(1.seconds)
+            .map { -1 }
+            .onEach {
+                if(timerActive){
+                    if(player1Turn){
+                        player1Timer += it
+                    } else{
+                        player2Timer += it
+                    }
+                }
+                // TODO Maybe check for 0 time here and make win?
+            }.launchIn(viewModelScope)
     }
 }
