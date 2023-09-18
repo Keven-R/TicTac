@@ -1,5 +1,17 @@
 package com.cnc.tictac
 
+/**
+ * TicTac app Overview
+ * Requirements: API34 - or any api that doesn't have a permanent menu bar
+ *               This is due to the UI's design to utilize the entire screen
+ *               as is the current trend in design.
+ *
+ *               10mb Disk - This is roughly what space it takes up
+ *
+ *               30mb memory - This is how much ram it might use
+ */
+
+
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
