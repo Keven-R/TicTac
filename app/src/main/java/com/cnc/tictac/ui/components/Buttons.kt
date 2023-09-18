@@ -565,6 +565,18 @@ fun getGameMenuLabelAndEvents (menu: MENU, navController: NavHostController, vie
                 }
             )
         }
+        MENU.UNDO -> {
+            return arrayOf(
+                Pair(R.string.game_menu_undo_confirm) {
+                    viewModel.onEvent(TicTacEvent.Undo)
+                    navController.popBackStack()
+                },
+                Pair(R.string.game_menu_undo_dismiss) {
+                    viewModel.onEvent(TicTacEvent.TimerStart)
+                    navController.popBackStack()
+                }
+            )
+        }
         else -> {
             // IGNORE, just needed something here lol
             return arrayOf(

@@ -230,7 +230,14 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
     }
 
-    private fun undo(){Log.v(TAG, TYPE+"Undo")}
+    private fun undo(){
+        Log.v(TAG, TYPE+"Undo")
+
+        gd.undoPreviousMove()
+        swapPlayer()
+        val board2D = gd.getBoardAsString()
+        boardConvertAndSet(board2D)
+    }
     private fun restart(){Log.v(TAG, TYPE+"Restart")}
     private fun exit(){Log.v(TAG, TYPE+"Exit")}
 

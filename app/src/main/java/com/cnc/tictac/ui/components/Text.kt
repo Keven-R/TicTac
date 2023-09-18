@@ -199,6 +199,9 @@ fun getMenuContent(menu: MENU): Pair<Int, Int> {
         MENU.EXIT -> {
             Pair(R.string.game_menu_exit_title, R.string.game_menu_exit_description)
         }
+        MENU.UNDO -> {
+            Pair(R.string.game_menu_undo_title, R.string.game_menu_undo_description)
+        }
         else -> {
             // IGNORE, just needed something here lol
             Pair(R.string.user_name_placeholder, R.string.user_name_placeholder)
