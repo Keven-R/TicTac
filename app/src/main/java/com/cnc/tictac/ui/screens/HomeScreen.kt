@@ -24,8 +24,6 @@ import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.ui.components.DisplayButton
 import com.cnc.tictac.ui.components.LogoText
-import com.cnc.tictac.ui.system.DeviceInfo
-import com.cnc.tictac.ui.system.getDeviceInfo
 import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 import com.cnc.tictac.R.string as copy
@@ -86,7 +84,17 @@ fun DisplayNarrowHomeScreen(navController: NavHostController,viewModel: TicTacVi
                     DisplayButton(stringResource(id = copy.button_play_solo),viewModel,TicTacEvent.NewSinglePlayerGame,navController,Destination.GameSettingsScreen)
                     DisplayButton(stringResource(id = copy.button_play_multi),viewModel,TicTacEvent.NewMultiPlayerGame,navController,Destination.MultiplayerSettingsScreen)
                 }
-                DisplayButton(stringResource(id = copy.button_profile),viewModel,TicTacEvent.ProfileMenuSelect,navController,Destination.ProfileScreen)
+
+                // UI: Solo or multi game mode action
+                Column (
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    DisplayButton(stringResource(id = copy.button_profile),viewModel,TicTacEvent.ProfileMenuSelect,navController,Destination.ProfileScreen)
+                    // TODO: add leaderboard events
+                    DisplayButton(stringResource(id = copy.button_leaderboard),viewModel,TicTacEvent.TempEvent,navController,Destination.Leaderboard)
+                }
             }
         }
     }
@@ -142,9 +150,13 @@ fun DisplayWideHomeScreen(navController: NavHostController,viewModel: TicTacView
             }
 
             Column(
+                // UI: profile + high scores page
                 modifier = Modifier.fillMaxWidth().weight(1f),
-                horizontalAlignment = Alignment.End) {
+                horizontalAlignment = Alignment.End
+            ) {
                 DisplayButton(stringResource(id = copy.button_profile),viewModel, TicTacEvent.ProfileMenuSelect,navController,Destination.ProfileScreen)
+                // TODO: add leaderboard events
+                DisplayButton(stringResource(id = copy.button_leaderboard),viewModel,TicTacEvent.TempEvent,navController,Destination.Leaderboard)
             }
         }
     }

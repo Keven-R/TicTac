@@ -3,6 +3,7 @@ package com.cnc.tictac.viewmodel
 import android.content.Context
 import android.graphics.Point
 import android.util.Log
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +49,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var db : PLAYER_ROOM_DATABASE
 
     var users by mutableStateOf(emptyList<HumanPlayer>())
-    var leaderBoard by mutableStateOf(emptyList<HumanPlayer>())
+    var leaderboard by mutableStateOf(emptyList<HumanPlayer>())
 
     /* Player 1 States */
     var player1 by mutableStateOf(placeHolderPlayer)
@@ -114,8 +115,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
         gd = GameDriver(GameConfig(),db) // Makes Game driver
         generateInitialUsers() // Makes Game driver populates database if empty
         users = gd.getPlayersFromDatabase() as List<HumanPlayer> // Sets users, also makes them un-nullable
-        leaderBoard = gd.getLeaderboard() as List<HumanPlayer>
+        leaderboard = gd.getLeaderboard() as List<HumanPlayer>
         winner = null
+        leaderboard = gd.getLeaderboard() as List<HumanPlayer>
         setupDefaultProfiles()
         ticker()
     }
@@ -262,6 +264,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
     private fun restart(){
         Log.v(TAG, TYPE+"Restart")
+
         gd.resetGameBoard()
         swapPlayer() //swaps player so the person who resets is always second
         boardConvertAndSet(gd.getBoardAsString()) // redraws board
@@ -288,6 +291,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         Log.v("Test", "Stats After: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
 
         users = gd.getPlayersFromDatabase() as List<HumanPlayer> // reloads the user list for updated info
+
     }
 
     private fun saveUser(){
@@ -465,6 +469,13 @@ class TicTacViewModel(context: Context) : ViewModel(){
         if (moveUndoAvailable != null){
             undoAvailable = true
         }
+
+//        Log.v("Test", "BoardString: ${board2D.joinToString()}")
+
+//        boardConvertAndSet(board2D)
+
+        // Get current player
+        //switch
         player1Timer = 10
         player2Timer = 10
     }
@@ -520,6 +531,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             "O"
         }
     }
+
     fun getBoardSize(): Int{
         return when(boardSelection){
             0 -> 3
@@ -528,6 +540,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             else -> {3}
         }
     }
+
     fun findAvatar(): Int{
         if(newUser){
             return 0
@@ -642,5 +655,20 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 }
                 // TODO Maybe check for 0 time here and make win?
             }.launchIn(viewModelScope)
+    }
+
+    // Returns stats as a triple, already in string format. <Wins, Draws, Loss>
+    fun getPlayerStats (player : HumanPlayer) : Triple<Int, Int, Int> {
+        val stats = gd.getPlayerStatsFromDatabase(player)
+        val numWin = stats.first
+        val numDraw = stats.second
+        val numLoss = stats.third
+
+        return Triple(numWin, numDraw, numLoss)
+    }
+
+    // Returns total number of games in string format.
+    fun getPlayerTotalGames (player : HumanPlayer) : Int {
+        return gd.getPlayerTotalGamesFromDatabase(player)
     }
 }

@@ -30,6 +30,7 @@ import com.cnc.tictac.ui.screens.GameMenuScreen
 import com.cnc.tictac.ui.screens.GameScreen
 import com.cnc.tictac.ui.screens.GameSettingsScreen
 import com.cnc.tictac.ui.screens.HomeScreen
+import com.cnc.tictac.ui.screens.Leaderboard
 import com.cnc.tictac.ui.screens.MultiplayerSettingsScreen
 import com.cnc.tictac.ui.screens.ProfileScreen
 import com.cnc.tictac.ui.screens.UserDetailScreen
@@ -50,6 +51,7 @@ sealed class Destination(val route: String){
     object UserSelectScreen: Destination("player_select")
     object ProfileScreen: Destination("profile")
     object GameMenuScreen: Destination("game_menu")
+    object Leaderboard: Destination("leaderboard")
 }
 
 /**
@@ -96,5 +98,6 @@ fun NavigationAppHost (navController: NavHostController, viewModel: TicTacViewMo
         composable(route = Destination.UserSelectScreen.route){ UserSelectScreen(navController,viewModel) }
         composable(route = Destination.ProfileScreen.route){ ProfileScreen(navController,viewModel) }
         composable(route = Destination.GameMenuScreen.route){ BackHandler(true) {}; GameMenuScreen(navController,viewModel) }
+        composable(route = Destination.Leaderboard.route){ BackHandler(true) {}; Leaderboard(navController,viewModel) }
     }
 }
