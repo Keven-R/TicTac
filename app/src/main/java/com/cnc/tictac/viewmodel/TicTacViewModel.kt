@@ -275,6 +275,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         this.resetMutableStates()
         val board2D = gd.getBoardAsString()
         boardConvertAndSet(board2D)
+        timerStart()
     }
     private fun restart(){
         Log.v(TAG, TYPE+"Restart")
