@@ -278,7 +278,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
     private fun restart(){
         Log.v(TAG, TYPE+"Restart")
-
         gd.resetGameBoard()
         swapPlayer() //swaps player so the person who resets is always second
         boardConvertAndSet(gd.getBoardAsString()) // redraws board
@@ -335,10 +334,10 @@ class TicTacViewModel(context: Context) : ViewModel(){
         timerActive = false
     }
 
-    /** ATTENTION: THIS IS A DUMMY METHOD....
-     * I DONT KNOW WHAT IS SUPPOSED TO HAPPEN WHEN THE markerPlaced METHOD OBSERVES THAT SOMEONE
-     * HAS ONE THE GAME>>>>
-     * CALLED FROM markerPlaced!!!!
+    /** Called whenever a winner is detected after a marker is placed
+     * > Updates this.winner
+     * > Updates this.winCondition
+     * > Updates this.winIndices
      */
     private fun winnerDecided(winner : Player?, winCondition : WinCondition?, winCoordinates : Pair<Pair<Int, Int>, Pair<Int, Int>>?) {
         Log.d(TAG, "Winner decided")
@@ -356,20 +355,20 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 when(winCondition){
                     WinCondition.VERTICAL, WinCondition.HORISONTAL -> {
                         Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.first}")
-                        Log.d("Test", "${winCoordinates!!.first.second}:${winCoordinates.second.second}")
-                        for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
-                            for (j in winCoordinates!!.first.second..winCoordinates.second.second) {
-                                this.winIndices[positionConverter_to1D(Point(i, j))] = true
+                        Log.d("Test", "${winCoordinates.first.second}:${winCoordinates.second.second}")
+                        for(i in winCoordinates.first.first .. winCoordinates.second.first) {
+                            for (j in winCoordinates.first.second..winCoordinates.second.second) {
+                                this.winIndices[positionConverter1D(Point(i, j))] = true
                             }
                         }
                     }
                     WinCondition.DIAGONAL_1 -> {
                         Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.first}")
-                        Log.d("Test", "${winCoordinates!!.first.second}:${winCoordinates.second.second}")
-                        for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
-                            for (j in winCoordinates!!.first.second..winCoordinates.second.second) {
+                        Log.d("Test", "${winCoordinates.first.second}:${winCoordinates.second.second}")
+                        for(i in winCoordinates.first.first .. winCoordinates.second.first) {
+                            for (j in winCoordinates.first.second..winCoordinates.second.second) {
                                 if(i == j){
-                                    this.winIndices[positionConverter_to1D(Point(i, j))] = true
+                                    this.winIndices[positionConverter1D(Point(i, j))] = true
                                 }
                             }
                         }
@@ -380,7 +379,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
                             for (j in winCoordinates!!.second.second..winCoordinates.first.second) {
                                 if(i == -j + gd.getMinimumWin() - 1){
-                                    this.winIndices[positionConverter_to1D(Point(i, j))] = true
+                                    this.winIndices[positionConverter1D(Point(i, j))] = true
                                 }
                             }
                         }
@@ -395,6 +394,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
         print1D(this.winIndices as Array<Any>)
         Log.d("Test", "${this.winner}")
     }
+
+    /** markerPlaced
+     * > Places a marker when a cell is selected in the UI.
+     * > tests the winCondition
+     *          > queries winCondition- if a win, calls this.winnerDecided
+     */
     private fun markerPlaced(position: Int){
         if(this.winner != null){
             return
@@ -411,16 +416,10 @@ class TicTacViewModel(context: Context) : ViewModel(){
             WinCondition.DIAGONAL_1,
             WinCondition.DIAGONAL_2 -> {
                 Log.v(TAG, "Win condition detected for player.")
-                val wincoordinates = gd.getWinCoordinates(wincondition)
-                // Do stuff maybe use when
                 val board2D = gd.getBoardAsString()
                 boardConvertAndSet(board2D)
                 print2D(board2D)
-                Log.v("Test", wincondition.toString())
-                Log.v("Test", "${wincoordinates?.first?.first}, " +
-                        "${wincoordinates?.first?.second} : " +
-                        "${wincoordinates?.second?.first}, " +
-                        "${wincoordinates?.second?.second}")
+                val wincoordinates = gd.getWinCoordinates(wincondition)
                 this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
                 return
             }
@@ -437,11 +436,15 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
         /** If next player is AI -> play AI move automatically **/
         if (player2 is AIPlayer){
-            markerPlacedAI(player2 as AIPlayer)
+            markerPlacedAI()
         }
         updateNewMarker()
     }
 
+    /** updateNewMarker
+     * > updates board from backend to frontend
+     * > resets timer for player 1 and player 2
+     */
     private fun updateNewMarker(){
         /** Print board to debugging output **/
         val board2D = gd.getBoardAsString()
@@ -455,7 +458,11 @@ class TicTacViewModel(context: Context) : ViewModel(){
         player2Timer = 10
     }
 
-    private fun markerPlacedAI(player2 : AIPlayer){
+    /** markerPlacedAI
+     * > Places marker for AI player.
+     * > Called from markerPlaced if in single player
+     */
+    private fun markerPlacedAI(){
         val wincondition = gd.playMove()
         /** If the AI player wins **/
         when(wincondition){
@@ -482,24 +489,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 swapPlayer()
             }
         }
-        /** Print board to debugging output **/
-        val board2D = gd.getBoardAsString()
-        print2D(board2D)
-        boardConvertAndSet(board2D)
-        Log.v("Test", wincondition.toString())
-        val moveUndoAvailable = boardState.find { move -> "x".equals(move) || "o".equals(move) }
-        if (moveUndoAvailable != null){
-            undoAvailable = true
-        }
-
-//        Log.v("Test", "BoardString: ${board2D.joinToString()}")
-
-//        boardConvertAndSet(board2D)
-
-        // Get current player
-        //switch
-        player1Timer = 10
-        player2Timer = 10
     }
 
     /********************************
@@ -539,7 +528,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         position2D.y = position1D / getBoardSize()
         return position2D
     }
-    private fun positionConverter_to1D(position2D: Point): Int {
+    private fun positionConverter1D(position2D: Point): Int {
         var position1D : Int = position2D.x + (position2D.y * gd.getBoard().getConstraints().first)
         return position1D
     }
@@ -677,6 +666,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         player2Timer += it
                     }
                 }
+                /**
+                 * If multiplayer game, someones timer run out, and nobody has won
+                 *      -> swap players, and reset timers
+                 * else if singleplayer game, player 2 is AI, player 1 timer is out, and nobody won
+                 *      -> play AI player and reset timers
+                 */
                 if (timerActive
                     && (!singlePlayerGame)
                     && (player1Timer == 0 || player2Timer == 0)
@@ -688,12 +683,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 } else if (timerActive
                     && (singlePlayerGame)
                     && (player2 is AIPlayer)
-                    && (player1Timer == 0 || player2Timer == 0)
+                    && (player1Timer == 0)
                     && (winCondition == WinCondition.NO_WIN)){
-                    Log.v("Test", "player timed out in singleplayer")
-                    markerPlacedAI(player2 as AIPlayer)
-                    updateNewMarker()
+                    this.markerPlacedAI()
+                    this.updateNewMarker()
                     player1Timer = 10
+                    player2Timer = 10
                 }
             }.launchIn(viewModelScope)
     }
