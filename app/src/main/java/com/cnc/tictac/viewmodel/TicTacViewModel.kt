@@ -287,8 +287,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun exit(){
         Log.v(TAG, TYPE+"Exit")
-
-        Log.v("Test", "Stats Before: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
         if(this.winCondition != WinCondition.NO_WIN){
             val currentPlayerStats = gd.getPlayerStatsFromDatabase(this.winner as HumanPlayer)
             var wins = currentPlayerStats.second
