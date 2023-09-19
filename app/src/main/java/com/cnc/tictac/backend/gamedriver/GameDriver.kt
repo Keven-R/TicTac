@@ -177,6 +177,9 @@ class GameDriver(
      **********************************
      *  accessor for the board
      */
+    fun getMinimumWin() : Int {
+        return this.getBoard().getMinimumWin()
+    }
     fun getBoard() : Board {
         Log.d(TAG, "Current board is being fetched.")
         return this.board
@@ -226,7 +229,7 @@ class GameDriver(
      *  In order to test if the current player is AI without removing it, .peek() is used.
      *  Returns a WinCondition enum attribute.
      */
-    fun playMove(x : Int? =  null, y : Int? =  null) : Triple<WinCondition, Pair<Int, Int>?, Pair<Int, Int>?>? {
+    fun playMove(x : Int? =  null, y : Int? =  null) : WinCondition? {
         Log.d(TAG, "Placing a puck at $x, $y.")
         /** Get current player **/
         this.player = this.playerArray[currentPlayer]
@@ -250,13 +253,6 @@ class GameDriver(
             }while(!this.board.placePuck(x = aiX!!, y = aiY!!, currentPlayer = this.player!!))
             // Random plays will continue being made until a square without a puck is found.
             Log.d(TAG, "Searching win condition for AIPlayer")
-            /** Toggle current player **/
-            Log.d(TAG, "Toggling current player from ${this.currentPlayer}")
-            if(this.currentPlayer == 0){
-                this.currentPlayer = 1
-            } else {
-                this.currentPlayer = 0
-            }
             return this.board.searchWinCondition(this.player!!)
         } else if(this.player is HumanPlayer && x != null && y != null) { /** Placing puck if HumanPlayer **/
             /** placing a puck **/
@@ -265,16 +261,26 @@ class GameDriver(
                 Log.e(TAG, "Puck is placed on occupied square.")
                 return null
             }
-            if(this.currentPlayer == 0){
-                this.currentPlayer = 1
-            } else {
-                this.currentPlayer = 0
-            }
             Log.d(TAG, "Searching win condition for HumanPlayer")
             return this.board.searchWinCondition(this.player!!)
         } else {
             return null
         }
+    }
+    fun nextPlayer() {
+        Log.d(TAG, "Next player")
+        if(this.currentPlayer == 0){
+            this.currentPlayer = 1
+        } else {
+            this.currentPlayer = 0
+        }
+    }
+    fun getWinCoordinates(winCondition : WinCondition) : Pair<Pair<Int, Int>, Pair<Int, Int>>?{
+        Log.d(TAG, "Getting win coordinates")
+        if(this.player != null) {
+            return this.board.getWinCoordinates(this.player!!, winCondition)
+        }
+        return null
     }
     /**********************************
      * resetGameBoard()
