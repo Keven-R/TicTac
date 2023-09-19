@@ -66,12 +66,12 @@ interface PLAYER_DAO {
     fun removePlayer(player : HumanPlayer)
 
     /** Increment wins, losses, draws **/
-    @Query("UPDATE $TABLE_NAME SET wins = :newWins WHERE obj = :player")
-    fun updateWins(newWins : Int, player : HumanPlayer)
-    @Query("UPDATE $TABLE_NAME SET losses = :newLosses WHERE obj = :player")
-    fun updateLosses(newLosses : Int, player : HumanPlayer)
-    @Query("UPDATE $TABLE_NAME SET draws = :newDraws WHERE obj = :player")
-    fun updateDraws(newDraws : Int, player : HumanPlayer)
+    @Query("UPDATE $TABLE_NAME SET wins = :newWins WHERE id = :playerID")
+    fun updateWins(newWins : Int, playerID : Int)
+    @Query("UPDATE $TABLE_NAME SET losses = :newLosses WHERE id = :playerID")
+    fun updateLosses(newLosses : Int, playerID : Int)
+    @Query("UPDATE $TABLE_NAME SET draws = :newDraws WHERE id = :playerID")
+    fun updateDraws(newDraws : Int, playerID : Int)
 
 }
 /** This is the database class for the players **/
@@ -80,21 +80,6 @@ interface PLAYER_DAO {
 @TypeConverters(Converters::class)
 abstract class PLAYER_ROOM_DATABASE : RoomDatabase() {
     abstract fun getDAO(): PLAYER_DAO
-    /*
-    companion object {
-        @Volatile
-        private var Instance: PLAYER_ROOM_DATABASE? = null
-        fun getDatabase(context: Context): PLAYER_ROOM_DATABASE {
-            // if the Instance is not null, return it, otherwise create a new database instance.
-            return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, PLAYER_ROOM_DATABASE::class.java, "PLAYER_ROOM_DATABASE_imp")
-                    .build()
-                    .also { Instance = it }
-            }
-        }
-    }
-    */
-
 }
 
 

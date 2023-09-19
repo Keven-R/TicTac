@@ -187,14 +187,21 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
         // Sets play order
         when(startingSelection){
-            0 -> gd.setPlayerOrder(0)
-            1 -> gd.setPlayerOrder(1)
+            0 -> {
+                gd.setPlayerOrder(0)
+                this.player1Turn = true
+                this.player2Turn = false
+            }
+            1 -> {
+                gd.setPlayerOrder(1)
+                this.player1Turn = false
+                this.player2Turn = true
+            }
         }
 
         gd.reinit(GameConfig(boardSize, boardSize, winSize))
-        val constraints = gd.getBoard().getConstraints()
-        this.winIndices = Array(constraints.first*constraints.second, { false })
 
+        this.resetMutableStates()
         timerStart()
     }
 
@@ -205,7 +212,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         player2Name = "AI"
 
         singlePlayerGame = true
-
     }
 
     private fun newMultiPlayerGame(){
@@ -221,6 +227,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
 
+    private fun resetMutableStates(){
+        this.winner = null
+        this.winCondition = WinCondition.NO_WIN
+        val constraints = gd.getBoard().getConstraints()
+        this.winIndices = Array(constraints.first*constraints.second, { false })
+    }
     private fun changePlayer(player: HumanPlayer){
         when(uiSelectedPlayer){
             UIPLAYERSELECT.PLAYER1 -> {
@@ -260,9 +272,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             gd.undoPreviousMove()
             swapPlayer()
         }
-        this.winner = null
-        val constraints = gd.getBoard().getConstraints()
-        this.winIndices = Array(constraints.first*constraints.second, { false })
+        this.resetMutableStates()
         val board2D = gd.getBoardAsString()
         boardConvertAndSet(board2D)
     }
@@ -272,31 +282,26 @@ class TicTacViewModel(context: Context) : ViewModel(){
         gd.resetGameBoard()
         swapPlayer() //swaps player so the person who resets is always second
         boardConvertAndSet(gd.getBoardAsString()) // redraws board
-        this.winner = null
-        val constraints = gd.getBoard().getConstraints()
-        this.winIndices = Array(constraints.first*constraints.second, { false })
+        this.resetMutableStates()
     }
 
     private fun exit(){
         Log.v(TAG, TYPE+"Exit")
-        this.winner = null
-        val constraints = gd.getBoard().getConstraints()
-        this.winIndices = Array(constraints.first*constraints.second, { false })
-        gd.resetGameBoard()
 
         Log.v("Test", "Stats Before: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
-
-        val currentPlayerStats = gd.getPlayerStatsFromDatabase(this.winner as HumanPlayer)
-        var wins = currentPlayerStats.second
-        var losses = currentPlayerStats.first
-        var draws = currentPlayerStats.third
-        when(this.winCondition){
-            WinCondition.DRAW -> draws ++ // update draws
-            WinCondition.VERTICAL, WinCondition.HORISONTAL,
-            WinCondition.DIAGONAL_2, WinCondition.DIAGONAL_1 -> wins ++
-            else -> Log.v(TAG, "Not updating stats. no win condition achieved.")
+        if(this.winCondition != WinCondition.NO_WIN){
+            val currentPlayerStats = gd.getPlayerStatsFromDatabase(this.winner as HumanPlayer)
+            var wins = currentPlayerStats.second
+            var losses = currentPlayerStats.first
+            var draws = currentPlayerStats.third
+            when(this.winCondition){
+                WinCondition.DRAW -> draws ++ // update draws
+                WinCondition.VERTICAL, WinCondition.HORISONTAL,
+                WinCondition.DIAGONAL_2, WinCondition.DIAGONAL_1 -> wins ++
+                else -> Log.v(TAG, "Not updating stats. no win condition achieved.")
+            }
+            gd.updatePlayerStatsInDatabase(this.winner as HumanPlayer,wins,draws,losses) // TODO: Play stats don't seem to update
         }
-        gd.updatePlayerStatsInDatabase(this.winner as HumanPlayer,wins,draws,losses) // TODO: Play stats don't seem to update
         player1StatMarker = gd.getPlayerStatsRibbonFromDatabase(player1 as HumanPlayer)
 
         val stats = gd.getPlayerDisplayStatsFromDatabase(player1 as HumanPlayer)
@@ -307,6 +312,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
         Log.v("Test", "Stats After: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
 
+        this.resetMutableStates()
+        gd.resetGameBoard()
         users = gd.getPlayersFromDatabase() as List<HumanPlayer> // reloads the user list for updated info
 
     }
@@ -357,8 +364,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
             }
             is HumanPlayer, is AIPlayer -> { /** PLAYER WON **/
                 Log.d(TAG, "${winner.playerName} won the game.")
-                this.winner = gd.whoIsPlaying()
                 this.winCondition = winCondition
+                this.winner = gd.whoIsPlaying()
                 when(winCondition){
                     WinCondition.VERTICAL, WinCondition.HORISONTAL -> {
                         Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.first}")
@@ -392,7 +399,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         }
                     }
                     else -> {
-                        this.winner = null
                         val constraints = gd.getBoard().getConstraints()
                         this.winIndices = Array(constraints.first*constraints.second, { false })
                     }
@@ -404,7 +410,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
     private fun markerPlaced(position: Int){
         if(this.winner != null){
-            Log.v(TAG, "Winner already determined. winner is ${this.winner!!.playerName}")
             return
         }
         Log.v(TAG, "Placing marker for ${gd.whoIsPlaying()?.playerName}")
@@ -441,43 +446,53 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 this.winner = null
                 Log.v(TAG, "No win condition detected for player.")
                 swapPlayer()
-                gd.nextPlayer()
             }
         }
         /** If next player is AI -> play AI move automatically **/
-        if(player2 is AIPlayer){
-            wincondition = gd.playMove()
-            /** If the AI player wins **/
-            when(wincondition){
-                WinCondition.HORISONTAL,
-                WinCondition.VERTICAL,
-                WinCondition.DIAGONAL_1,
-                WinCondition.DIAGONAL_2 -> {
-                    Log.v(TAG, "Win condition detected for AI.")
-                    val wincoordinates = gd.getWinCoordinates(wincondition)
-                    // Do stuff maybe use when
-                    val board2D = gd.getBoardAsString()
-                    boardConvertAndSet(board2D)
-                    print2D(board2D)
-                    Log.v("Test", wincondition.toString())
-                    Log.v("Test", "${wincoordinates?.first?.first}, " +
-                            "${wincoordinates?.first?.second} : " +
-                            "${wincoordinates?.second?.first}, " +
-                            "${wincoordinates?.second?.second}")
-                    this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
-                    return
-                }
-                WinCondition.DRAW -> {
-                    Log.v(TAG, "Draw detected for AI player.")
-                    this.winnerDecided(null, null,null)
-                    return
-                }
-                else -> {
-                    this.winner = null
-                    Log.v(TAG, "No win condition detected for AI.")
-                    swapPlayer()
-                    gd.nextPlayer()
-                }
+        if (player2 is AIPlayer){
+            markerPlacedAI(player2 as AIPlayer)
+        }
+        updateNewMarker()
+    }
+
+    private fun updateNewMarker(){
+        /** Print board to debugging output **/
+        val board2D = gd.getBoardAsString()
+        print2D(board2D)
+        boardConvertAndSet(board2D)
+        val moveUndoAvailable = boardState.find { move -> "x".equals(move) || "o".equals(move) }
+        if (moveUndoAvailable != null){
+            undoAvailable = true
+        }
+        player1Timer = 10
+        player2Timer = 10
+    }
+
+    private fun markerPlacedAI(player2 : AIPlayer){
+        val wincondition = gd.playMove()
+        /** If the AI player wins **/
+        when(wincondition){
+            WinCondition.HORISONTAL,
+            WinCondition.VERTICAL,
+            WinCondition.DIAGONAL_1,
+            WinCondition.DIAGONAL_2 -> {
+                Log.v(TAG, "Win condition detected for AI.")
+                val wincoordinates = gd.getWinCoordinates(wincondition)
+                val board2D = gd.getBoardAsString()
+                boardConvertAndSet(board2D)
+                print2D(board2D)
+                this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
+                return
+            }
+            WinCondition.DRAW -> {
+                Log.v(TAG, "Draw detected for AI player.")
+                this.winnerDecided(null, null,null)
+                return
+            }
+            else -> {
+                this.winner = null
+                Log.v(TAG, "No win condition detected for AI.")
+                swapPlayer()
             }
         }
         /** Print board to debugging output **/
@@ -505,6 +520,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
      *******************************/
 
     private fun swapPlayer(){
+        Log.v(TAG, "Swapping player")
         if(player1Turn){
             player1Turn = false
             player2Turn = true
@@ -514,6 +530,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             player2Turn = false
             Log.v("Test", "Player 1 Turn")
         }
+        this.gd.nextPlayer()
     }
 
     private fun print2D(arr:Array<Array<String>>){
@@ -673,7 +690,24 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         player2Timer += it
                     }
                 }
-                // TODO Maybe check for 0 time here and make win?
+                if (timerActive
+                    && (!singlePlayerGame)
+                    && (player1Timer == 0 || player2Timer == 0)
+                    && (winCondition == WinCondition.NO_WIN)){
+                    Log.v("Test", "player timed out")
+                    this.swapPlayer()
+                    player1Timer = 10
+                    player2Timer = 10
+                } else if (timerActive
+                    && (singlePlayerGame)
+                    && (player2 is AIPlayer)
+                    && (player1Timer == 0 || player2Timer == 0)
+                    && (winCondition == WinCondition.NO_WIN)){
+                    Log.v("Test", "player timed out in singleplayer")
+                    markerPlacedAI(player2 as AIPlayer)
+                    updateNewMarker()
+                    player1Timer = 10
+                }
             }.launchIn(viewModelScope)
     }
 
