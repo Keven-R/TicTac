@@ -359,13 +359,13 @@ class GameDriver(
     fun updatePlayerStatsInDatabase(player : HumanPlayer, wins : Int?, draws : Int?, losses : Int?){
         Log.d(TAG, "Updating player ${player.playerName} to database.")
         if(wins != null) {
-            this.playerDAO.updateWins(wins, player)
+            this.playerDAO.updateWins(wins, player.playerID!!)
         }
         if(draws != null) {
-            this.playerDAO.updateDraws(draws, player)
+            this.playerDAO.updateDraws(draws, player.playerID!!)
         }
         if(losses != null) {
-            this.playerDAO.updateLosses(losses, player)
+            this.playerDAO.updateLosses(losses, player.playerID!!)
         }
     }
     /**********************************
