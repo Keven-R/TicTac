@@ -17,6 +17,14 @@
     <string name="profile_action_left">edit profile</string>
     <string name="profile_action_right">switch user</string>
 
+    <!-- Leaderboard content -->
+    <string name="header_rank">#</string>
+    <string name="header_user">name</string>
+    <string name="header_wins">win</string>
+    <string name="header_draw">tie</string>
+    <string name="header_loss">loss</string>
+    <string name="header_total">total</string>
+
     <!-- User detail screen content -->
     <string name="user_create_action">create</string>
     <string name="user_save_action">save</string>
@@ -68,6 +76,7 @@
     <string name="button_play_solo">single player</string>
     <string name="button_play_multi">multiplayer</string>
     <string name="button_profile">profile</string>
+    <string name="button_leaderboard">leaderboard</string>
     <string name="button_new_user_icon">+</string>
     <string name="button_new_user_label">new user</string>
 

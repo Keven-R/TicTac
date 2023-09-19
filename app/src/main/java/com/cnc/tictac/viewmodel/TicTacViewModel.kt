@@ -3,6 +3,7 @@ package com.cnc.tictac.viewmodel
 import android.content.Context
 import android.graphics.Point
 import android.util.Log
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +47,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var db : PLAYER_ROOM_DATABASE
 
     var users by mutableStateOf(emptyList<HumanPlayer>())
-    var leaderBoard by mutableStateOf(emptyList<HumanPlayer>())
+    var leaderboard by mutableStateOf(emptyList<HumanPlayer>())
 
     /* Player 1 States */
     var player1 by mutableStateOf(placeHolderHumanPlayer)
@@ -111,7 +112,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         gd = GameDriver(GameConfig(),db) // Makes Game driver
         generateInitialUsers() // Makes Game driver populates database if empty
         users = gd.getPlayersFromDatabase() as List<HumanPlayer> // Sets users, also makes them un-nullable
-        leaderBoard = gd.getLeaderboard() as List<HumanPlayer>
+        leaderboard = gd.getLeaderboard() as List<HumanPlayer>
         setupDefaultProfiles()
         ticker()
     }
@@ -526,5 +527,20 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 }
                 // TODO Maybe check for 0 time here and make win?
             }.launchIn(viewModelScope)
+    }
+
+    // Returns stats as a triple, already in string format. <Wins, Draws, Loss>
+    fun getPlayerStats (player : HumanPlayer) : Triple<Int, Int, Int> {
+        val stats = gd.getPlayerStatsFromDatabase(player)
+        val numWin = stats.first
+        val numDraw = stats.second
+        val numLoss = stats.third
+
+        return Triple(numWin, numDraw, numLoss)
+    }
+
+    // Returns total number of games in string format.
+    fun getPlayerTotalGames (player : HumanPlayer) : Int {
+        return gd.getPlayerTotalGamesFromDatabase(player)
     }
 }

@@ -79,6 +79,16 @@ val Typography = Typography(
 
     /* USES
      *
+     * - leaderboard
+     */
+    headlineSmall = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 14.sp
+    ),
+
+    /* USES
+     *
      * - Game pause/restart/exit overlays.
      */
     headlineMedium = TextStyle(

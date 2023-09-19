@@ -419,6 +419,16 @@ class GameDriver(
         Log.d(TAG, "${player.playerName} has stats wins = $wins, looses = $losses, draws = $draws.")
         return Triple(losses, wins, draws)
     }
+
+    fun getPlayerTotalGamesFromDatabase(player : HumanPlayer) : Int {
+        Log.d(TAG, "Obtaining player total games from database.")
+        val losses = this.playerDAO.getLosses(player.playerID)
+        val wins = this.playerDAO.getWins(player.playerID)
+        val draws = this.playerDAO.getDraws(player.playerID)
+        val total = losses+wins+draws
+        Log.d(TAG, "${player.playerName} has total games: $total")
+        return total
+    }
     /**
      * A duplicate of the above method, returning a formatted string in percent. Here to allow easy
      * display in the frontend.
@@ -444,7 +454,7 @@ class GameDriver(
         val draws = this.playerDAO.getDraws(player.playerID)
         val total = losses + wins + draws
         Log.d(TAG, "${player.playerName} has a total of $total games.")
-        return "total games $total"
+        return "total games: $total"
     }
     /**********************************
      * getPlayerStatsRibbon()
