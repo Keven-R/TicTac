@@ -7,6 +7,7 @@ sealed class TicTacEvent{
     object StartGame: TicTacEvent()
     object NewSinglePlayerGame: TicTacEvent()
     object NewMultiPlayerGame: TicTacEvent()
+    object ProfileMenuSelect: TicTacEvent()
     object Undo: TicTacEvent()
     object Restart: TicTacEvent()
     object Exit: TicTacEvent()

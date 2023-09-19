@@ -185,6 +185,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
     fun onEvent(event: TicTacEvent){
         when(event){
+            TicTacEvent.ProfileMenuSelect -> {} // Redundant but too long to remove
             TicTacEvent.TempEvent -> Log.v(TAG, TYPE+"Temp Event For Testing")
             TicTacEvent.StartGame -> gameStart()
             TicTacEvent.NewSinglePlayerGame -> newSinglePlayerGame()
