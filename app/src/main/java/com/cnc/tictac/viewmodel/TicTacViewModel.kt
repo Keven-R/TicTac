@@ -264,6 +264,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             1 -> { 4 }
             else -> { 5 }
         }
+
         boardState = Array(boardSize*boardSize) { _ -> "" }
         val winSize = when(winConditionSelection){
             0 -> 3
@@ -292,6 +293,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
         // Game ready to start
         resetMutableStates()
         timerStart()
+
+        if(player2 is AIPlayer) {
+            if(player2Turn) {
+                markerPlacedAI()
+            }
+        }
     }
 
     private fun newSinglePlayerGame(){
@@ -564,6 +571,11 @@ class TicTacViewModel(context: Context) : ViewModel(){
      */
     private fun markerPlacedAI(){
         val wincondition = gd.playMove()
+
+        // Update board as soon as possible
+        val board2D = gd.getBoardAsString()
+        boardConvertAndSet(board2D)
+
         /** If the AI player wins **/
         when(wincondition){
             WinCondition.HORISONTAL,
