@@ -78,6 +78,72 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2LossesString by mutableStateOf("")
     var player2TotalGamesString by mutableStateOf("")
 
+    /* Game setting states */
+    // Radio variables in GameSettingsScreens
+    val markerOptions = arrayOf("x", "o")
+    var startOptions by mutableStateOf(arrayOf(player1Name, player2Name))
+    val boardOptions = arrayOf("3x3", "4x4", "5x5")
+    val winOptions = arrayOf("3", "4", "5")
+
+    // Radio onclick events
+    val updateP1Marker =  {
+        when(player1Marker) {
+            0 -> {
+                player1Marker = 1
+                player2Marker = 0
+            }
+            1 -> {
+                player1Marker = 0
+                player2Marker = 1
+            }
+        }
+    }
+    val updateWhoGoesFirst: () -> Unit = {
+        when(startingSelection){
+            0 -> startingSelection = 1
+            1 -> startingSelection = 0
+        }
+    }
+    val updateBoardSize: () -> Unit = {
+        when(boardSelection){
+            0 -> {
+                boardSelection = 1
+                winSelectable = arrayOf(false, false, true)
+            }
+            1 -> {
+                boardSelection = 2
+                winSelectable = arrayOf(false, false, false)
+            }
+            2 -> {
+                boardSelection = 0
+                winSelectable = arrayOf(false, true, true)
+            }
+        }
+    }
+    val updateWinCondition: () -> Unit = {
+        when(winConditionSelection){
+            0 -> {
+                if(winSelectable[1]){
+                    winConditionSelection = 0
+                }
+                else{
+                    winConditionSelection = 1
+                }
+            }
+            1 -> {
+                if(winSelectable[2]){
+                    winConditionSelection = 0
+                }
+                else{
+                    winConditionSelection = 2
+                }
+            }
+            2 -> {
+                winConditionSelection = 0
+            }
+        }
+    }
+
     /* Game States */
     var boardState by mutableStateOf(arrayOf<String>())
     var gameActive by mutableStateOf(true) // This and gameEnded could probably be the same
@@ -221,7 +287,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")
 
         if(player2 == users[0]) { player2Name = player2.playerName}
-
         singlePlayerGame = false
 
         gd.setFirstPlayer(player1)
