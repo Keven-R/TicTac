@@ -22,16 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
-import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
-import com.cnc.tictac.backend.gamedriver.GameConfig
-import com.cnc.tictac.backend.gamedriver.GameDriver
-import com.cnc.tictac.backend.system.HumanPlayer
 import com.cnc.tictac.ui.screens.GameMenuScreen
 import com.cnc.tictac.ui.screens.GameScreen
 import com.cnc.tictac.ui.screens.GameSettingsScreen
@@ -43,7 +37,6 @@ import com.cnc.tictac.ui.screens.UserDetailScreen
 import com.cnc.tictac.ui.screens.UserSelectScreen
 import com.cnc.tictac.ui.theme.TicTacTheme
 import com.cnc.tictac.viewmodel.TicTacViewModel
-import kotlin.random.Random
 
 private const val TAG = "MainActivity"
 
@@ -51,6 +44,7 @@ private const val TAG = "MainActivity"
 sealed class Destination(val route: String){
     object HomeScreen: Destination("home")
     object GameScreen: Destination("game")
+    object WinnerScreen: Destination("winner")
     object GameSettingsScreen: Destination("settings")
     object MultiplayerSettingsScreen: Destination("multi")
     object UserDetailScreen: Destination("edit_info")

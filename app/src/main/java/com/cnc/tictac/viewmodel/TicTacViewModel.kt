@@ -15,7 +15,9 @@ import com.cnc.tictac.R
 import com.cnc.tictac.backend.database.PLAYER_ROOM_DATABASE
 import com.cnc.tictac.backend.gamedriver.GameConfig
 import com.cnc.tictac.backend.gamedriver.GameDriver
+import com.cnc.tictac.backend.system.AIPlayer
 import com.cnc.tictac.backend.system.HumanPlayer
+import com.cnc.tictac.backend.system.Player
 import com.cnc.tictac.backend.system.WinCondition
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -41,8 +43,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
         R.drawable.avatar_8, R.drawable.avatar_9, R.drawable.avatar_10)
 
     /* Backend Variables */
-    private var placeHolderHumanPlayer: HumanPlayer = HumanPlayer()
-//    private var placeHolderAIPlayer: Player = AIPlayer()
+    private var placeHolderPlayer: Player = HumanPlayer()
+    private var placeHolderAIPlayer: Player = AIPlayer()
     var gd : GameDriver
     var db : PLAYER_ROOM_DATABASE
 
@@ -50,7 +52,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var leaderboard by mutableStateOf(emptyList<HumanPlayer>())
 
     /* Player 1 States */
-    var player1 by mutableStateOf(placeHolderHumanPlayer)
+    var player1 by mutableStateOf(placeHolderPlayer)
     var player1Name by mutableStateOf("Default Player")
     var player1Timer by mutableIntStateOf(10)
     var player1Turn by mutableStateOf(true)
@@ -64,7 +66,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player1TotalGamesString by mutableStateOf("")
 
     /* Player 2 States */
-    var player2 by mutableStateOf(placeHolderHumanPlayer)
+    var player2 by mutableStateOf(placeHolderPlayer)
     var player2Name by mutableStateOf("Default Player")
     var player2Timer by mutableIntStateOf(10)
     var player2Turn by mutableStateOf(false)
@@ -88,6 +90,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var undoAvailable by mutableStateOf(false)
     var singlePlayerGame by mutableStateOf(true)
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
+    var winner by mutableStateOf(HumanPlayer() as Player?)
 
     /* UI States*/
     var gameUIState by mutableStateOf(MENU.RUNNING)
@@ -112,6 +115,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
         gd = GameDriver(GameConfig(),db) // Makes Game driver
         generateInitialUsers() // Makes Game driver populates database if empty
         users = gd.getPlayersFromDatabase() as List<HumanPlayer> // Sets users, also makes them un-nullable
+        leaderboard = gd.getLeaderboard() as List<HumanPlayer>
+        winner = null
         leaderboard = gd.getLeaderboard() as List<HumanPlayer>
         setupDefaultProfiles()
         ticker()
@@ -193,7 +198,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     private fun newSinglePlayerGame(){
         Log.v(TAG, TYPE+"NewSinglePlayerGame")
 
-        player2 = users[0]
+        player2 = placeHolderAIPlayer
         player2Name = "AI"
 
         singlePlayerGame = true
@@ -243,9 +248,17 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun undo(){
         Log.v(TAG, TYPE+"Undo")
-
-        gd.undoPreviousMove()
-        swapPlayer()
+        /** If single player, undo 2 moves **/
+        if(singlePlayerGame){
+            gd.undoPreviousMove()
+            gd.undoPreviousMove()
+        } else if(!singlePlayerGame){
+            gd.undoPreviousMove()
+            swapPlayer()
+        }
+        this.winner = null
+        val constraints = gd.getBoard().getConstraints()
+        this.winIndices = Array(constraints.first*constraints.second, { false })
         val board2D = gd.getBoardAsString()
         boardConvertAndSet(board2D)
     }
@@ -255,6 +268,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
         gd.resetGameBoard()
         swapPlayer() //swaps player so the person who resets is always second
         boardConvertAndSet(gd.getBoardAsString()) // redraws board
+        this.winner = null
+        val constraints = gd.getBoard().getConstraints()
+        this.winIndices = Array(constraints.first*constraints.second, { false })
     }
 
     private fun exit(){
@@ -263,14 +279,14 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
         Log.v("Test", "Stats Before: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
 
-        gd.updatePlayerStatsInDatabase(player1,99,0,0) // TODO: Play stats don't seem to update
-        player1StatMarker = gd.getPlayerStatsRibbonFromDatabase(player1)
+        gd.updatePlayerStatsInDatabase(player1 as HumanPlayer,99,0,0) // TODO: Play stats don't seem to update
+        player1StatMarker = gd.getPlayerStatsRibbonFromDatabase(player1 as HumanPlayer)
 
-        val stats = gd.getPlayerDisplayStatsFromDatabase(player1)
+        val stats = gd.getPlayerDisplayStatsFromDatabase(player1 as HumanPlayer)
         player1WinString = stats.first
         player1DrawString = stats.second
         player1LossesString = stats.third
-        player1TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player1)
+        player1TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player1 as HumanPlayer)
 
         Log.v("Test", "Stats After: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
 
@@ -308,45 +324,149 @@ class TicTacViewModel(context: Context) : ViewModel(){
         timerActive = false
     }
 
+    /** ATTENTION: THIS IS A DUMMY METHOD....
+     * I DONT KNOW WHAT IS SUPPOSED TO HAPPEN WHEN THE markerPlaced METHOD OBSERVES THAT SOMEONE
+     * HAS ONE THE GAME>>>>
+     * CALLED FROM markerPlaced!!!!
+     */
+    private fun winnerDecided(winner : Player?, winCondition : WinCondition?, winCoordinates : Pair<Pair<Int, Int>, Pair<Int, Int>>?) {
+        Log.d(TAG, "Winner decided")
+        val constraints = gd.getBoard().getConstraints()
+        this.winIndices = Array(constraints.first*constraints.second, { false })
+        when(winner){
+            null -> { /** DRAW **/
+                Log.d(TAG, "Game ended in a draw.")
+                this.winner = null
+            }
+            is HumanPlayer, is AIPlayer -> { /** PLAYER WON **/
+                Log.d(TAG, "${winner.playerName} won the game.")
+                this.winner = gd.whoIsPlaying()
+                when(winCondition){
+                    WinCondition.VERTICAL, WinCondition.HORISONTAL -> {
+                        Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.first}")
+                        Log.d("Test", "${winCoordinates!!.first.second}:${winCoordinates.second.second}")
+                        for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
+                            for (j in winCoordinates!!.first.second..winCoordinates.second.second) {
+                                this.winIndices[positionConverter_to1D(Point(i, j))] = true
+                            }
+                        }
+                    }
+                    WinCondition.DIAGONAL_1 -> {
+                        Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.first}")
+                        Log.d("Test", "${winCoordinates!!.first.second}:${winCoordinates.second.second}")
+                        for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
+                            for (j in winCoordinates!!.first.second..winCoordinates.second.second) {
+                                if(i == j){
+                                    this.winIndices[positionConverter_to1D(Point(i, j))] = true
+                                }
+                            }
+                        }
+                    }
+                    WinCondition.DIAGONAL_2 -> {
+                        Log.d("Test", "${winCoordinates!!.first.second}:${winCoordinates.second.first}")
+                        Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.second}")
+                        for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
+                            for (j in winCoordinates!!.second.second..winCoordinates.first.second) {
+                                if(i == -j + gd.getMinimumWin() - 1){
+                                    this.winIndices[positionConverter_to1D(Point(i, j))] = true
+                                }
+                            }
+                        }
+                    }
+                    else -> {
+                        val constraints = gd.getBoard().getConstraints()
+                        this.winIndices = Array(constraints.first*constraints.second, { false })
+                    }
+                }
+            }
+        }
+        print1D(this.winIndices as Array<Any>)
+        Log.d("Test", "${this.winner}")
+    }
     private fun markerPlaced(position: Int){
+        if(this.winner != null){
+            return
+        }
+        Log.v(TAG, "Placing marker for ${gd.whoIsPlaying()?.playerName}")
         val position2D = positionConverter(position)
         Log.v(TAG, TYPE+"MarkerPlaced: UIPosition = $position, GameDriverPosition = ${position2D.x},${position2D.y}")
-
+        /** Player 1 makes move **/
         var wincondition = gd.playMove(position2D.x,position2D.y)
-
-        if (wincondition?.first == WinCondition.WIN){
-            // Do stuff maybe use when
-            val board2D = gd.getBoardAsString()
-            boardConvertAndSet(board2D)
-            print2D(board2D)
-            Log.v("Test", wincondition.toString())
-            return
-        }else{
-            swapPlayer()
+        /** if Player 1 wins **/
+        when(wincondition){
+            WinCondition.HORISONTAL,
+            WinCondition.VERTICAL,
+            WinCondition.DIAGONAL_1,
+            WinCondition.DIAGONAL_2 -> {
+                Log.v(TAG, "Win condition detected for player.")
+                val wincoordinates = gd.getWinCoordinates(wincondition)
+                // Do stuff maybe use when
+                val board2D = gd.getBoardAsString()
+                boardConvertAndSet(board2D)
+                print2D(board2D)
+                Log.v("Test", wincondition.toString())
+                Log.v("Test", "${wincoordinates?.first?.first}, " +
+                        "${wincoordinates?.first?.second} : " +
+                        "${wincoordinates?.second?.first}, " +
+                        "${wincoordinates?.second?.second}")
+                this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
+                return
+            }
+            WinCondition.DRAW -> {
+                Log.v(TAG, "Draw detected for player.")
+                this.winnerDecided(null, null,null)
+                return
+            }
+            else -> {
+                this.winner = null
+                Log.v(TAG, "No win condition detected for player.")
+                swapPlayer()
+                gd.nextPlayer()
+            }
         }
-
-        if(player2Name.equals("AI") && player2 == users[0]){
+        /** If next player is AI -> play AI move automatically **/
+        if(player2 is AIPlayer){
             wincondition = gd.playMove()
-            swapPlayer()
+            /** If the AI player wins **/
+            when(wincondition){
+                WinCondition.HORISONTAL,
+                WinCondition.VERTICAL,
+                WinCondition.DIAGONAL_1,
+                WinCondition.DIAGONAL_2 -> {
+                    Log.v(TAG, "Win condition detected for AI.")
+                    val wincoordinates = gd.getWinCoordinates(wincondition)
+                    // Do stuff maybe use when
+                    val board2D = gd.getBoardAsString()
+                    boardConvertAndSet(board2D)
+                    print2D(board2D)
+                    Log.v("Test", wincondition.toString())
+                    Log.v("Test", "${wincoordinates?.first?.first}, " +
+                            "${wincoordinates?.first?.second} : " +
+                            "${wincoordinates?.second?.first}, " +
+                            "${wincoordinates?.second?.second}")
+                    this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
+                    return
+                }
+                WinCondition.DRAW -> {
+                    Log.v(TAG, "Draw detected for AI player.")
+                    this.winnerDecided(null, null,null)
+                    return
+                }
+                else -> {
+                    this.winner = null
+                    Log.v(TAG, "No win condition detected for AI.")
+                    swapPlayer()
+                    gd.nextPlayer()
+                }
+            }
         }
-
-        if (wincondition?.first == WinCondition.WIN){
-            // Do stuff maybe use when
-            val board2D = gd.getBoardAsString()
-            boardConvertAndSet(board2D)
-            print2D(board2D)
-            Log.v("Test", wincondition.toString())
-            return
-        }
-
+        /** Print board to debugging output **/
         val board2D = gd.getBoardAsString()
         print2D(board2D)
         boardConvertAndSet(board2D)
         Log.v("Test", wincondition.toString())
-
         val moveUndoAvailable = boardState.find { move -> "x".equals(move) || "o".equals(move) }
-
-        if (moveUndoAvailable != null && !singlePlayerGame){
+        if (moveUndoAvailable != null){
             undoAvailable = true
         }
 
@@ -382,17 +502,25 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
         Log.v("Test", "")
     }
+
+    private fun print1D(arr:Array<Any>){
+        for (i in arr.indices) {
+            Log.v("Test", "${arr[i]}")
+        }
+        Log.v("Test", "")
+    }
     private fun positionConverter(position1D: Int): Point {
         val position2D = Point(0,0)
         position2D.x = position1D % getBoardSize()
         position2D.y = position1D / getBoardSize()
-
         return position2D
     }
-
+    private fun positionConverter_to1D(position2D: Point): Int {
+        var position1D : Int = position2D.x + (position2D.y * gd.getBoard().getConstraints().first)
+        return position1D
+    }
     private fun boardConvertAndSet(board2D: Array<Array<String>>){
         val board1D = board2D.reduce { acc, ints -> acc + ints  }
-
         Log.v("Test", "BoardString: ${board1D.joinToString()}")
         boardState = board1D
     }
