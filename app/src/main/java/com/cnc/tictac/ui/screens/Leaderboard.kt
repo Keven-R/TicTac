@@ -77,9 +77,9 @@ fun Leaderboard(navController: NavHostController, viewModel: TicTacViewModel) {
                         TableCell(text = (i+1).toString(), weight = column1Weight)
                         TableCell(text = players[i].playerName, weight = column2Weight)
                         TableHeader(text = wins.toString(), weight = column3Weight)
-                        TableHeader(text = draws.toString(), weight = column4Weight)
-                        TableHeader(text = losses.toString(), weight = column5Weight)
-                        TableHeader(text = total.toString(), weight = column6Weight)
+                        TableCell(text = draws.toString(), weight = column4Weight)
+                        TableCell(text = losses.toString(), weight = column5Weight)
+                        TableCell(text = total.toString(), weight = column6Weight)
                     }
                 }
             }

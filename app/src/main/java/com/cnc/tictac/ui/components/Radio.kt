@@ -66,7 +66,7 @@ fun Radio(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
-                        onClick = { /*DO NOTHING ON CLICK*/ }
+                        onClick = onClick
                     )
                 } else if (isDisabled[ind]) {
                     SecondaryButtonDisabled(
@@ -75,7 +75,7 @@ fun Radio(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
-                        onClick = { /*DO NOTHING ON CLICK*/ }
+                        onClick = onClick
                     )
                 } else {
                     SecondaryButton(
