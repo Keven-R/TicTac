@@ -78,6 +78,65 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2LossesString by mutableStateOf("")
     var player2TotalGamesString by mutableStateOf("")
 
+    /* GameSettingsScreen */
+    // Radio onclick events
+    val updateP1Marker =  {
+        when(player1Marker){
+            0 -> player1Marker = 1
+            1 -> player1Marker = 0 }
+    }
+    val updateWhoGoesFirst: () -> Unit = {
+        when(startingSelection){
+            0 -> startingSelection = 1
+            1 -> startingSelection = 0
+        }
+    }
+    val updateBoardSize: () -> Unit = {
+        when(boardSelection){
+            0 -> {
+                boardSelection = 1
+                winSelectable = arrayOf(false, false, true)
+            }
+            1 -> {
+                boardSelection = 2
+                winSelectable = arrayOf(false, false, false)
+            }
+            2 -> {
+                boardSelection = 0
+                winSelectable = arrayOf(false, true, true)
+            }
+        }
+    }
+    val updateWinCondition: () -> Unit = {
+        when(winConditionSelection){
+            0 -> {
+                if(winSelectable[1]){
+                    winConditionSelection = 0
+                }
+                else{
+                    winConditionSelection = 1
+                }
+            }
+            1 -> {
+                if(winSelectable[2]){
+                    winConditionSelection = 0
+                }
+                else{
+                    winConditionSelection = 2
+                }
+            }
+            2 -> {
+                winConditionSelection = 0
+            }
+        }
+    }
+
+    // Radio variables
+    val markerOptions = arrayOf("x", "o")
+    val startOptions = arrayOf(player1Name, player2Name)
+    val boardOptions = arrayOf("3x3", "4x4", "5x5")
+    val winOptions = arrayOf("3", "4", "5")
+
     /* Game States */
     var boardState by mutableStateOf(arrayOf<String>())
     var gameActive by mutableStateOf(true) // This and gameEnded could probably be the same
@@ -145,8 +204,15 @@ class TicTacViewModel(context: Context) : ViewModel(){
         ** OnEvent functions **
      *******************************/
     private fun gameStart(){
-        Log.v(TAG, TYPE+"StartGame")
+        /* Starting a new game should set the following:
+         * 0 Players active in game
+         * 1 P2 marker
+         * 2 Who goes first
+         * 4 Board size
+         * 5 Win condition
+         */
 
+        Log.v(TAG, TYPE+"StartGame")
         movesMade = 0
 
         if(player1Turn){
