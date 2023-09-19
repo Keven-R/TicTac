@@ -287,13 +287,11 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun exit(){
         Log.v(TAG, TYPE+"Exit")
-
-        Log.v("Test", "Stats Before: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
-        if(this.winCondition != WinCondition.NO_WIN){
-            val currentPlayerStats = gd.getPlayerStatsFromDatabase(this.winner as HumanPlayer)
-            var wins = currentPlayerStats.second
-            var losses = currentPlayerStats.first
-            var draws = currentPlayerStats.third
+        if(this.winCondition != WinCondition.NO_WIN && this.winner is HumanPlayer){
+            val currentWinnerStats = gd.getPlayerStatsFromDatabase(this.winner as HumanPlayer)
+            var wins = currentWinnerStats.second
+            var losses = currentWinnerStats.first
+            var draws = currentWinnerStats.third
             when(this.winCondition){
                 WinCondition.DRAW -> draws ++ // update draws
                 WinCondition.VERTICAL, WinCondition.HORISONTAL,
@@ -302,20 +300,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
             }
             gd.updatePlayerStatsInDatabase(this.winner as HumanPlayer,wins,draws,losses) // TODO: Play stats don't seem to update
         }
-        player1StatMarker = gd.getPlayerStatsRibbonFromDatabase(player1 as HumanPlayer)
-
-        val stats = gd.getPlayerDisplayStatsFromDatabase(player1 as HumanPlayer)
-        player1WinString = stats.first
-        player1DrawString = stats.second
-        player1LossesString = stats.third
-        player1TotalGamesString = gd.getPlayerTotalGamesDisplayFromDatabase(player1 as HumanPlayer)
-
-        Log.v("Test", "Stats After: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
-
         this.resetMutableStates()
         gd.resetGameBoard()
         users = gd.getPlayersFromDatabase() as List<HumanPlayer> // reloads the user list for updated info
-
     }
 
     private fun saveUser(){
