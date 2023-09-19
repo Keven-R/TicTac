@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -207,4 +208,51 @@ fun getMenuContent(menu: MENU): Pair<Int, Int> {
             Pair(R.string.user_name_placeholder, R.string.user_name_placeholder)
         }
     }
+}
+
+@Composable
+fun HeadlineSmall(
+    modifier: Modifier = Modifier,
+    text: String = "headlineSmall",
+) {
+    Text(
+    text = text,
+    style = MaterialTheme.typography.headlineSmall,
+    color = MaterialTheme.colorScheme.onPrimary,
+    modifier = modifier
+    )
+}
+
+@Composable
+fun RowScope.TableHeader(
+    text: String,
+    weight: Float
+) {
+    HeadlineSmall(
+        Modifier.weight(weight),
+        text,
+    )
+}
+
+@Composable
+fun RowScope.TableCell (
+    text: String,
+    weight: Float
+) {
+    RowItem(
+        Modifier.weight(weight),
+        text,
+    )
+}
+@Composable
+fun RowItem(
+    modifier: Modifier = Modifier,
+    text: String = "rowItem",
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onPrimary,
+        modifier = modifier
+    )
 }
