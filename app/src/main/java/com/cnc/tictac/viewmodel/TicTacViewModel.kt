@@ -3,7 +3,6 @@ package com.cnc.tictac.viewmodel
 import android.content.Context
 import android.graphics.Point
 import android.util.Log
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -192,6 +191,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
 
         gd.reinit(GameConfig(boardSize, boardSize, winSize))
+        val constraints = gd.getBoard().getConstraints()
+        this.winIndices = Array(constraints.first*constraints.second, { false })
+
         timerStart()
     }
 
@@ -202,6 +204,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         player2Name = "AI"
 
         singlePlayerGame = true
+
     }
 
     private fun newMultiPlayerGame(){
@@ -275,6 +278,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun exit(){
         Log.v(TAG, TYPE+"Exit")
+        this.winner = null
+        val constraints = gd.getBoard().getConstraints()
+        this.winIndices = Array(constraints.first*constraints.second, { false })
         gd.resetGameBoard()
 
         Log.v("Test", "Stats Before: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
@@ -374,6 +380,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         }
                     }
                     else -> {
+                        this.winner = null
                         val constraints = gd.getBoard().getConstraints()
                         this.winIndices = Array(constraints.first*constraints.second, { false })
                     }
@@ -385,6 +392,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
     private fun markerPlaced(position: Int){
         if(this.winner != null){
+            Log.v(TAG, "Winner already determined. winner is ${this.winner!!.playerName}")
             return
         }
         Log.v(TAG, "Placing marker for ${gd.whoIsPlaying()?.playerName}")
