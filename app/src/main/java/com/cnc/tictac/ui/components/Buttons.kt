@@ -429,7 +429,9 @@ fun GameMenuButtonGroup (
     viewModel: TicTacViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    enableUndo: Boolean = viewModel.undoAvailable
+    enableUndo: Boolean = viewModel.undoAvailable,
+    enableRestart: Boolean = viewModel.restartAvailable,
+    enablePause: Boolean = viewModel.pauseAvailable,
 ) {
     Row (
         modifier = modifier,
@@ -437,6 +439,7 @@ fun GameMenuButtonGroup (
     ) {
         GameMenuButton(
             label = stringResource(id = copy.game_actions_pause),
+            enabled = enablePause,
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             viewModel.onEvent(TicTacEvent.TimerStop)
@@ -456,6 +459,7 @@ fun GameMenuButtonGroup (
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_restart),
+            enabled = enableRestart
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             viewModel.onEvent(TicTacEvent.TimerStop)
