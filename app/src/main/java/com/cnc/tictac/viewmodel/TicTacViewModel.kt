@@ -32,7 +32,7 @@ private const val TYPE = "EVENT: "
 
 enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 enum class UIPLAYERSELECT { PLAYER1, PLAYER2 }
-enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
+enum class MENU { HIDDEN, PAUSE, RESTART, EXIT, UNDO }
 
 class TicTacViewModel(context: Context) : ViewModel(){
 
@@ -78,6 +78,70 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2LossesString by mutableStateOf("")
     var player2TotalGamesString by mutableStateOf("")
 
+    /* Game settings states */
+    // Radio variables in GameSettingsScreens
+    val markerOptions = arrayOf("x", "o")
+    var startOptions by mutableStateOf(arrayOf(player1Name, player2Name))
+    val boardOptions = arrayOf("3x3", "4x4", "5x5")
+    val winOptions = arrayOf("3", "4", "5")
+
+    // Radio onclick events
+    val updateP1Marker =  {
+        when(player1Marker) {
+            0 -> {
+                player1Marker = 1
+            }
+            1 -> {
+                player1Marker = 0
+            }
+        }
+    }
+    val updateWhoGoesFirst: () -> Unit = {
+        when(startingSelection){
+            0 -> startingSelection = 1
+            1 -> startingSelection = 0
+        }
+    }
+    val updateBoardSize: () -> Unit = {
+        when(boardSelection){
+            0 -> {
+                boardSelection = 1
+                winSelectable = arrayOf(false, false, true)
+            }
+            1 -> {
+                boardSelection = 2
+                winSelectable = arrayOf(false, false, false)
+            }
+            2 -> {
+                boardSelection = 0
+                winSelectable = arrayOf(false, true, true)
+            }
+        }
+    }
+    val updateWinCondition: () -> Unit = {
+        when(winConditionSelection){
+            0 -> {
+                if(winSelectable[1]){
+                    winConditionSelection = 0
+                }
+                else{
+                    winConditionSelection = 1
+                }
+            }
+            1 -> {
+                if(winSelectable[2]){
+                    winConditionSelection = 0
+                }
+                else{
+                    winConditionSelection = 2
+                }
+            }
+            2 -> {
+                winConditionSelection = 0
+            }
+        }
+    }
+
     /* Game States */
     var boardState by mutableStateOf(arrayOf<String>())
     var gameActive by mutableStateOf(true) // This and gameEnded could probably be the same
@@ -94,7 +158,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var winCondition by mutableStateOf(WinCondition.NO_WIN as WinCondition?)
 
     /* UI States*/
-    var gameUIState by mutableStateOf(MENU.RUNNING)
+    var gameUIState by mutableStateOf(MENU.HIDDEN)
     var uiSelectedPlayer by mutableStateOf(UIPLAYERSELECT.PLAYER1)
     var newUser by mutableStateOf(false)
     var selectedAvatar by mutableIntStateOf(findAvatar())
@@ -146,10 +210,32 @@ class TicTacViewModel(context: Context) : ViewModel(){
         ** OnEvent functions **
      *******************************/
     private fun gameStart(){
+        /* Starting a new game should set the following:
+         * 0 Confirm: board size & win condition, players active in game
+         * 1 SET - all relevant game states
+         * 2 - Create players
+         * 3 - Set all player states (if not already)
+         * 4 - Set correct board size and wincondition
+         * 5 - Set player order
+         * 6 - Undo shouldn't be available
+         */
         Log.v(TAG, TYPE+"StartGame")
+        Log.v(TAG, TYPE+"P1 = $player1Name, P2 = $player2Name")
+        // 0 - Set correct board size (already updated in GameSettingsScreen
+        Log.v(TAG, TYPE+"Board size = ${getBoardSize()}, Win = $winConditionSelection")
 
+        // 1 - SET the following game states
+        gameActive = true
+        timerActive = true
+        player1Timer = 10
+        player2Timer = 10
+        undoAvailable = false
+        winner = null
+        winCondition = WinCondition.NO_WIN
+        gameUIState = MENU.HIDDEN
         movesMade = 0
 
+        // 2 - Create players
         if(player1Turn){
             gd.setFirstPlayer(player1)
             gd.setSecondPlayer(player2)
@@ -158,37 +244,36 @@ class TicTacViewModel(context: Context) : ViewModel(){
             gd.setSecondPlayer(player1)
         }
 
-        // Default values
-        var boardSize = 3
-        var winSize = 3
-
-        // Get players marker
+        // 3 - Set all player states (if not already)
         when(player1Marker){
             0 -> {
                 gd.getPlayerArray()[0]!!.playerIcon = "x"
                 gd.getPlayerArray()[1]!!.playerIcon = "o"
+                player2Marker = 1
             }
             1 -> {
                 gd.getPlayerArray()[0]!!.playerIcon = "o"
                 gd.getPlayerArray()[1]!!.playerIcon = "x"
+                player2Marker = 0
             }
         }
 
-        // sets board size and initial board state
-        when(boardSelection){
-            0 -> { boardSize = 3; boardState = Array(9) { _ -> "" } }
-            1 -> { boardSize = 4; boardState = Array(16) { _ -> "" } }
-            2 -> { boardSize = 5; boardState = Array(25) { _ -> "" } }
+        // 4 - Set correct board size and wincondition
+        val boardSize = when(boardSelection){
+            0 -> { 3 }
+            1 -> { 4 }
+            else -> { 5 }
         }
 
-        // Sets win condition
-        when(winConditionSelection){
-            0 -> winSize = 3
-            1 -> winSize = 4
-            2 -> winSize = 5
+        boardState = Array(boardSize*boardSize) { _ -> "" }
+        val winSize = when(winConditionSelection){
+            0 -> 3
+            1 -> 4
+            else -> 5
         }
+        gd.reinit(GameConfig(boardSize, boardSize, winSize))
 
-        // Sets play order
+        // 5 - Set player order
         when(startingSelection){
             0 -> {
                 gd.setPlayerOrder(0)
@@ -202,10 +287,18 @@ class TicTacViewModel(context: Context) : ViewModel(){
             }
         }
 
-        gd.reinit(GameConfig(boardSize, boardSize, winSize))
+        // 6 - Undo shouldn't be available
+        undoAvailable = false
 
-        this.resetMutableStates()
+        // Game ready to start
+        resetMutableStates()
         timerStart()
+
+        if(player2 is AIPlayer) {
+            if(player2Turn) {
+                markerPlacedAI()
+            }
+        }
     }
 
     private fun newSinglePlayerGame(){
@@ -221,7 +314,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         Log.v(TAG, TYPE+"NewMultiplayerPlayerGame")
 
         if(player2 == users[0]) { player2Name = player2.playerName}
-
         singlePlayerGame = false
 
         gd.setFirstPlayer(player1)
@@ -282,10 +374,11 @@ class TicTacViewModel(context: Context) : ViewModel(){
     private fun restart(){
         Log.v(TAG, TYPE+"Restart")
         gd.resetGameBoard()
-        swapPlayer() //swaps player so the person who resets is always second
-        boardConvertAndSet(gd.getBoardAsString()) // redraws board
+//        swapPlayer() //swaps player so the person who resets is always second
+//        boardConvertAndSet(gd.getBoardAsString()) // redraws board
         movesMade = 0
-        this.resetMutableStates()
+        gameStart()
+//        this.resetMutableStates()
     }
 
     private fun exit(){
@@ -395,6 +488,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 }
             }
         }
+        timerStop()
         print1D(this.winIndices as Array<Any>)
         Log.d("Test", "${this.winner}")
     }
@@ -477,6 +571,11 @@ class TicTacViewModel(context: Context) : ViewModel(){
      */
     private fun markerPlacedAI(){
         val wincondition = gd.playMove()
+
+        // Update board as soon as possible
+        val board2D = gd.getBoardAsString()
+        boardConvertAndSet(board2D)
+
         /** If the AI player wins **/
         when(wincondition){
             WinCondition.HORISONTAL,
@@ -552,9 +651,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
     fun getMarkerSymbol(stateMarker: Int): String{
         return if(stateMarker == 0){
-            "X"
+            "x"
         } else{
-            "O"
+            "o"
         }
     }
 
