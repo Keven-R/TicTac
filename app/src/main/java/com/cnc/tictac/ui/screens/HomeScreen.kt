@@ -30,6 +30,8 @@ import com.cnc.tictac.R.string as copy
 
 @Composable
 fun HomeScreen(navController: NavHostController,viewModel: TicTacViewModel) {
+    viewModel.resetSettings()
+
     // Determine UI layout.
     val configuration = LocalConfiguration.current
 

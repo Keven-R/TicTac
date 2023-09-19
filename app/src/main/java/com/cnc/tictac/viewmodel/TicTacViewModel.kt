@@ -30,7 +30,7 @@ import kotlin.time.Duration.Companion.seconds
 private const val TAG = "TicTacViewModel"
 private const val TYPE = "EVENT: "
 
-enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
+enum class PLAYERWINSTATUS { LOSS, DRAW, WIN , NULL}
 enum class UIPLAYERSELECT { PLAYER1, PLAYER2 }
 enum class MENU { HIDDEN, PAUSE, RESTART, EXIT, UNDO }
 
@@ -55,7 +55,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player1Name by mutableStateOf("Default Player")
     var player1Timer by mutableIntStateOf(10)
     var player1Turn by mutableStateOf(true)
-    var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
+    var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.NULL)
     var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player1Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player1StatMarker by mutableStateOf("")  // "ooo/////xx"
@@ -69,7 +69,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2Name by mutableStateOf("Default Player")
     var player2Timer by mutableIntStateOf(10)
     var player2Turn by mutableStateOf(false)
-    var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
+    var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.NULL)
     var player2Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player2Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player2StatMarker by mutableStateOf("")  // "ooo/////xx"
@@ -152,6 +152,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var winSelectable by mutableStateOf(arrayOf(false, true, true)) // Controls button selection
     var movesMade by mutableIntStateOf(0)
     var undoAvailable by mutableStateOf(false)
+    var restartAvailable by mutableStateOf(true)
     var singlePlayerGame by mutableStateOf(true)
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
     var winner by mutableStateOf(HumanPlayer() as Player?)
@@ -234,6 +235,10 @@ class TicTacViewModel(context: Context) : ViewModel(){
         winCondition = WinCondition.NO_WIN
         gameUIState = MENU.HIDDEN
         movesMade = 0
+        winner = null
+        winCondition = null
+        player1WinStatus = PLAYERWINSTATUS.NULL
+        player2WinStatus = PLAYERWINSTATUS.NULL
 
         // 2 - Create players
         if(player1Turn){
@@ -300,6 +305,30 @@ class TicTacViewModel(context: Context) : ViewModel(){
             }
         }
     }
+
+    // Ends the game and sets the correct states for UI to display in GameScreen
+    // Do not update anything that will cause players to not be able to restart
+    private fun GameEnd() {
+        // 1 - SET the following game states
+        gameActive = false
+        timerActive = false
+
+        movesMade = 0
+        undoAvailable = false
+        restartAvailable = false
+
+        gameUIState = MENU.HIDDEN
+        // DO NOT RESET win status here.
+    }
+
+    // Resets selections in game settings screen
+    internal fun resetSettings() {
+        startingSelection = 0
+        boardSelection = 0
+        winConditionSelection = 0
+        winSelectable = arrayOf(false, true, true)
+    }
+
 
     private fun newSinglePlayerGame(){
         Log.v(TAG, TYPE+"NewSinglePlayerGame")
@@ -519,11 +548,25 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 print2D(board2D)
                 val wincoordinates = gd.getWinCoordinates(wincondition)
                 this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
+
+                // Update win status for UI
+                if (gd.whoIsPlaying() == player1) {
+                    setPlayerAsWin(0)
+                } else {
+                    setPlayerAsWin(1)
+                }
+
+                GameEnd()
+
                 return
             }
             WinCondition.DRAW -> {
                 Log.v(TAG, "Draw detected for player.")
                 this.winnerDecided(null, null,null)
+
+                // Set win status for UI updates
+                player1WinStatus = PLAYERWINSTATUS.DRAW
+                player2WinStatus = PLAYERWINSTATUS.DRAW
                 return
             }
             else -> {
@@ -545,6 +588,18 @@ class TicTacViewModel(context: Context) : ViewModel(){
             false
         }else{
             movesMade >= 2 // Sets undo to true if 2 or more moves
+        }
+    }
+
+    // Sets p1/p2 with the appropriate win status for UI updates
+    // Called in MarkerPlaced
+    private fun setPlayerAsWin(playerNum: Int) {
+        if (playerNum == 0) {
+            player1WinStatus = PLAYERWINSTATUS.WIN
+            player2WinStatus = PLAYERWINSTATUS.LOSS
+        } else {
+            player1WinStatus = PLAYERWINSTATUS.LOSS
+            player2WinStatus = PLAYERWINSTATUS.WIN
         }
     }
 
@@ -588,11 +643,25 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 boardConvertAndSet(board2D)
                 print2D(board2D)
                 this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
+
+                // Update win status for UI
+                if (gd.whoIsPlaying() == player1) {
+                    setPlayerAsWin(0)
+                } else {
+                    setPlayerAsWin(1)
+                }
+
+                GameEnd()
                 return
             }
             WinCondition.DRAW -> {
                 Log.v(TAG, "Draw detected for AI player.")
                 this.winnerDecided(null, null,null)
+
+                // Set win status for UI updates
+                player1WinStatus = PLAYERWINSTATUS.DRAW
+                player2WinStatus = PLAYERWINSTATUS.DRAW
+
                 return
             }
             else -> {
