@@ -86,6 +86,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var boardSelection by mutableIntStateOf(0) // 0 = 3x3, 1 = 4x4, 2 = 5x5
     var winConditionSelection by mutableIntStateOf(0) // 0 = 3, 1 = 4, 2 = 5
     var winSelectable by mutableStateOf(arrayOf(false, true, true)) // Controls button selection
+    var movesMade by mutableIntStateOf(0)
     var undoAvailable by mutableStateOf(false)
     var singlePlayerGame by mutableStateOf(true)
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
@@ -275,6 +276,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         this.resetMutableStates()
         val board2D = gd.getBoardAsString()
         boardConvertAndSet(board2D)
+        movesMade -= 2
         timerStart()
     }
     private fun restart(){
@@ -440,6 +442,15 @@ class TicTacViewModel(context: Context) : ViewModel(){
             markerPlacedAI()
         }
         updateNewMarker()
+
+        movesMade += 1
+
+        // if AI (Single player game) undo is always unavailable
+        undoAvailable = if(player2 is AIPlayer){
+            false
+        }else{
+            movesMade >= 2 // Sets undo to true if 2 or more moves
+        }
     }
 
     /** updateNewMarker
