@@ -278,7 +278,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
     private fun restart(){
         Log.v(TAG, TYPE+"Restart")
-
         gd.resetGameBoard()
         swapPlayer() //swaps player so the person who resets is always second
         boardConvertAndSet(gd.getBoardAsString()) // redraws board
@@ -437,7 +436,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
         /** If next player is AI -> play AI move automatically **/
         if (player2 is AIPlayer){
-            markerPlacedAI(player2 as AIPlayer)
+            markerPlacedAI()
         }
         updateNewMarker()
     }
@@ -463,7 +462,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
      * > Places marker for AI player.
      * > Called from markerPlaced if in single player
      */
-    private fun markerPlacedAI(player2 : AIPlayer){
+    private fun markerPlacedAI(){
         val wincondition = gd.playMove()
         /** If the AI player wins **/
         when(wincondition){
@@ -489,15 +488,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 Log.v(TAG, "No win condition detected for AI.")
                 swapPlayer()
             }
-        }
-        /** Print board to debugging output **/
-        val board2D = gd.getBoardAsString()
-        print2D(board2D)
-        boardConvertAndSet(board2D)
-        Log.v("Test", wincondition.toString())
-        val moveUndoAvailable = boardState.find { move -> "x".equals(move) || "o".equals(move) }
-        if (moveUndoAvailable != null){
-            undoAvailable = true
         }
     }
 
@@ -676,6 +666,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         player2Timer += it
                     }
                 }
+                /**
+                 * If multiplayer game, someones timer run out, and nobody has won
+                 *      -> swap players, and reset timers
+                 * else if singleplayer game, player 2 is AI, player 1 timer is out, and nobody won
+                 *      -> play AI player and reset timers
+                 */
                 if (timerActive
                     && (!singlePlayerGame)
                     && (player1Timer == 0 || player2Timer == 0)
@@ -687,12 +683,12 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 } else if (timerActive
                     && (singlePlayerGame)
                     && (player2 is AIPlayer)
-                    && (player1Timer == 0 || player2Timer == 0)
+                    && (player1Timer == 0)
                     && (winCondition == WinCondition.NO_WIN)){
-                    Log.v("Test", "player timed out in singleplayer")
-                    markerPlacedAI(player2 as AIPlayer)
-                    updateNewMarker()
+                    this.markerPlacedAI()
+                    this.updateNewMarker()
                     player1Timer = 10
+                    player2Timer = 10
                 }
             }.launchIn(viewModelScope)
     }
