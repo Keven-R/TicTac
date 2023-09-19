@@ -130,7 +130,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
             TicTacEvent.StartGame -> gameStart()
             TicTacEvent.NewSinglePlayerGame -> newSinglePlayerGame()
             TicTacEvent.NewMultiPlayerGame  -> newMultiPlayerGame()
-            TicTacEvent.ProfileMenuSelect -> profileMenuSelect()
             TicTacEvent.Undo -> undo()
             TicTacEvent.Restart -> restart()
             TicTacEvent.Exit -> exit()
@@ -147,6 +146,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
      *******************************/
     private fun gameStart(){
         Log.v(TAG, TYPE+"StartGame")
+
+        movesMade = 0
 
         if(player1Turn){
             gd.setFirstPlayer(player1)
@@ -226,8 +227,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         gd.setSecondPlayer(player2)
     }
 
-    private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
-
     private fun resetMutableStates(){
         this.winner = null
         this.winCondition = WinCondition.NO_WIN
@@ -284,6 +283,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         gd.resetGameBoard()
         swapPlayer() //swaps player so the person who resets is always second
         boardConvertAndSet(gd.getBoardAsString()) // redraws board
+        movesMade = 0
         this.resetMutableStates()
     }
 
