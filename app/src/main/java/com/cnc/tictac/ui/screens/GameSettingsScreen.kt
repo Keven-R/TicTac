@@ -54,6 +54,68 @@ fun GameSettingsScreen(navController: NavHostController, viewModel: TicTacViewMo
  */
 @Composable
 fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
+    // Radio variables
+    val markerOptions = arrayOf("x", "o")
+    val startOptions = arrayOf(viewModel.player1Name, viewModel.player2Name)
+    val boardOptions = arrayOf("3x3", "4x4", "5x5")
+    val winOptions = arrayOf("3", "4", "5")
+
+    // lambda's to pass in
+    val markerUnit: () -> Unit = {
+            when(viewModel.player1Marker){
+                0 -> viewModel.player1Marker = 1
+                1 -> viewModel.player1Marker = 0
+            }
+    }
+
+    val startUnit: () -> Unit = {
+        when(viewModel.startingSelection){
+            0 -> viewModel.startingSelection = 1
+            1 -> viewModel.startingSelection = 0
+        }
+    }
+
+    val sizeUnit: () -> Unit = {
+        when(viewModel.boardSelection){
+            0 -> {
+                viewModel.boardSelection = 1
+                viewModel.winSelectable = arrayOf(false, false, true)
+            }
+            1 -> {
+                viewModel.boardSelection = 2
+                viewModel.winSelectable = arrayOf(false, false, false)
+            }
+            2 -> {
+                viewModel.boardSelection = 0
+                viewModel.winSelectable = arrayOf(false, true, true)
+            }
+        }
+    }
+
+    val winUnit: () -> Unit = {
+        when(viewModel.winConditionSelection){
+            0 -> {
+                if(viewModel.winSelectable[1]){
+                    viewModel.winConditionSelection = 0
+                }
+                else{
+                    viewModel.winConditionSelection = 1
+                }
+            }
+            1 -> {
+                if(viewModel.winSelectable[2]){
+                    viewModel.winConditionSelection = 0
+                }
+                else{
+                    viewModel.winConditionSelection = 2
+                }
+            }
+            2 -> {
+                viewModel.winConditionSelection = 0
+            }
+        }
+    }
+
     // CONTAINER: Set bg colour
     Box(
         modifier = Modifier
@@ -88,32 +150,32 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: Ti
                 Radio(
                     title = viewModel.player1Name,
                     viewModel = viewModel,
-                    onClick = viewModel.updateP1Marker,
-                    labels = viewModel.markerOptions,
+                    onClick = markerUnit,
+                    labels = markerOptions,
                     selectedIndex = viewModel.player1Marker,
                 )
 
                 Radio(
                     title = "who goes first?",
                     viewModel = viewModel,
-                    onClick = viewModel.updateWhoGoesFirst,
-                    labels = viewModel.startOptions,
+                    onClick = startUnit,
+                    labels = startOptions,
                     selectedIndex = viewModel.startingSelection,
                 )
 
                 Radio(
                     title = "board size",
                     viewModel = viewModel,
-                    onClick = viewModel.updateBoardSize,
-                    labels = viewModel.boardOptions,
+                    onClick = sizeUnit,
+                    labels = boardOptions,
                     selectedIndex = viewModel.boardSelection,
                 )
 
                 Radio(
                     title = "win condition (in a row)",
                     viewModel = viewModel,
-                    onClick = viewModel.updateWinCondition,
-                    labels = viewModel.winOptions,
+                    onClick = winUnit,
+                    labels = winOptions,
                     selectedIndex = viewModel.winConditionSelection,
                     isDisabled = viewModel.winSelectable
                 )
@@ -148,6 +210,67 @@ fun DisplayDefaultSettingsScreen(navController: NavHostController, viewModel: Ti
  */
 @Composable
 fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicTacViewModel) {
+    // Radio variables
+    val markerOptions = arrayOf("x", "o")
+    val startOptions = arrayOf(viewModel.player1Name, viewModel.player2Name)
+    val boardOptions = arrayOf("3x3", "4x4", "5x5")
+    val winOptions = arrayOf("3", "4", "5")
+
+    // lambda's to pass in
+    val markerUnit: () -> Unit = {
+        when(viewModel.player1Marker){
+            0 -> viewModel.player1Marker = 1
+            1 -> viewModel.player1Marker = 0
+        }
+    }
+
+    val startUnit: () -> Unit = {
+        when(viewModel.startingSelection){
+            0 -> viewModel.startingSelection = 1
+            1 -> viewModel.startingSelection = 0
+        }
+    }
+
+    val sizeUnit: () -> Unit = {
+        when(viewModel.boardSelection){
+            0 -> {
+                viewModel.boardSelection = 1
+                viewModel.winSelectable = arrayOf(false, false, true)
+            }
+            1 -> {
+                viewModel.boardSelection = 2
+                viewModel.winSelectable = arrayOf(false, false, false)
+            }
+            2 -> {
+                viewModel.boardSelection = 0
+                viewModel.winSelectable = arrayOf(false, true, true)
+            }
+        }
+    }
+
+    val winUnit: () -> Unit = {
+        when(viewModel.winConditionSelection){
+            0 -> {
+                if(viewModel.winSelectable[1]){
+                    viewModel.winConditionSelection = 0
+                }
+                else{
+                    viewModel.winConditionSelection = 1
+                }
+            }
+            1 -> {
+                if(viewModel.winSelectable[2]){
+                    viewModel.winConditionSelection = 0
+                }
+                else{
+                    viewModel.winConditionSelection = 2
+                }
+            }
+            2 -> {
+                viewModel.winConditionSelection = 0
+            }
+        }
+    }
     // CONTAINER: Set bg colour
     Box(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary)) {
         // CONTAINER: All content on screen
@@ -179,8 +302,8 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
                     Radio(
                         title = viewModel.player1Name,
                         viewModel = viewModel,
-                        onClick = viewModel.updateP1Marker,
-                        labels = viewModel.markerOptions,
+                        onClick = markerUnit,
+                        labels = markerOptions,
                         selectedIndex = viewModel.player1Marker,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -189,8 +312,8 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
                     Radio(
                         title = "board size",
                         viewModel = viewModel,
-                        onClick = viewModel.updateBoardSize,
-                        labels = viewModel.boardOptions,
+                        onClick = sizeUnit,
+                        labels = boardOptions,
                         selectedIndex = viewModel.boardSelection,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -205,8 +328,8 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
                     Radio(
                         title = "who goes first?",
                         viewModel = viewModel,
-                        onClick = viewModel.updateWhoGoesFirst,
-                        labels = viewModel.startOptions,
+                        onClick = startUnit,
+                        labels = startOptions,
                         selectedIndex = viewModel.startingSelection,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -216,8 +339,8 @@ fun DisplayShortSettingsScreen(navController: NavHostController, viewModel: TicT
                     Radio(
                         title = "win condition (in a row)",
                         viewModel = viewModel,
-                        onClick = viewModel.updateWinCondition,
-                        labels = viewModel.winOptions,
+                        onClick = winUnit,
+                        labels = winOptions,
                         selectedIndex = viewModel.winConditionSelection,
                         isDisabled = viewModel.winSelectable,
                         modifier = Modifier
