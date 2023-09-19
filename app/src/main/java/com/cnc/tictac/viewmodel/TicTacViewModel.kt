@@ -153,6 +153,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var movesMade by mutableIntStateOf(0)
     var undoAvailable by mutableStateOf(false)
     var restartAvailable by mutableStateOf(true)
+    var pauseAvailable by mutableStateOf(true)
     var singlePlayerGame by mutableStateOf(true)
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
     var winner by mutableStateOf(HumanPlayer() as Player?)
@@ -231,6 +232,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
         player1Timer = 10
         player2Timer = 10
         undoAvailable = false
+        restartAvailable = true
+        pauseAvailable = true
         winner = null
         winCondition = WinCondition.NO_WIN
         gameUIState = MENU.HIDDEN
@@ -316,6 +319,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         movesMade = 0
         undoAvailable = false
         restartAvailable = false
+        pauseAvailable = false
 
         gameUIState = MENU.HIDDEN
         // DO NOT RESET win status here.
