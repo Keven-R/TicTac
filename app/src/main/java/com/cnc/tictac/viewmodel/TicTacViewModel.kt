@@ -90,6 +90,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var singlePlayerGame by mutableStateOf(true)
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
     var winner by mutableStateOf(HumanPlayer() as Player?)
+    var winCondition by mutableStateOf(WinCondition.NO_WIN as WinCondition?)
 
     /* UI States*/
     var gameUIState by mutableStateOf(MENU.RUNNING)
@@ -285,7 +286,17 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
         Log.v("Test", "Stats Before: $player1WinString,$player1DrawString,$player1LossesString,$player1TotalGamesString")
 
-        gd.updatePlayerStatsInDatabase(player1 as HumanPlayer,99,0,0) // TODO: Play stats don't seem to update
+        val currentPlayerStats = gd.getPlayerStatsFromDatabase(this.winner as HumanPlayer)
+        var wins = currentPlayerStats.second
+        var losses = currentPlayerStats.first
+        var draws = currentPlayerStats.third
+        when(this.winCondition){
+            WinCondition.DRAW -> draws ++ // update draws
+            WinCondition.VERTICAL, WinCondition.HORISONTAL,
+            WinCondition.DIAGONAL_2, WinCondition.DIAGONAL_1 -> wins ++
+            else -> Log.v(TAG, "Not updating stats. no win condition achieved.")
+        }
+        gd.updatePlayerStatsInDatabase(this.winner as HumanPlayer,wins,draws,losses) // TODO: Play stats don't seem to update
         player1StatMarker = gd.getPlayerStatsRibbonFromDatabase(player1 as HumanPlayer)
 
         val stats = gd.getPlayerDisplayStatsFromDatabase(player1 as HumanPlayer)
@@ -347,6 +358,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             is HumanPlayer, is AIPlayer -> { /** PLAYER WON **/
                 Log.d(TAG, "${winner.playerName} won the game.")
                 this.winner = gd.whoIsPlaying()
+                this.winCondition = winCondition
                 when(winCondition){
                     WinCondition.VERTICAL, WinCondition.HORISONTAL -> {
                         Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.first}")
