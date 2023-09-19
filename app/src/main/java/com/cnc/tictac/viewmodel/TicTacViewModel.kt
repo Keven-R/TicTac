@@ -275,7 +275,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         this.resetMutableStates()
         val board2D = gd.getBoardAsString()
         boardConvertAndSet(board2D)
-        boardConvertAndSet(board2D)
     }
     private fun restart(){
         Log.v(TAG, TYPE+"Restart")
@@ -426,9 +425,15 @@ class TicTacViewModel(context: Context) : ViewModel(){
             WinCondition.DIAGONAL_2 -> {
                 Log.v(TAG, "Win condition detected for player.")
                 val wincoordinates = gd.getWinCoordinates(wincondition)
+                // Do stuff maybe use when
                 val board2D = gd.getBoardAsString()
                 boardConvertAndSet(board2D)
                 print2D(board2D)
+                Log.v("Test", wincondition.toString())
+                Log.v("Test", "${wincoordinates?.first?.first}, " +
+                        "${wincoordinates?.first?.second} : " +
+                        "${wincoordinates?.second?.first}, " +
+                        "${wincoordinates?.second?.second}")
                 this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
                 return
             }
@@ -490,6 +495,24 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 swapPlayer()
             }
         }
+        /** Print board to debugging output **/
+        val board2D = gd.getBoardAsString()
+        print2D(board2D)
+        boardConvertAndSet(board2D)
+        Log.v("Test", wincondition.toString())
+        val moveUndoAvailable = boardState.find { move -> "x".equals(move) || "o".equals(move) }
+        if (moveUndoAvailable != null){
+            undoAvailable = true
+        }
+
+//        Log.v("Test", "BoardString: ${board2D.joinToString()}")
+
+//        boardConvertAndSet(board2D)
+
+        // Get current player
+        //switch
+        player1Timer = 10
+        player2Timer = 10
     }
 
     /********************************
