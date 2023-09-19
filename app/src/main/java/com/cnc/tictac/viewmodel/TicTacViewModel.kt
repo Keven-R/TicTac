@@ -32,7 +32,7 @@ private const val TYPE = "EVENT: "
 
 enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
 enum class UIPLAYERSELECT { PLAYER1, PLAYER2 }
-enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
+enum class MENU { HIDDEN, PAUSE, RESTART, EXIT, UNDO }
 
 class TicTacViewModel(context: Context) : ViewModel(){
 
@@ -139,7 +139,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     /* Game States */
     var boardState by mutableStateOf(arrayOf<String>())
-    var gameActive by mutableStateOf(true) // This and gameEnded could probably be the same
+    var gameActive by mutableStateOf(false) // This and gameEnded could probably be the same
     var timerActive by mutableStateOf(false) // This and gameEnded could probably be the same
     var startingSelection by mutableIntStateOf(0) // 0 = "Player 1", 1 = "Player 2"
     var boardSelection by mutableIntStateOf(0) // 0 = 3x3, 1 = 4x4, 2 = 5x5
@@ -153,7 +153,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var winCondition by mutableStateOf(WinCondition.NO_WIN as WinCondition?)
 
     /* UI States*/
-    var gameUIState by mutableStateOf(MENU.RUNNING)
+    var gameUIState by mutableStateOf(MENU.HIDDEN)
     var uiSelectedPlayer by mutableStateOf(UIPLAYERSELECT.PLAYER1)
     var newUser by mutableStateOf(false)
     var selectedAvatar by mutableIntStateOf(findAvatar())
@@ -205,16 +205,40 @@ class TicTacViewModel(context: Context) : ViewModel(){
      *******************************/
     private fun gameStart(){
         /* Starting a new game should set the following:
-         * 0 Players active in game
-         * 1 P2 marker
-         * 2 Who goes first
-         * 4 Board size
-         * 5 Win condition
+         * 0 Confirm: board size & win condition, players active in game
+         * 1 SET - all relevant game states
+         * 2 SET - P1/P2 states
+         * 3 SET - order of turns
+         * 4 SET - correct board size
+         * 5 Undo shouldn't be available
          */
-
         Log.v(TAG, TYPE+"StartGame")
+
+        // 0 - confirm correct players are added
+        Log.v(TAG, TYPE+"P1 = $player1Name, P2 = $player2Name")
+        // 0 - Set correct board size (already updated in GameSettingsScreen
+        Log.v(TAG, TYPE+"Board size = ${getBoardSize()}, Win = $winConditionSelection")
+
+        // 1 - SET the following game states
+        gameActive = true
+        timerActive = true
+        player1Timer = 10
+        player2Timer = 10
+        undoAvailable = false
+        winner = null
+        winCondition = WinCondition.NO_WIN
+        gameUIState = MENU.HIDDEN
         movesMade = 0
 
+        // 2 - Set all player states (if not already)
+        player2Marker = if(player1Marker == 0) 1 else 0
+        val p1Icon = if(player1Marker == 0) "x" else "o"
+        val p2Icon = if(player2Marker == 0) "x" else "o"
+        gd.getPlayerArray()[0]!!.playerIcon = p1Icon
+        gd.getPlayerArray()[1]!!.playerIcon = p2Icon
+
+        // 3 - Set order of turns
+        // Radio selections
         if(player1Turn){
             gd.setFirstPlayer(player1)
             gd.setSecondPlayer(player2)
@@ -222,38 +246,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             gd.setFirstPlayer(player2)
             gd.setSecondPlayer(player1)
         }
-
-        // Default values
-        var boardSize = 3
-        var winSize = 3
-
-        // Get players marker
-        when(player1Marker){
-            0 -> {
-                gd.getPlayerArray()[0]!!.playerIcon = "x"
-                gd.getPlayerArray()[1]!!.playerIcon = "o"
-            }
-            1 -> {
-                gd.getPlayerArray()[0]!!.playerIcon = "o"
-                gd.getPlayerArray()[1]!!.playerIcon = "x"
-            }
-        }
-
-        // sets board size and initial board state
-        when(boardSelection){
-            0 -> { boardSize = 3; boardState = Array(9) { _ -> "" } }
-            1 -> { boardSize = 4; boardState = Array(16) { _ -> "" } }
-            2 -> { boardSize = 5; boardState = Array(25) { _ -> "" } }
-        }
-
-        // Sets win condition
-        when(winConditionSelection){
-            0 -> winSize = 3
-            1 -> winSize = 4
-            2 -> winSize = 5
-        }
-
-        // Sets play order
+        // Transfer radio selection to game driver
         when(startingSelection){
             0 -> {
                 gd.setPlayerOrder(0)
@@ -267,9 +260,25 @@ class TicTacViewModel(context: Context) : ViewModel(){
             }
         }
 
+        // 4 - Set correct board size and wincondition
+        val boardSize = when(boardSelection){
+            0 -> { 3 }
+            1 -> { 4 }
+            else -> { 5 }
+        }
+        boardState = Array(boardSize*boardSize) { _ -> "" }
+        val winSize: Int = when(winConditionSelection){
+            0 -> 3
+            1 -> 4
+            else -> 5
+        }
         gd.reinit(GameConfig(boardSize, boardSize, winSize))
 
-        this.resetMutableStates()
+        // 5 - Undo shouldn't be available
+        undoAvailable = false
+
+        // Game ready to start
+        resetMutableStates()
         timerStart()
     }
 
