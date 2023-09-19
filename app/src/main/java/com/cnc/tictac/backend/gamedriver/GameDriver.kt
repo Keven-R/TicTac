@@ -423,7 +423,7 @@ class GameDriver(
         val wins = this.playerDAO.getWins(player.playerID)
         val draws = this.playerDAO.getDraws(player.playerID)
         Log.d(TAG, "${player.playerName} has stats wins = $wins, looses = $losses, draws = $draws.")
-        return Triple(losses, wins, draws)
+        return Triple(wins, losses, draws)
     }
 
     fun getPlayerTotalGamesFromDatabase(player : HumanPlayer) : Int {
