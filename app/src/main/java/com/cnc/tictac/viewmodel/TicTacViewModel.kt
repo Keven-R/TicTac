@@ -226,6 +226,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
         // 0 - Set correct board size (already updated in GameSettingsScreen
         Log.v(TAG, TYPE+"Board size = ${getBoardSize()}, Win = $winConditionSelection")
 
+        // Correct game mode
+        if (singlePlayerGame) newSinglePlayerGame() else newMultiPlayerGame()
+
         // 1 - SET the following game states
         gameActive = true
         timerActive = true
@@ -390,20 +393,27 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun undo(){
         Log.v(TAG, TYPE+"Undo")
-        /** If single player, undo 2 moves **/
-        if(singlePlayerGame){
-            gd.undoPreviousMove()
-            gd.undoPreviousMove()
-        } else if(!singlePlayerGame){
-            gd.undoPreviousMove()
-            swapPlayer()
+
+        // UNDO only accessible if multiplayer and not vs AI.
+        if (player2 !is AIPlayer) {
+            if (!singlePlayerGame) {
+                // Undo moves
+                gd.undoPreviousMove()
+                movesMade -= 1
+                timerStart()
+                resetMutableStates()
+                swapPlayer()
+
+                // Disable undo if no more moves
+                undoAvailable = if(movesMade==0) false else true
+
+                // Update game board
+                val board2D = gd.getBoardAsString()
+                boardConvertAndSet(board2D)
+            }
         }
-        this.resetMutableStates()
-        val board2D = gd.getBoardAsString()
-        boardConvertAndSet(board2D)
-        movesMade -= 2
-        timerStart()
     }
+
     private fun restart(){
         Log.v(TAG, TYPE+"Restart")
         gd.resetGameBoard()
@@ -538,8 +548,14 @@ class TicTacViewModel(context: Context) : ViewModel(){
         Log.v(TAG, "Placing marker for ${gd.whoIsPlaying()?.playerName}")
         val position2D = positionConverter(position)
         Log.v(TAG, TYPE+"MarkerPlaced: UIPosition = $position, GameDriverPosition = ${position2D.x},${position2D.y}")
+
         /** Player 1 makes move **/
         var wincondition = gd.playMove(position2D.x,position2D.y)
+
+        // Enable undo whenever a player makes a move
+        // Ensure this goes back to unavailable at end of game + when no more moves to undo
+        undoAvailable = true
+
         /** if Player 1 wins **/
         when(wincondition){
             WinCondition.HORISONTAL,
