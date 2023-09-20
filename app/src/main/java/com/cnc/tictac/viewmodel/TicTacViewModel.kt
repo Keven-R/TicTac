@@ -31,7 +31,7 @@ private const val TAG = "TicTacViewModel"
 private const val SMTAG = "StateMachine"
 private const val TYPE = "EVENT: "
 
-enum class PLAYERWINSTATUS { LOSS, DRAW, WIN }
+enum class PLAYERWINSTATUS { NONE, LOSS, DRAW, WIN }
 enum class UIPLAYERSELECT { PLAYER1, PLAYER2 }
 enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
 
@@ -61,7 +61,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player1Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player1StatMarker by mutableStateOf("")  // "ooo/////xx"
-    var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
+    var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.NONE)
     var player1WinString by mutableStateOf("")    // These stat strings might need to be
     var player1DrawString by mutableStateOf("") // processed depending on backend
     var player1LossesString by mutableStateOf("")
@@ -75,7 +75,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player2Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player2StatMarker by mutableStateOf("")  // "ooo/////xx"
-    var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.DRAW)
+    var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.NONE)
     var player2WinString by mutableStateOf("")    // These stat strings might need to be
     var player2DrawString by mutableStateOf("") // processed depending on backend
     var player2LossesString by mutableStateOf("")
@@ -357,6 +357,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
                     }
                     WinCondition.DRAW -> {
                         this.winner = null
+                        this.player1WinStatus = PLAYERWINSTATUS.DRAW
+                        this.player2WinStatus = PLAYERWINSTATUS.DRAW
+                        this.gameActive = false
                         this.CurrentState = this.CurrentState.ChangeState(STATE.GAME_OVER)
                         return
                     }
@@ -369,6 +372,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
                     // When a win occurs
                     is WinCondition -> {
                         this.winner = player1
+                        this.player1WinStatus = PLAYERWINSTATUS.WIN
+                        this.player2WinStatus = PLAYERWINSTATUS.LOSS
+                        this.gameActive = false
                         this.CurrentState = this.CurrentState.ChangeState(STATE.GAME_OVER)
                     }
                 }
@@ -382,6 +388,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
                     }
                     WinCondition.DRAW -> {
                         this.winner = null
+                        this.player1WinStatus = PLAYERWINSTATUS.DRAW
+                        this.player2WinStatus = PLAYERWINSTATUS.DRAW
+                        this.gameActive = false
                         this.CurrentState = this.CurrentState.ChangeState(STATE.GAME_OVER)
                         return
                     }
@@ -393,7 +402,10 @@ class TicTacViewModel(context: Context) : ViewModel(){
                     }
                     // When a win occurs
                     is WinCondition -> {
-                        this.winner = player1
+                        this.winner = player2
+                        this.player2WinStatus = PLAYERWINSTATUS.WIN
+                        this.player1WinStatus = PLAYERWINSTATUS.LOSS
+                        this.gameActive = false
                         this.CurrentState = this.CurrentState.ChangeState(STATE.GAME_OVER)
                     }
                 }
@@ -409,6 +421,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
 
     private fun resetMutableStates(){
         this.winner = null
+        this.gameActive = true
         this.winCondition = WinCondition.NO_WIN
         val constraints = gd.getBoard().getConstraints()
         this.winIndices = Array(constraints.first*constraints.second, { false })
