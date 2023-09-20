@@ -1,5 +1,6 @@
 package com.cnc.tictac.ui.components
 
+import android.app.GameState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -192,8 +193,8 @@ fun GameMenuText (
 // Returns string resource id
 fun getMenuContent(
     menu: MENU,
-    isGameEnded: Boolean,
-    ): Pair<Int, Int> {
+    isGameEnded: Boolean)
+: Pair<Int, Int> {
     return when (menu) {
         MENU.PAUSE -> {
             Pair(R.string.game_menu_pause_title, R.string.game_menu_pause_description)

@@ -78,8 +78,11 @@ class Board(
      * Then sets the boardstate to the top of the boardHistory stack.
      */
     fun undoPreviousMove(){
-        this.boardHistory.pop()
-        this.boardState = this.boardHistory.peek()
+        if(this.movesMade != 0) {
+            this.movesMade--
+            this.boardHistory.pop()
+            this.boardState = this.boardHistory.peek()
+        }
     }
     /** clearGameBoard()
      * -------------------
@@ -91,6 +94,7 @@ class Board(
         // Append initial blank board state to boardHistory stack
         this.boardHistory.clear()
         this.boardHistory.push(this.boardState)
+        this.movesMade = 0
     }
     /** searchWinCondition()
      * ----------------------
