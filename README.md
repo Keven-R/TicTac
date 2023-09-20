@@ -18,6 +18,10 @@ This game handles any number of user profiles that can be selected. These will t
 
 Player 1 will get to decide what marker the would like to be, either X or O. From there they can close to go first or second. The board size can be changed from either 3x3, 4x4 or 5x5. With Larger size boards different win conditions can be set, either 3, 4 or 5 in a row.
 
+## Timer
+
+Each player will have a time limit for each move. The timer for the game will start as soon as the first move is made. If the timer runs out the turn will be passed to the other player.
+
 ## Single Player Game
 
 In this game mode you will pitted against the most advanced AI ever created..... Ok no not really it just places a marker randomly in an available spot so to give the AI a fighting chance the undo feature is unavailable for single player. Each player will have a row of X's this is the timer. If this runs out then the turn is swapped to the other play regardless if any move has been made. When the win condition is met (either 3,4 or 5 in a row) these will be highlighted and the player can use the game menu at the bottom the screen to either restart or quit.
@@ -32,7 +36,13 @@ In this game mode undo is available (once two moves are on the board). If you us
 
 So you think you're better than everyone else hey? prove it and show them the leaderboard on the main menu
 
-### Made with love by:
+## Other Features
+
+* See all your user stats on the profile screen as well as ratios
+* All stats saved in persistent data (List of users generated on install to show features)
+* Switch your phone to dark/light mode for a different look
+
+### Made with love by-
 
 * Keven Rashleigh
 * Ryan May
