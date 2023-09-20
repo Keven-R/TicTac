@@ -53,7 +53,7 @@ fun DisplayDefaultGameMenuScreen(navController: NavHostController, viewModel: Ti
             GameMenuText(
                 menu = viewModel.gameUIState,
                 modifier = Modifier.widthIn(200.dp).padding(top = 32.dp),
-                isGameEnded = viewModel.gameActive
+                isGameEnded = !viewModel.gameActive
             )
 
             // ELEMENT: Menu buttons
@@ -62,6 +62,7 @@ fun DisplayDefaultGameMenuScreen(navController: NavHostController, viewModel: Ti
                 modifier = Modifier.weight(1f).fillMaxHeight().fillMaxWidth().padding(bottom = 160.dp),
                 navController = navController,
                 viewModel = viewModel
+
             )
         }
     }
