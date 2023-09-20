@@ -561,16 +561,21 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 }
 
                 GameEnd()
-
                 return
             }
             WinCondition.DRAW -> {
                 Log.v(TAG, "Draw detected for player.")
                 this.winnerDecided(null, null,null)
 
+                // Update board at end of game
+                val board2D = gd.getBoardAsString()
+                boardConvertAndSet(board2D)
+
                 // Set win status for UI updates
                 player1WinStatus = PLAYERWINSTATUS.DRAW
                 player2WinStatus = PLAYERWINSTATUS.DRAW
+
+                GameEnd()
                 return
             }
             else -> {
@@ -661,6 +666,10 @@ class TicTacViewModel(context: Context) : ViewModel(){
             WinCondition.DRAW -> {
                 Log.v(TAG, "Draw detected for AI player.")
                 this.winnerDecided(null, null,null)
+
+                // Update board at end of game
+                val board2D = gd.getBoardAsString()
+                boardConvertAndSet(board2D)
 
                 // Set win status for UI updates
                 player1WinStatus = PLAYERWINSTATUS.DRAW
