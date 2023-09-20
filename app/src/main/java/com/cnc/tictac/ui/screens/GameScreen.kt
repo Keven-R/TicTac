@@ -296,7 +296,7 @@ fun DisplayGameScreenPortraitMobile(navController: NavHostController, viewModel:
 
                 playerName = viewModel.player2Name,
                 playerAvatarResourceId = viewModel.player2Avatar,
-                playerMarker = viewModel.getMarkerSymbol(viewModel.player2Marker),
+                playerMarker = viewModel.getMarkerSymbol(2),
                 isGameEnded = !viewModel.gameActive,
 
                 playerWinStatus = viewModel.player2WinStatus,
@@ -349,7 +349,7 @@ fun DisplayGameScreenPortraitMedium(navController: NavHostController, viewModel:
 
                     playerName = viewModel.player1Name,
                     playerAvatarResourceId = viewModel.player1Avatar,
-                    playerMarker = viewModel.getMarkerSymbol(viewModel.player1Marker),
+                    playerMarker = viewModel.getMarkerSymbol(1),
                     isGameEnded = !viewModel.gameActive,
 
                     playerWinStatus = viewModel.player1WinStatus,
