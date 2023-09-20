@@ -398,10 +398,14 @@ class TicTacViewModel(context: Context) : ViewModel(){
             gd.undoPreviousMove()
             swapPlayer()
         }
+
+        gd.nextPlayer()
+
         this.resetMutableStates()
         val board2D = gd.getBoardAsString()
         boardConvertAndSet(board2D)
         movesMade -= 2
+
         timerStart()
     }
     private fun restart(){
