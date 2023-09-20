@@ -52,8 +52,8 @@ fun DisplayDefaultGameMenuScreen(navController: NavHostController, viewModel: Ti
             // ELEMENT: Menu title & description
             GameMenuText(
                 menu = viewModel.gameUIState,
-                isGameEnded = !viewModel.gameActive,
-                modifier = Modifier.widthIn(200.dp).padding(top = 32.dp)
+                modifier = Modifier.widthIn(200.dp).padding(top = 32.dp),
+                isGameEnded = viewModel.gameActive
             )
 
             // ELEMENT: Menu buttons
@@ -84,7 +84,7 @@ fun DisplayWideGameMenuScreen(navController: NavHostController, viewModel: TicTa
             GameMenuText(
                 menu = viewModel.gameUIState,
                 modifier = Modifier.widthIn(200.dp).padding(top = 32.dp, start = 12.dp, end = 12.dp),
-                isGameEnded = !viewModel.gameActive,
+                isGameEnded = viewModel.gameActive
             )
 
             // ELEMENT: Menu buttons
