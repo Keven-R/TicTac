@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.cnc.tictac.Destination
 import com.cnc.tictac.R
@@ -431,7 +430,7 @@ fun GameMenuButtonGroup (
     modifier: Modifier = Modifier,
     enableUndo: Boolean = viewModel.undoAvailable,
     enableRestart: Boolean = viewModel.restartAvailable,
-    enablePause: Boolean = viewModel.pauseAvailable,
+    enablePause : Boolean = viewModel.pauseAvailable
 ) {
     Row (
         modifier = modifier,
@@ -452,14 +451,13 @@ fun GameMenuButtonGroup (
     //            modifier = Modifier.weight(1f).fillMaxWidth(),
             enabled = enableUndo
         ) {
-            viewModel.onEvent(TicTacEvent.TimerStop)
             viewModel.gameUIState = MENU.UNDO
             navController.navigate(Destination.GameMenuScreen.route)
         }
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_restart),
-            enabled = enableRestart
+            enabled = enableRestart,
     //            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
             viewModel.onEvent(TicTacEvent.TimerStop)
