@@ -59,7 +59,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player1Timer by mutableIntStateOf(10)
     var player1Turn by mutableStateOf(true)
 
-    var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.NONE)
     var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player1Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player1StatMarker by mutableStateOf("")  // "ooo/////xx"
@@ -75,7 +74,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2Timer by mutableIntStateOf(10)
     var player2Turn by mutableStateOf(false)
 
-    var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.NONE)
     var player2Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player2Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player2StatMarker by mutableStateOf("")  // "ooo/////xx"
@@ -273,6 +271,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             TicTacEvent.TimerStop -> timerStop()
         }
     }
+    private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
     private fun gameStart(){
         /** To start the game, the state machine must first be in the state OUTSIDE_GAME **/
         if (CurrentState == STATE.OUTSIDE_GAME) {
