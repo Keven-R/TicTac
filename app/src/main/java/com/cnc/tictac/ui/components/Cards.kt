@@ -1,6 +1,5 @@
 package com.cnc.tictac.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -75,7 +74,7 @@ fun GamePlayerCard (
     secondsLeft: Int = 0, // 0 if not player's turn
 
     // if Game is ended, require:
-    playerWinStatus: Enum<PLAYERWINSTATUS> = PLAYERWINSTATUS.DRAW // TODO: not sure what our viewmodel uses, pls change
+    playerWinStatus: Enum<PLAYERWINSTATUS> = PLAYERWINSTATUS.NONE
 ) {
     // Avatar design and content logic
     var borderTransparent: Boolean
@@ -98,11 +97,9 @@ fun GamePlayerCard (
             PLAYERWINSTATUS.WIN -> {
                 stringResource(id = copy.game_status_win)
             }
-
             PLAYERWINSTATUS.LOSS -> {
                 stringResource(id = copy.game_status_loss)
             }
-
             else -> {
                 stringResource(id = copy.game_status_draw)
             }
