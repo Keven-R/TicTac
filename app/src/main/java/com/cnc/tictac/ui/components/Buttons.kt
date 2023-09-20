@@ -440,7 +440,6 @@ fun GameMenuButtonGroup (
             label = stringResource(id = copy.game_actions_pause),
             enabled = enablePause,
     //            modifier = Modifier.weight(1f).fillMaxWidth()
-            enabled = enablePause
         ) {
             viewModel.onEvent(TicTacEvent.TimerStop)
             viewModel.gameUIState = MENU.PAUSE
@@ -458,9 +457,8 @@ fun GameMenuButtonGroup (
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_restart),
-            enabled = enableRestart
+            enabled = enableRestart,
     //            modifier = Modifier.weight(1f).fillMaxWidth()
-            enabled = enableRestart
         ) {
             viewModel.onEvent(TicTacEvent.TimerStop)
             viewModel.gameUIState = MENU.RESTART
