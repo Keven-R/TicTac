@@ -134,7 +134,7 @@ fun BoardCell (
                 "o" -> {}
                 "X" -> {}
                 "O" -> {}
-                else -> { viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) }
+                else -> { if(viewModel.gameActive) viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) else {} }
             }},
         contentAlignment = Alignment.Center
     ) {

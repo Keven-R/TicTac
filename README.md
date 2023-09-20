@@ -32,6 +32,10 @@ In this game mode undo is available (once two moves are on the board). If you us
 
 So you think you're better than everyone else hey? prove it and show them the leaderboard on the main menu
 
+## Theme
+
+Switch between light and dark mode by switching your device theme.
+
 ### Made with love by:
 
 * Keven Rashleigh
