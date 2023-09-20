@@ -399,10 +399,11 @@ class TicTacViewModel(context: Context) : ViewModel(){
             if (!singlePlayerGame) {
                 // Undo moves
                 gd.undoPreviousMove()
+                swapPlayer()
+                gd.nextPlayer()
                 movesMade -= 1
                 timerStart()
                 resetMutableStates()
-                swapPlayer()
 
                 // Disable undo if no more moves
                 undoAvailable = if(movesMade==0) false else true
