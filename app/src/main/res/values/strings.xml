@@ -50,7 +50,7 @@
     <string name="game_actions_exit">exit</string>
     <string name="game_status_win">winner</string>
     <string name="game_status_loss">next time...</string>
-    <string name="game_status_draw">tie</string>
+    <string name="game_status_draw">draw</string>
 
     <!-- Game menu content -->
     <string name="game_menu_pause_title">game paused</string>
@@ -66,8 +66,8 @@
     <string name="game_menu_restart_confirm">restart</string>
     <string name="game_menu_restart_dismiss">resume</string>
     <string name="game_menu_exit_title">exit game?</string>
-    <string name="game_menu_exit_description_endgame">this will end the game and count as a loss for the current player</string>
-    <string name="game_menu_exit_description">congratulations to the winner</string>
+    <string name="game_menu_exit_description">this will end the game and count as a loss for the current player</string>
+    <string name="game_menu_exit_description_endgame">this will go back to the home screen</string>
     <string name="game_menu_exit_confirm">exit</string>
     <string name="game_menu_exit_dismiss">resume</string>
 

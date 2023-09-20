@@ -193,8 +193,8 @@ fun GameMenuText (
 // Returns string resource id
 fun getMenuContent(
     menu: MENU,
-    isGameEnded: Boolean,
-): Pair<Int, Int> {
+    isGameEnded: Boolean)
+: Pair<Int, Int> {
     return when (menu) {
         MENU.PAUSE -> {
             Pair(R.string.game_menu_pause_title, R.string.game_menu_pause_description)
