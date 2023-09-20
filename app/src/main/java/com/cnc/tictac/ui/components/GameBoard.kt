@@ -129,7 +129,13 @@ fun BoardCell (
             .background(bgColor)
             .aspectRatio(1f)
             .padding(8.dp)
-            .clickable { viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) },
+            .clickable { when(content) {
+                "x" -> {}
+                "o" -> {}
+                "X" -> {}
+                "O" -> {}
+                else -> { viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) }
+            } },
         contentAlignment = Alignment.Center
     ) {
         if (content != " ") {
