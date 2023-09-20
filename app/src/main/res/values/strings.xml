@@ -58,15 +58,16 @@
     <string name="game_menu_pause_confirm"> </string>
     <string name="game_menu_pause_dismiss">resume</string>
     <string name="game_menu_undo_title">undo move?</string>
-    <string name="game_menu_undo_description">this will under the last move made and swap players</string>
+    <string name="game_menu_undo_description">this will undo the last move made and swap players.</string>
     <string name="game_menu_undo_confirm">undo</string>
     <string name="game_menu_undo_dismiss">resume</string>
     <string name="game_menu_restart_title">restart game?</string>
-    <string name="game_menu_restart_description">this will not affect player statistics\nother player will be first</string>
+    <string name="game_menu_restart_description">this will not affect player statistics.</string>
     <string name="game_menu_restart_confirm">restart</string>
     <string name="game_menu_restart_dismiss">resume</string>
     <string name="game_menu_exit_title">exit game?</string>
-    <string name="game_menu_exit_description">this will end the game and count as a loss for the current player</string>
+    <string name="game_menu_exit_description">this will end the game and count as a loss for the current player.</string>
+    <string name="game_menu_exit_description_endgame">this will end the game.</string>
     <string name="game_menu_exit_confirm">exit</string>
     <string name="game_menu_exit_dismiss">resume</string>
 

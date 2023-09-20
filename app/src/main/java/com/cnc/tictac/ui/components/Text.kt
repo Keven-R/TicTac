@@ -1,5 +1,6 @@
 package com.cnc.tictac.ui.components
 
+import android.app.GameState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -165,9 +166,10 @@ fun LogoText(
 fun GameMenuText (
     modifier: Modifier = Modifier,
     menu: MENU,
+    isGameEnded: Boolean,
 ) {
     // Access correct content for each menu
-    val (menuTitle, menuDesc) = getMenuContent(menu)
+    val (menuTitle, menuDesc) = getMenuContent(menu, isGameEnded)
 
     Column (modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
         // ELEMENT: Title
@@ -189,7 +191,10 @@ fun GameMenuText (
 }
 
 // Returns string resource id
-fun getMenuContent(menu: MENU): Pair<Int, Int> {
+fun getMenuContent(
+    menu: MENU,
+    isGameEnded: Boolean,
+): Pair<Int, Int> {
     return when (menu) {
         MENU.PAUSE -> {
             Pair(R.string.game_menu_pause_title, R.string.game_menu_pause_description)
@@ -198,7 +203,11 @@ fun getMenuContent(menu: MENU): Pair<Int, Int> {
             Pair(R.string.game_menu_restart_title, R.string.game_menu_restart_description)
         }
         MENU.EXIT -> {
-            Pair(R.string.game_menu_exit_title, R.string.game_menu_exit_description)
+            if (isGameEnded) {
+                Pair(R.string.game_menu_exit_title, R.string.game_menu_exit_description_endgame)
+            } else {
+                Pair(R.string.game_menu_exit_title, R.string.game_menu_exit_description)
+            }
         }
         MENU.UNDO -> {
             Pair(R.string.game_menu_undo_title, R.string.game_menu_undo_description)
