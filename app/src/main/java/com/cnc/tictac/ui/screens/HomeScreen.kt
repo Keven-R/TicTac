@@ -30,6 +30,8 @@ import com.cnc.tictac.R.string as copy
 
 @Composable
 fun HomeScreen(navController: NavHostController,viewModel: TicTacViewModel) {
+    viewModel.resetSettings()
+
     // Determine UI layout.
     val configuration = LocalConfiguration.current
 
@@ -152,7 +154,8 @@ fun DisplayWideHomeScreen(navController: NavHostController,viewModel: TicTacView
             Column(
                 // UI: profile + high scores page
                 modifier = Modifier.fillMaxWidth().weight(1f),
-                horizontalAlignment = Alignment.End
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.End,
             ) {
                 DisplayButton(stringResource(id = copy.button_profile),viewModel, TicTacEvent.ProfileMenuSelect,navController,Destination.ProfileScreen)
                 // TODO: add leaderboard events

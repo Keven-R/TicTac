@@ -33,7 +33,7 @@ private const val TYPE = "EVENT: "
 
 enum class PLAYERWINSTATUS { NONE, LOSS, DRAW, WIN }
 enum class UIPLAYERSELECT { PLAYER1, PLAYER2 }
-enum class MENU { RUNNING, PAUSE, RESTART, EXIT, UNDO }
+enum class MENU { HIDDEN, PAUSE, RESTART, EXIT, UNDO }
 
 class TicTacViewModel(context: Context) : ViewModel(){
     /* For establishing some initial UI states */
@@ -58,6 +58,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player1Name by mutableStateOf("Default Player")
     var player1Timer by mutableIntStateOf(10)
     var player1Turn by mutableStateOf(true)
+
+    var player1WinStatus by mutableStateOf(PLAYERWINSTATUS.NONE)
     var player1Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player1Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player1StatMarker by mutableStateOf("")  // "ooo/////xx"
@@ -72,6 +74,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2Name by mutableStateOf("Default Player")
     var player2Timer by mutableIntStateOf(10)
     var player2Turn by mutableStateOf(false)
+
+    var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.NONE)
     var player2Avatar by mutableIntStateOf(R.drawable.avatar_1)
     var player2Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
     var player2StatMarker by mutableStateOf("")  // "ooo/////xx"
@@ -81,6 +85,70 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2LossesString by mutableStateOf("")
     var player2TotalGamesString by mutableStateOf("")
 
+    /* Game settings states */
+    // Radio variables in GameSettingsScreens
+    val markerOptions = arrayOf("x", "o")
+    var startOptions by mutableStateOf(arrayOf(player1Name, player2Name))
+    val boardOptions = arrayOf("3x3", "4x4", "5x5")
+    val winOptions = arrayOf("3", "4", "5")
+
+    // Radio onclick events
+    val updateP1Marker =  {
+        when(player1Marker) {
+            0 -> {
+                player1Marker = 1
+            }
+            1 -> {
+                player1Marker = 0
+            }
+        }
+    }
+    val updateWhoGoesFirst: () -> Unit = {
+        when(startingSelection){
+            0 -> startingSelection = 1
+            1 -> startingSelection = 0
+        }
+    }
+    val updateBoardSize: () -> Unit = {
+        when(boardSelection){
+            0 -> {
+                boardSelection = 1
+                winSelectable = arrayOf(false, false, true)
+            }
+            1 -> {
+                boardSelection = 2
+                winSelectable = arrayOf(false, false, false)
+            }
+            2 -> {
+                boardSelection = 0
+                winSelectable = arrayOf(false, true, true)
+            }
+        }
+    }
+    val updateWinCondition: () -> Unit = {
+        when(winConditionSelection){
+            0 -> {
+                if(winSelectable[1]){
+                    winConditionSelection = 0
+                }
+                else{
+                    winConditionSelection = 1
+                }
+            }
+            1 -> {
+                if(winSelectable[2]){
+                    winConditionSelection = 0
+                }
+                else{
+                    winConditionSelection = 2
+                }
+            }
+            2 -> {
+                winConditionSelection = 0
+            }
+        }
+    }
+
     /* Game States */
     var boardState by mutableStateOf(arrayOf<String>())
     var gameActive by mutableStateOf(true) // This and gameEnded could probably be the same
@@ -89,6 +157,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var boardSelection by mutableIntStateOf(0) // 0 = 3x3, 1 = 4x4, 2 = 5x5
     var winConditionSelection by mutableIntStateOf(0) // 0 = 3, 1 = 4, 2 = 5
     var winSelectable by mutableStateOf(arrayOf(false, true, true)) // Controls button selection
+    var movesMade by mutableIntStateOf(0)
     var undoAvailable by mutableStateOf(false)
     var restartAvailable by mutableStateOf(false)
     var pauseAvailable by mutableStateOf(false)
@@ -98,7 +167,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var winCondition by mutableStateOf(WinCondition.NO_WIN as WinCondition?)
 
     /* UI States*/
-    var gameUIState by mutableStateOf(MENU.RUNNING)
+    var gameUIState by mutableStateOf(MENU.HIDDEN)
     var uiSelectedPlayer by mutableStateOf(UIPLAYERSELECT.PLAYER1)
     var newUser by mutableStateOf(false)
     var selectedAvatar by mutableIntStateOf(findAvatar())
@@ -134,6 +203,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     // is keyword for when its a dataclass and takes parameters (can be on all of them but helps separate them)
     fun onEvent(event: TicTacEvent){
         when(event){
+            TicTacEvent.ProfileMenuSelect -> {} // Redundant but too long to remove
             TicTacEvent.TempEvent -> Log.v(TAG, TYPE+"Temp Event For Testing")
             /** Creating a new single player or multiplayer game starts the state machine
              * outside the loop at OUTSIDE_GAME **/
@@ -333,7 +403,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
             }
             WinCondition.DIAGONAL_2 -> {
                 val winCoordinates = gd.getWinCoordinates(this.winCondition!!)
-
                 for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
                     for (j in winCoordinates!!.second.second..winCoordinates.first.second) {
                         if(i == -j + gd.getMinimumWin() - 1){
@@ -432,8 +501,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         }
     }
 
-    private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
-
     private fun resetMutableStates(){
         this.winner = null
         this.gameActive = true
@@ -480,6 +547,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
         this.resetMutableStates()
         val board2D = gd.getBoardAsString()
         boardConvertAndSet(board2D)
+        movesMade -= 2
+        timerStart()
     }
     private fun restart(){
         Log.v(TAG, TYPE + "Restart")
@@ -603,10 +672,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         timerActive = false
     }
 
-
-
-
-
     /** updateNewMarker
      * > updates board from backend to frontend
      * > resets timer for player 1 and player 2
@@ -626,11 +691,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
             player2Timer = 10
         }
     }
-
-    /** markerPlacedAI
-     * > Places marker for AI player.
-     * > Called from markerPlaced if in single player
-     */
 
     /********************************
      ** Helper functions **

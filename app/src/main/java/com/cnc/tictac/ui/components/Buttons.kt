@@ -438,6 +438,7 @@ fun GameMenuButtonGroup (
     ) {
         GameMenuButton(
             label = stringResource(id = copy.game_actions_pause),
+            enabled = enablePause,
     //            modifier = Modifier.weight(1f).fillMaxWidth()
             enabled = enablePause
         ) {
@@ -457,6 +458,7 @@ fun GameMenuButtonGroup (
 
         GameMenuButton(
             label = stringResource(id = copy.game_actions_restart),
+            enabled = enableRestart
     //            modifier = Modifier.weight(1f).fillMaxWidth()
             enabled = enableRestart
         ) {
