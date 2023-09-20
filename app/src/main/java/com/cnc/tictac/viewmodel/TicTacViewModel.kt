@@ -666,6 +666,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 player1WinStatus = PLAYERWINSTATUS.DRAW
                 player2WinStatus = PLAYERWINSTATUS.DRAW
 
+                GameEnd()
                 return
             }
             else -> {

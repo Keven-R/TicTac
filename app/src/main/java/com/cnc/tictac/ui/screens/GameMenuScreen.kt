@@ -16,11 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.cnc.tictac.viewmodel.MENU
 import com.cnc.tictac.ui.components.GameMenuButtonGroup
 import com.cnc.tictac.ui.components.GameMenuText
 import com.cnc.tictac.ui.system.getDeviceInfo
-import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
 
 @Composable
@@ -54,6 +52,7 @@ fun DisplayDefaultGameMenuScreen(navController: NavHostController, viewModel: Ti
             // ELEMENT: Menu title & description
             GameMenuText(
                 menu = viewModel.gameUIState,
+                isGameEnded = !viewModel.gameActive,
                 modifier = Modifier.widthIn(200.dp).padding(top = 32.dp)
             )
 
@@ -84,7 +83,9 @@ fun DisplayWideGameMenuScreen(navController: NavHostController, viewModel: TicTa
             // ELEMENT: Menu title & description
             GameMenuText(
                 menu = viewModel.gameUIState,
-                modifier = Modifier.widthIn(200.dp).padding(top = 32.dp, start = 12.dp, end = 12.dp))
+                modifier = Modifier.widthIn(200.dp).padding(top = 32.dp, start = 12.dp, end = 12.dp),
+                isGameEnded = !viewModel.gameActive,
+            )
 
             // ELEMENT: Menu buttons
             GameMenuButtonGroup(
