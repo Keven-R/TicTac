@@ -167,11 +167,18 @@ class TicTacViewModel(context: Context) : ViewModel(){
             TicTacEvent.Restart -> {
                 restart()
                 updateNewMarker()
-                swapPlayer()
-                this.CurrentState = if(player1Turn) {
-                    this.CurrentState.ChangeState(STATE.PLAYER2_TURN)
-                }else{
-                    this.CurrentState.ChangeState((STATE.PLAYER1_TURN))
+                if(!singlePlayerGame) {
+                    swapPlayer()
+                    this.CurrentState = if (player1Turn) {
+                        this.CurrentState.ChangeState(STATE.PLAYER2_TURN)
+                    } else {
+                        this.CurrentState.ChangeState((STATE.PLAYER1_TURN))
+                    }
+                } else {
+                    if(gd.whoIsPlaying() is HumanPlayer){
+                        swapPlayer()
+                    }
+                    this.CurrentState = this.CurrentState.ChangeState(STATE.PLAYER2_TURN)
                 }
             }
             /** Exit changes game start to GAME_OVER **/
