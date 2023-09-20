@@ -273,57 +273,17 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
     private fun profileMenuSelect(){Log.v(TAG, TYPE+"ProfileMenuSelect")}
     private fun gameStart(){
-        /* Starting a new game should set the following:
-         * 0 Confirm: board size & win condition, players active in game
-         * 1 SET - all relevant game states
-         * 2 - Create players
-         * 3 - Set all player states (if not already)
-         * 4 - Set correct board size and wincondition
-         * 5 - Set player order
-         * 6 - Undo shouldn't be available
-         */
-        Log.v(TAG, TYPE+"StartGame")
-        Log.v(TAG, TYPE+"P1 = $player1Name, P2 = $player2Name")
-        // 0 - Set correct board size (already updated in GameSettingsScreen
-        Log.v(TAG, TYPE+"Board size = ${getBoardSize()}, Win = $winConditionSelection")
-
-        // Correct game mode
-        if (singlePlayerGame) newSinglePlayerGame() else newMultiPlayerGame()
-
-        // 1 - SET the following game states
-        gameActive = true
-        timerActive = true
-        player1Timer = 10
-        player2Timer = 10
-        undoAvailable = false
-        restartAvailable = true
-        pauseAvailable = true
-        winner = null
-        winCondition = WinCondition.NO_WIN
-        gameUIState = MENU.HIDDEN
-        movesMade = 0
-        winner = null
-        winCondition = null
-        player1WinStatus = PLAYERWINSTATUS.NULL
-        player2WinStatus = PLAYERWINSTATUS.NULL
-
-        // 2 - Create players
-        if(player1Turn){
-            gd.setFirstPlayer(player1)
-            gd.setSecondPlayer(player2)
-        }else{
-            gd.setFirstPlayer(player2)
-            gd.setSecondPlayer(player1)
-        }
-
-        // 3 - Set all player states (if not already)
-        when(player1Marker){
-            0 -> {
-                gd.getPlayerArray()[0]!!.playerIcon = "x"
-                gd.getPlayerArray()[1]!!.playerIcon = "o"
-                player2Marker = 1
+        /** To start the game, the state machine must first be in the state OUTSIDE_GAME **/
+        if (CurrentState == STATE.OUTSIDE_GAME) {
+            Log.d(SMTAG, "State machine is GAME_START: gameStart")
+            // Configure who starts first in the backend
+            if (player1Turn) {
+                gd.setFirstPlayer(player1)
+                gd.setSecondPlayer(player2)
+            } else {
+                gd.setFirstPlayer(player2)
+                gd.setSecondPlayer(player1)
             }
-            
             // Default values
             var boardSize = 3
             var winSize = 3
@@ -334,21 +294,18 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 1 -> {  gd.getPlayerArray()[0]!!.playerIcon = "o"
                         gd.getPlayerArray()[1]!!.playerIcon = "x" }
             }
-            
             // sets board size and initial board state
             when (boardSelection) {
                 0 -> { boardSize = 3; boardState = Array(9) { _ -> "" } }
                 1 -> { boardSize = 4; boardState = Array(16) { _ -> "" } }
                 2 -> { boardSize = 5; boardState = Array(25) { _ -> "" } }
             }
-            
             // Sets win condition
             when (winConditionSelection) {
                 0 -> winSize = 3
                 1 -> winSize = 4
                 2 -> winSize = 5
             }
-            
             // Sets play order
             when (startingSelection) {
                 0 -> {
@@ -362,7 +319,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
                     this.player2Turn = true
                 }
             }
-            
             // Regenerates game to new configuration
             gd.reinit(GameConfig(boardSize, boardSize, winSize))
             // Resets mutable states
@@ -584,29 +540,15 @@ class TicTacViewModel(context: Context) : ViewModel(){
     }
 
     private fun undo(){
-        Log.v(TAG, TYPE+"Undo")
-
-        // UNDO only accessible if multiplayer and not vs AI.
-        if (player2 !is AIPlayer) {
-            if (!singlePlayerGame) {
-                // Undo moves
-                gd.undoPreviousMove()
-                swapPlayer()
-                gd.nextPlayer()
-                movesMade -= 1
-                timerStart()
-                resetMutableStates()
-
-                // Disable undo if no more moves
-                undoAvailable = if(movesMade==0) false else true
-
-                // Update game board
-                val board2D = gd.getBoardAsString()
-                boardConvertAndSet(board2D)
-            }
+        if (!singlePlayerGame) {
+            gd.undoPreviousMove()
         }
+        this.resetMutableStates()
+        val board2D = gd.getBoardAsString()
+        boardConvertAndSet(board2D)
+        movesMade -= 2
+        timerStart()
     }
-
     private fun restart(){
         Log.v(TAG, TYPE + "Restart")
         gd.resetGameBoard()
@@ -729,159 +671,6 @@ class TicTacViewModel(context: Context) : ViewModel(){
         timerActive = false
     }
 
-    /** Called whenever a winner is detected after a marker is placed
-     * > Updates this.winner
-     * > Updates this.winCondition
-     * > Updates this.winIndices
-     */
-    private fun winnerDecided(winner : Player?, winCondition : WinCondition?, winCoordinates : Pair<Pair<Int, Int>, Pair<Int, Int>>?) {
-        Log.d(TAG, "Winner decided")
-        val constraints = gd.getBoard().getConstraints()
-        this.winIndices = Array(constraints.first*constraints.second, { false })
-        when(winner){
-            null -> { /** DRAW **/
-                Log.d(TAG, "Game ended in a draw.")
-                this.winner = null
-            }
-            is HumanPlayer, is AIPlayer -> { /** PLAYER WON **/
-                Log.d(TAG, "${winner.playerName} won the game.")
-                this.winCondition = winCondition
-                this.winner = gd.whoIsPlaying()
-                when(winCondition){
-                    WinCondition.VERTICAL, WinCondition.HORISONTAL -> {
-                        Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.first}")
-                        Log.d("Test", "${winCoordinates.first.second}:${winCoordinates.second.second}")
-                        for(i in winCoordinates.first.first .. winCoordinates.second.first) {
-                            for (j in winCoordinates.first.second..winCoordinates.second.second) {
-                                this.winIndices[positionConverter1D(Point(i, j))] = true
-                            }
-                        }
-                    }
-                    WinCondition.DIAGONAL_1 -> {
-                        Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.first}")
-                        Log.d("Test", "${winCoordinates.first.second}:${winCoordinates.second.second}")
-                        for(i in winCoordinates.first.first .. winCoordinates.second.first) {
-                            for (j in winCoordinates.first.second..winCoordinates.second.second) {
-                                if(i == j){
-                                    this.winIndices[positionConverter1D(Point(i, j))] = true
-                                }
-                            }
-                        }
-                    }
-                    WinCondition.DIAGONAL_2 -> {
-                        Log.d("Test", "${winCoordinates!!.first.second}:${winCoordinates.second.first}")
-                        Log.d("Test", "${winCoordinates!!.first.first}:${winCoordinates.second.second}")
-                        for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
-                            for (j in winCoordinates!!.second.second..winCoordinates.first.second) {
-                                if(i == -j + gd.getMinimumWin() - 1){
-                                    this.winIndices[positionConverter1D(Point(i, j))] = true
-                                }
-                            }
-                        }
-                    }
-                    else -> {
-                        val constraints = gd.getBoard().getConstraints()
-                        this.winIndices = Array(constraints.first*constraints.second, { false })
-                    }
-                }
-            }
-        }
-        timerStop()
-        print1D(this.winIndices as Array<Any>)
-        Log.d("Test", "${this.winner}")
-    }
-
-    /** markerPlaced
-     * > Places a marker when a cell is selected in the UI.
-     * > tests the winCondition
-     *          > queries winCondition- if a win, calls this.winnerDecided
-     */
-    private fun markerPlaced(position: Int){
-        if(this.winner != null){
-            return
-        }
-        Log.v(TAG, "Placing marker for ${gd.whoIsPlaying()?.playerName}")
-        val position2D = positionConverter(position)
-        Log.v(TAG, TYPE+"MarkerPlaced: UIPosition = $position, GameDriverPosition = ${position2D.x},${position2D.y}")
-
-        /** Player 1 makes move **/
-        var wincondition = gd.playMove(position2D.x,position2D.y)
-
-        // Enable undo whenever a player makes a move
-        // Ensure this goes back to unavailable at end of game + when no more moves to undo
-        undoAvailable = true
-
-        /** if Player 1 wins **/
-        when(wincondition){
-            WinCondition.HORISONTAL,
-            WinCondition.VERTICAL,
-            WinCondition.DIAGONAL_1,
-            WinCondition.DIAGONAL_2 -> {
-                Log.v(TAG, "Win condition detected for player.")
-                val board2D = gd.getBoardAsString()
-                boardConvertAndSet(board2D)
-                print2D(board2D)
-                val wincoordinates = gd.getWinCoordinates(wincondition)
-                this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
-
-                // Update win status for UI
-                if (gd.whoIsPlaying() == player1) {
-                    setPlayerAsWin(0)
-                } else {
-                    setPlayerAsWin(1)
-                }
-
-                GameEnd()
-                return
-            }
-            WinCondition.DRAW -> {
-                Log.v(TAG, "Draw detected for player.")
-                this.winnerDecided(null, null,null)
-
-                // Update board at end of game
-                val board2D = gd.getBoardAsString()
-                boardConvertAndSet(board2D)
-
-                // Set win status for UI updates
-                player1WinStatus = PLAYERWINSTATUS.DRAW
-                player2WinStatus = PLAYERWINSTATUS.DRAW
-
-                GameEnd()
-                return
-            }
-            else -> {
-                this.winner = null
-                Log.v(TAG, "No win condition detected for player.")
-                swapPlayer()
-            }
-        }
-        /** If next player is AI -> play AI move automatically **/
-        if (player2 is AIPlayer){
-            markerPlacedAI()
-        }
-        updateNewMarker()
-
-        movesMade += 1
-
-        // if AI (Single player game) undo is always unavailable
-        undoAvailable = if(player2 is AIPlayer){
-            false
-        }else{
-            movesMade >= 2 // Sets undo to true if 2 or more moves
-        }
-    }
-
-    // Sets p1/p2 with the appropriate win status for UI updates
-    // Called in MarkerPlaced
-    private fun setPlayerAsWin(playerNum: Int) {
-        if (playerNum == 0) {
-            player1WinStatus = PLAYERWINSTATUS.WIN
-            player2WinStatus = PLAYERWINSTATUS.LOSS
-        } else {
-            player1WinStatus = PLAYERWINSTATUS.LOSS
-            player2WinStatus = PLAYERWINSTATUS.WIN
-        }
-    }
     /** updateNewMarker
      * > updates board from backend to frontend
      * > resets timer for player 1 and player 2
@@ -892,68 +681,13 @@ class TicTacViewModel(context: Context) : ViewModel(){
         print2D(board2D)
         boardConvertAndSet(board2D)
         val moveUndoAvailable = boardState.find { move -> "x".equals(move) || "o".equals(move) }
-
-        if (moveUndoAvailable != null){
-            undoAvailable = true
-        }
-        player1Timer = 10
-        player2Timer = 10
-    }
-
-    /** markerPlacedAI
-     * > Places marker for AI player.
-     * > Called from markerPlaced if in single player
-     */
-    private fun markerPlacedAI(){
-        val wincondition = gd.playMove()
-
-        // Update board as soon as possible
-        val board2D = gd.getBoardAsString()
-        boardConvertAndSet(board2D)
-
-        /** If the AI player wins **/
-        when(wincondition){
-            WinCondition.HORISONTAL,
-            WinCondition.VERTICAL,
-            WinCondition.DIAGONAL_1,
-            WinCondition.DIAGONAL_2 -> {
-                Log.v(TAG, "Win condition detected for AI.")
-                val wincoordinates = gd.getWinCoordinates(wincondition)
-                val board2D = gd.getBoardAsString()
-                boardConvertAndSet(board2D)
-                print2D(board2D)
-                this.winnerDecided(gd.whoIsPlaying(), wincondition, wincoordinates)
-
-                // Update win status for UI
-                if (gd.whoIsPlaying() == player1) {
-                    setPlayerAsWin(0)
-                } else {
-                    setPlayerAsWin(1)
-                }
-
-                GameEnd()
-                return
-            }
-            WinCondition.DRAW -> {
-                Log.v(TAG, "Draw detected for AI player.")
-                this.winnerDecided(null, null,null)
-
-                // Update board at end of game
-                val board2D = gd.getBoardAsString()
-                boardConvertAndSet(board2D)
-
-                // Set win status for UI updates
-                player1WinStatus = PLAYERWINSTATUS.DRAW
-                player2WinStatus = PLAYERWINSTATUS.DRAW
-
-                GameEnd()
-                return
-            }
-            else -> {
-                this.winner = null
-                Log.v(TAG, "No win condition detected for AI.")
-                swapPlayer()
-            }
+        undoAvailable = moveUndoAvailable != null && !singlePlayerGame
+        if(singlePlayerGame) {
+            player1Timer = 10
+            player2Timer = 0
+        } else {
+            player1Timer = 10
+            player2Timer = 10
         }
     }
 
