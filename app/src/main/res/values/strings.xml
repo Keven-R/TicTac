@@ -50,7 +50,7 @@
     <string name="game_actions_exit">exit</string>
     <string name="game_status_win">winner</string>
     <string name="game_status_loss">next time...</string>
-    <string name="game_status_draw">it\'s a draw</string>
+    <string name="game_status_draw">tie</string>
 
     <!-- Game menu content -->
     <string name="game_menu_pause_title">game paused</string>
