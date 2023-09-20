@@ -4,12 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cnc.tictac.viewmodel.TicTacEvent
 import com.cnc.tictac.viewmodel.TicTacViewModel
@@ -77,31 +79,24 @@ fun GameBoard (
             }
         )
     } else {
-        // Set content to display (needs transformation depending on layout
-        var boardContent = Array(boardSize*boardSize) {_ -> ""}
 
-        for (row in 0..boardSize-1) {
-            for (col in 0..boardSize-1) {
-                boardContent[col*boardSize+row] = "${viewModel.boardState[row*boardSize + col]}"
-            }
-        }
-
-        LazyHorizontalGrid(
-            modifier = modifier,
-            rows = GridCells.Fixed(count = boardSize),
-            content = {
-                items(boardSize * boardSize) { i ->
-                    BoardCell(
-                        modifier = cellModifier.fillMaxSize(),
-                        viewModel = viewModel,
-                        win = if (winIndices.isNotEmpty()) winIndices[i] else false,
-                        content = boardContent[i],
-                        // Negative to denote transposed 1D position
-                        position = i
-                    )
+        Column(modifier = modifier) {
+            for (row in 0..boardSize-1) {
+                // Generate row same way as lazy grid.
+                Row(modifier = Modifier.fillMaxHeight().weight(1f)) {
+                    for (col in 0..boardSize-1) {
+                        var i = boardSize*row+col
+                        BoardCell(
+                            modifier = cellModifier.fillMaxHeight(),
+                            viewModel = viewModel,
+                            win = if (winIndices.isNotEmpty()) winIndices[i] else false,
+                            content = viewModel.boardState[i],
+                            position = i,
+                            )
+                    }
                 }
             }
-        )
+        }
     }
 }
 
@@ -143,13 +138,17 @@ fun BoardCell (
                     avatarResourceId = if (win) images.marker_o_win else images.marker_o_default,
                     onPrimaryColour = win,
                     color = contentColor,
-                    imageModifier = Modifier.fillMaxSize().padding(8.dp),
+                    imageModifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
                 )
             } else {
                 Avatar(
                     avatarResourceId = if (win) images.marker_x_win else images.marker_x_default,
                     onPrimaryColour = win,
-                    imageModifier = Modifier.fillMaxSize().padding(8.dp),
+                    imageModifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
                     color = contentColor,
                 )
             }
