@@ -90,6 +90,8 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var winConditionSelection by mutableIntStateOf(0) // 0 = 3, 1 = 4, 2 = 5
     var winSelectable by mutableStateOf(arrayOf(false, true, true)) // Controls button selection
     var undoAvailable by mutableStateOf(false)
+    var restartAvailable by mutableStateOf(false)
+    var pauseAvailable by mutableStateOf(false)
     var singlePlayerGame by mutableStateOf(true)
     var winIndices by mutableStateOf(emptyArray<Boolean>()) // Fill with win when happens
     var winner by mutableStateOf(HumanPlayer() as Player?)
@@ -331,6 +333,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
             }
             WinCondition.DIAGONAL_2 -> {
                 val winCoordinates = gd.getWinCoordinates(this.winCondition!!)
+
                 for(i in winCoordinates!!.first.first .. winCoordinates.second.first) {
                     for (j in winCoordinates!!.second.second..winCoordinates.first.second) {
                         if(i == -j + gd.getMinimumWin() - 1){
@@ -360,6 +363,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         this.player1WinStatus = PLAYERWINSTATUS.DRAW
                         this.player2WinStatus = PLAYERWINSTATUS.DRAW
                         this.gameActive = false
+                        this.undoAvailable = false
+                        this.restartAvailable = false
+                        this.pauseAvailable = false
                         this.CurrentState = this.CurrentState.ChangeState(STATE.GAME_OVER)
                         return
                     }
@@ -375,6 +381,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         this.player1WinStatus = PLAYERWINSTATUS.WIN
                         this.player2WinStatus = PLAYERWINSTATUS.LOSS
                         this.gameActive = false
+                        this.undoAvailable = false
+                        this.restartAvailable = false
+                        this.pauseAvailable = false
                         this.CurrentState = this.CurrentState.ChangeState(STATE.GAME_OVER)
                     }
                 }
@@ -391,6 +400,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         this.player1WinStatus = PLAYERWINSTATUS.DRAW
                         this.player2WinStatus = PLAYERWINSTATUS.DRAW
                         this.gameActive = false
+                        this.undoAvailable = false
+                        this.restartAvailable = false
+                        this.pauseAvailable = false
                         this.CurrentState = this.CurrentState.ChangeState(STATE.GAME_OVER)
                         return
                     }
@@ -406,6 +418,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
                         this.player2WinStatus = PLAYERWINSTATUS.WIN
                         this.player1WinStatus = PLAYERWINSTATUS.LOSS
                         this.gameActive = false
+                        this.undoAvailable = false
+                        this.restartAvailable = false
+                        this.pauseAvailable = false
                         this.CurrentState = this.CurrentState.ChangeState(STATE.GAME_OVER)
                     }
                 }
@@ -422,6 +437,9 @@ class TicTacViewModel(context: Context) : ViewModel(){
     private fun resetMutableStates(){
         this.winner = null
         this.gameActive = true
+        this.undoAvailable = true
+        this.restartAvailable = true
+        this.pauseAvailable = true
         this.winCondition = WinCondition.NO_WIN
         val constraints = gd.getBoard().getConstraints()
         this.winIndices = Array(constraints.first*constraints.second, { false })
@@ -494,7 +512,22 @@ class TicTacViewModel(context: Context) : ViewModel(){
                 users = gd.getPlayersFromDatabase() as List<HumanPlayer> // reloads the user list for updated info
                 return
             }
-            WinCondition.NO_WIN, null -> {
+            WinCondition.NO_WIN, null -> { // if multiplayer, increment losses for whoever is currently playing.
+                if(!this.singlePlayerGame) {
+                    val currentWinnerStats =
+                        gd.getPlayerStatsFromDatabase(this.gd.whoIsPlaying() as HumanPlayer)
+                    val p2wins = currentWinnerStats.first
+                    var p2losses = currentWinnerStats.second
+                    val p2draws = currentWinnerStats.third
+                    gd.updatePlayerStatsInDatabase(this.gd.whoIsPlaying() as HumanPlayer, p2wins, p2draws, ++p2losses)
+                } else { // if single player, increment losses for human player
+                    val currentWinnerStats =
+                        gd.getPlayerStatsFromDatabase(this.player1 as HumanPlayer)
+                    val p1wins = currentWinnerStats.first
+                    var p1losses = currentWinnerStats.second
+                    val p1draws = currentWinnerStats.third
+                    gd.updatePlayerStatsInDatabase(this.player1 as HumanPlayer, p1wins, p1draws, ++p1losses)
+                }
                 // exit
                 this.resetMutableStates()
                 gd.resetGameBoard()
