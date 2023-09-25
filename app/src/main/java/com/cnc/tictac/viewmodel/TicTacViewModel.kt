@@ -75,7 +75,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
     var player2Turn by mutableStateOf(false)
 
     var player2Avatar by mutableIntStateOf(R.drawable.avatar_1)
-    var player2Marker by mutableIntStateOf(0) // 0 = 'X', 1 = 'O'
+    var player2Marker by mutableIntStateOf(1) // 0 = 'X', 1 = 'O'
     var player2StatMarker by mutableStateOf("")  // "ooo/////xx"
     var player2WinStatus by mutableStateOf(PLAYERWINSTATUS.NONE)
     var player2WinString by mutableStateOf("")    // These stat strings might need to be
@@ -95,9 +95,11 @@ class TicTacViewModel(context: Context) : ViewModel(){
         when(player1Marker) {
             0 -> {
                 player1Marker = 1
+                player2Marker = 0
             }
             1 -> {
                 player1Marker = 0
+                player2Marker = 1
             }
         }
     }
@@ -740,17 +742,7 @@ class TicTacViewModel(context: Context) : ViewModel(){
         boardState = board1D
     }
     fun getMarkerSymbol(player: Int): String{
-        if(this.player1Marker == 0 && player == 1){
-            return "X"
-        } else if(this.player1Marker == 1 && player == 1){
-            return "O"
-        } else if(this.player1Marker == 0 && player == 2){
-            return "O"
-        } else if(this.player1Marker == 1 && player == 2){
-            return "X"
-        } else {
-            return "X"
-        }
+        return gd.getPlayerArray()[player]!!.playerIcon
     }
 
     fun getBoardSize(): Int{

@@ -5,12 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -129,7 +127,13 @@ fun BoardCell (
             .background(bgColor)
             .aspectRatio(1f)
             .padding(8.dp)
-            .clickable { viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) },
+            .clickable { when(content) {
+                "x" -> {}
+                "o" -> {}
+                "X" -> {}
+                "O" -> {}
+                else -> { if(viewModel.gameActive) viewModel.onEvent(TicTacEvent.MarkerPlaced(position)) else {} }
+            } },
         contentAlignment = Alignment.Center
     ) {
         if (content != " ") {
